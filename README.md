@@ -1,24 +1,24 @@
 # COEN-390-Development-Space (possible name change pending)
 
-### Collaborators:
+#### Collaborators:
 •	Matthew Lunt, 40137949       Username: Matthew-Lunt   Tutorial Section: EC C <br />
 •	Mari Kajita, 40245510 <br />
 •	Muthui Mureithi, 40246021 <br />
 •	 <br />
 •	 <br />
 
-# Description
+## Description
 •	
 
-# Objectives
+## Objectives
 •	
 
-# Core Features
+## Core Features
 •	
 
-# Langauges
+## Langauges
 •	
 
-# Techniques
+## Techniques
 •	
 
