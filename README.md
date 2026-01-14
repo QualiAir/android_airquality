@@ -5,7 +5,7 @@
 •	Mari Kajita, 40245510        Username: Marilakkuma    Tutorial Section: EC C <br />
 •	Muthui Mureithi, 40246021 <br />
 •	Daniel Diego Garcia <br />
-•	Janet Keswani <br />
+•	Janet Keswani, 40246183 <br />
 
 ## Description
 •	
