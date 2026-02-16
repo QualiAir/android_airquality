@@ -1,0 +1,44 @@
+Notes
+
+-users: respiratory issue, asthma, sensitive nose, 
+-portable device
+-decide protocol for data flow
+-suggestion to use on firebase, works well with real time data really well and connect to hardware, works well with login and user implementation
+-make more sense to put thing db store on the cloud and in terms of authentication, 
+-urge early on which aspect we are going to, commit to do one
+-database question, bluetooth->phone, need another path with firebase,
+-syncing to the cloud as a story, 
+-focus on the primary datapath first for sprint 1!
+-datapath working form the sensor to the phone
+-pick one datapath and work and implement it
+-what is the main scenario we are aiming first, and then follow that and then functionality will follow to that, 
+-product owner is like the face of the team to the customer, the one that owns the backlog.
+-final say in the backlog, input of the team and priority over on the product backlog
+-check the confirmation task, definition of done, unit test and do test as much as they can
+
+
+product backlog
+-suggestions: putting all your sprint 1 above in order, just the current sprint and the future,,
+-reducing the size, it’s way too big, 
+
+conversation that the story is completed in development, put it in question format to confirm the story is fully successfully completed, 
+card: what will i do in the story, customer to verify to see if it’s well done
+-UI-3 implementing the selection of ranges, acceptable, bad air quality, start with an action verb,
+-lynch: func2 card: try to simplify the as a user, cards are not quite large, a bit nested 
+-conformation: try to make them crips, yes no, pass fail kinda thing, start on each line
+-we want to make it that it’s easy to make it easy for the team to understand whether they met the criteria or not,
+-reference the diagram here, (conversation), it should look like this activity, clear label, 
+-start each confirmation on a new line
+-work on think of who is implementing this,  
+-just mention the goals for sprint 1, but not justification for upcoming data path 
+-start on datapath, need sensor, connect to the development board, (challenging so start early) 
+-need the data to put into the database
+-name the each activity of the screen,
+-divide task for ui-2,
+-administrative task, documentation, definition of done, test document and the design document
+-70-80% building, 20-30 administration task (prepare sprint 2 backlog, pb grooming)
+-20 hours sprint, we will each will have 3-4-5 tasks, per sprint 
+-more byte size
+- need more details, reference to the sketches, activities, where the database is located, and what is the database sql, firebase, what is it storing, what are the values, do we know the sampling rate of your sensor and how often we want to look into them, 
+-urge you to take the extra room perhaps add the thing about try to do something with the datapath/hardware,
+-next meeting:: sprint 1 review and demo and presprint 2 review session to see what’s your goal are expected are from sprint 2
