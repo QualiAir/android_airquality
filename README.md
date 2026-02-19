@@ -1,4 +1,4 @@
-# COEN-390-Development-Space (possible name change pending)
+# COEN-390-QualiAir-Development-Space
 
 #### Collaborators:
 •	Matthew Lunt, 40137949       Username: Matthew-Lunt   Tutorial Section: EC C <br />
