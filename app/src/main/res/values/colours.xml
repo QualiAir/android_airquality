@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default Android colors (keep these) -->
+<!--    <color name="white">#FFFFFFFF</color>-->
+
+    <!-- QualiAir theme -->
+<!--    <color name="bg">#0A0F1E</color>-->
+<!--    <color name="card">#111827</color>-->
+<!--    <color name="accent">#00D4AA</color>-->
+<!--    <color name="accent_dim">#1A00D4AA</color>-->
+<!--    <color name="safe">#00D4AA</color>-->
+<!--    <color name="safe_dim">#1A00D4AA</color>-->
+<!--    <color name="warning">#FFB347</color>-->
+<!--    <color name="warning_dim">#1AFFB347</color>-->
+<!--    <color name="danger">#FF4D4D</color>-->
+<!--    <color name="danger_dim">#1AFF4D4D</color>-->
+<!--    <color name="text">#F0F4FF</color>-->
+<!--    <color name="muted">#6B7280</color>-->
+<!--    <color name="border">#1F2937</color>-->
+</resources>
