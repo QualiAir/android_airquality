@@ -1,0 +1,40 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme for dark mode. -->
+    <style name="Theme.QualiAir" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <!-- M3 Role: Background of the entire app -->
+        <item name="android:colorBackground">@color/bg</item>
+
+        <!-- M3 Role: Surface for components like Cards, BottomSheets -->
+        <item name="colorSurface">@color/surface</item>
+
+        <!-- M3 Role: Brighter surface for emphasized components -->
+        <item name="colorSurfaceVariant">@color/surfaceHigh</item>
+
+        <!-- M3 Role: Borders for components like Card outlines, TextFields -->
+        <item name="colorOutline">@color/border</item>
+
+        <!-- M3 Role: Primary accent color for key components like buttons -->
+        <item name="colorPrimary">@color/accent</item>
+
+        <!-- M3 Role: Color for less prominent components -->
+        <item name="colorSecondary">@color/accentSoft</item>
+
+        <!-- M3 Role: Color for text and icons on top of background/surface -->
+        <item name="colorOnBackground">@color/text</item>
+        <item name="colorOnSurface">@color/text</item>
+
+        <!-- M3 Role: Color for muted/secondary text and icons -->
+        <item name="colorOnSurfaceVariant">@color/textMuted</item>
+
+        <!-- Custom Semantic Colors (Keep these as they are specific to your app) -->
+        <item name="safe">@color/safe</item>
+        <item name="danger">@color/danger</item>
+        <item name="warning">@color/warning</item>
+
+        <!-- Custom Gradient Colors (Keep these as they are) -->
+        <item name="gradStart">@color/gradStart</item>
+        <item name="gradEnd">@color/gradEnd</item>
+
+    </style>
+</resources>
