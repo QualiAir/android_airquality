@@ -43,5 +43,24 @@ public class MainActivity extends AppCompatActivity {
         gauge.setMaxValue(50);
         gauge.setValue(18);
 
+        // create UserPreferences
+        UserPreferences prefs = new UserPreferences(this);
+
+        // load saved values
+        prefs.loadAllPreferences();
+
+        // get NH3 thresholds
+        int nh3Min = prefs.getNh3LowMin();
+        int nh3Max = prefs.getNh3HighMax();
+
+        // if there is no saved value for NH3, use the defaults
+        if (nh3Max == 0) {
+            gauge.setMinValue(0);
+            gauge.setMaxValue(50);
+        } else {
+            gauge.setMinValue(nh3Min);
+            gauge.setMaxValue(nh3Max);
+        }
+
     }
 }
