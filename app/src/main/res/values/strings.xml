@@ -1,3 +1,10 @@
+
 <resources>
-    <string name="app_name">QualiAir</string>
+    ...
+    <string-array name="time_range_options">
+        <item>Last Hour</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+    </string-array>
 </resources>
