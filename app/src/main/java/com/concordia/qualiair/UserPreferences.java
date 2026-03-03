@@ -1,4 +1,8 @@
 package com.concordia.qualiair;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
 /** FUNC-5.1 (Design Preferences Data Model)
  * UserPreferences
 
@@ -12,6 +16,19 @@ package com.concordia.qualiair;
  * - Updating ranges later
  * - Determining air quality level based on a measured value
  */
+
+/** FUNC-5.2  (Implement Local Storage Logic)
+ * handle persistent storage using SharedPreferences
+ * Store small configuration data
+ * The data remains saved even after the application is closed or restarted
+
+ * Supports:
+ * - Saving user account information
+ * - Saving NH3, CO2, and Dust threshold ranges
+ * - Loading saved preferences when the app starts
+ * - Keeping data available after the application restarts
+ */
+
 
 public class UserPreferences {
 
@@ -50,7 +67,7 @@ public class UserPreferences {
     private int dustHighMax;
 
 
-    //Constructor
+    //Constructor of userPreferences
     public UserPreferences(String username,
                            String email,
                            int nh3LowMin, int nh3LowMax,
@@ -110,6 +127,113 @@ public class UserPreferences {
         this.dustHighMax = dustHighMax;
 
     }
+
+    //SharedPreferences Setup
+    private static final String PREF_NAME = "QualiAirPreferences";
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+
+    //Keys
+    // User keys
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_EMAIL = "email";
+
+    // NH3 keys
+    private static final String KEY_NH3_LOW_MIN = "nh3LowMin";
+    private static final String KEY_NH3_LOW_MAX = "nh3LowMax";
+    private static final String KEY_NH3_MEDIUM_MIN = "nh3MediumMin";
+    private static final String KEY_NH3_MEDIUM_MAX = "nh3MediumMax";
+    private static final String KEY_NH3_HIGH_MIN = "nh3HighMin";
+    private static final String KEY_NH3_HIGH_MAX = "nh3HighMax";
+
+    // CO2 keys
+    private static final String KEY_CO2_LOW_MIN = "co2LowMin";
+    private static final String KEY_CO2_LOW_MAX = "co2LowMax";
+    private static final String KEY_CO2_MEDIUM_MIN = "co2MediumMin";
+    private static final String KEY_CO2_MEDIUM_MAX = "co2MediumMax";
+    private static final String KEY_CO2_HIGH_MIN = "co2HighMin";
+    private static final String KEY_CO2_HIGH_MAX = "co2HighMax";
+
+
+    // Dust Keys
+    private static final String KEY_DUST_LOW_MIN = "dustLowMin";
+    private static final String KEY_DUST_LOW_MAX = "dustLowMax";
+    private static final String KEY_DUST_MEDIUM_MIN= "dustMedMin";
+    private static final String KEY_DUST_MEDIUM_MAX= "dustMedMax";
+    private static final String KEY_DUST_HIGH_MIN = "dustHighMin";
+    private static final String KEY_DUST_HIGH_MAX = "dustHighMax";
+
+
+    //Constructor of UserPreferences (connecting the class to Android storage)
+    public UserPreferences(Context context) {
+        sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+    }
+
+    //function to Save the values to SharedPreferences
+    public void saveAllPreferences(){
+        editor.putString(KEY_USERNAME, username);
+        editor.putString(KEY_EMAIL,email);
+
+        //NH3
+        editor.putInt(KEY_NH3_HIGH_MIN, nh3HighMin);
+        editor.putInt(KEY_NH3_HIGH_MAX, nh3HighMax);
+        editor.putInt(KEY_NH3_MEDIUM_MIN, nh3MediumMin);
+        editor.putInt(KEY_NH3_MEDIUM_MAX, nh3MediumMax);
+        editor.putInt(KEY_NH3_LOW_MIN, nh3LowMin);
+        editor.putInt(KEY_NH3_LOW_MAX, nh3LowMax);
+
+        //CO2
+        editor.putInt(KEY_CO2_LOW_MIN, co2LowMin);
+        editor.putInt(KEY_CO2_LOW_MAX, co2LowMax);
+        editor.putInt(KEY_CO2_MEDIUM_MIN, co2MediumMin);
+        editor.putInt(KEY_CO2_MEDIUM_MAX, co2MediumMax);
+        editor.putInt(KEY_CO2_HIGH_MIN, co2HighMin);
+        editor.putInt(KEY_CO2_HIGH_MAX, co2HighMax);
+
+        //Dust
+        editor.putInt(KEY_DUST_LOW_MIN, dustLowMin);
+        editor.putInt(KEY_DUST_LOW_MAX, dustLowMax);
+        editor.putInt(KEY_DUST_MEDIUM_MIN, dustMediumMin);
+        editor.putInt(KEY_DUST_MEDIUM_MAX, dustMediumMax);
+        editor.putInt(KEY_DUST_HIGH_MIN, dustHighMin);
+        editor.putInt(KEY_DUST_HIGH_MAX, dustHighMax);
+
+        editor.apply();
+    }
+
+    //a function to load all values from SharedPreferences
+    public void loadAllPreferences(){
+        //user info
+        username = sharedPreferences.getString(KEY_USERNAME, "");
+        email= sharedPreferences.getString(KEY_EMAIL,"");
+
+        //nh3
+        nh3LowMin = sharedPreferences.getInt(KEY_NH3_LOW_MIN, 0);
+        nh3LowMax = sharedPreferences.getInt(KEY_NH3_LOW_MAX, 0);
+        nh3MediumMin = sharedPreferences.getInt(KEY_NH3_MEDIUM_MIN, 0);
+        nh3MediumMax = sharedPreferences.getInt(KEY_NH3_MEDIUM_MAX, 0);
+        nh3HighMin = sharedPreferences.getInt(KEY_NH3_HIGH_MIN, 0);
+        nh3HighMax = sharedPreferences.getInt(KEY_NH3_HIGH_MAX, 0);
+
+        //co2
+        nh3LowMin = sharedPreferences.getInt(KEY_NH3_LOW_MIN, 0);
+        nh3LowMax = sharedPreferences.getInt(KEY_NH3_LOW_MAX, 0);
+        nh3MediumMin = sharedPreferences.getInt(KEY_NH3_MEDIUM_MIN, 0);
+        nh3MediumMax = sharedPreferences.getInt(KEY_NH3_MEDIUM_MAX, 0);
+        nh3HighMin = sharedPreferences.getInt(KEY_NH3_HIGH_MIN, 0);
+        nh3HighMax = sharedPreferences.getInt(KEY_NH3_HIGH_MAX, 0);
+
+        //dust
+        dustLowMin = sharedPreferences.getInt(KEY_DUST_LOW_MIN, 0);
+        dustLowMax = sharedPreferences.getInt(KEY_DUST_LOW_MAX, 0);
+        dustMediumMin = sharedPreferences.getInt(KEY_DUST_MEDIUM_MIN, 0);
+        dustMediumMax = sharedPreferences.getInt(KEY_DUST_MEDIUM_MAX, 0);
+        dustHighMin = sharedPreferences.getInt(KEY_DUST_HIGH_MIN, 0);
+        dustHighMax = sharedPreferences.getInt(KEY_DUST_HIGH_MAX, 0);
+
+    }
+
 
     // Getters
     public String getUsername() { return username; }
