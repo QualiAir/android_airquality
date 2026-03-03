@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Background -->
+    <color name="bg">#0F1117</color>
+    <color name="surface">#1A1D27</color>
+    <color name="surfaceHigh">#232638</color>
+    <color name="border">#2E3145</color>
+
+    <!-- Accent -->
+    <color name="accent">#6C63FF</color>
+    <color name="accentSoft">#226C63FF</color>
+
+    <!-- Semantic -->
+    <color name="safe">#3DD68C</color>
+    <color name="danger">#FF5C5C</color>
+    <color name="warning">#FFC84A</color>
+
+    <!-- Text -->
+    <color name="text">#E8E9F0</color>
+    <color name="textMuted">#7B7E9A</color>
+    <color name="textDim">#4A4D6A</color>
+    <color name="supreme">#FFFFFF</color>
+
+    <!-- Gradient -->
+    <color name="gradStart">#6C63FF</color>
+    <color name="gradEnd">#9B35FF</color>
+</resources>

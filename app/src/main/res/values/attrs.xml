@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Declare custom attributes that can be used in themes -->
+    <attr name="safe" format="color" />
+    <attr name="danger" format="color" />
+    <attr name="warning" format="color" />
+    <attr name="gradStart" format="color" />
+    <attr name="gradEnd" format="color" />
+    <attr name="supreme" format="color"/>
+</resources>

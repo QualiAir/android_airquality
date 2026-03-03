@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <!-- APP TITLE (Now outside and above the ScrollView) -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="QualiAir"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/supreme"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="24dp"
+        android:paddingBottom="16dp"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <!-- NH3 GAUGE -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_gauge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                app:cardBackgroundColor="@color/surface"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="Real-time NH3"
+                        android:textColor="@color/textMuted"
+                        android:textSize="13sp" />
+
+                    <com.concordia.qualiair.GaugeView
+                        android:id="@+id/gauge_nh3"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp" />
+
+                    <TextView
+                        android:id="@+id/tv_gauge_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-20dp"
+                        android:text="18"
+                        android:textColor="@color/text"
+                        android:textSize="36sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ppm"
+                        android:textColor="@color/textMuted"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tv_gauge_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_pill_safe"
+                        android:paddingStart="16dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="4dp"
+                        android:text="Good"
+                        android:textColor="@color/safe"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Updated Just Now"
+                        android:textColor="@color/textMuted"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- NH3 LEVEL PILLS -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_levels"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                app:cardBackgroundColor="@color/surface"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="NH3 Levels"
+                        android:textColor="@color/textMuted"
+                        android:textSize="13sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_pill_safe_dim"
+                            android:gravity="center"
+                            android:paddingTop="6dp"
+                            android:paddingBottom="6dp"
+                            android:text="Low"
+                            android:textColor="@color/safe"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_pill_warning_dim"
+                            android:gravity="center"
+                            android:paddingTop="6dp"
+                            android:paddingBottom="6dp"
+                            android:text="Moderate"
+                            android:textColor="@color/warning"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_pill_danger_dim"
+                            android:gravity="center"
+                            android:paddingTop="6dp"
+                            android:paddingBottom="6dp"
+                            android:text="High"
+                            android:textColor="@color/danger"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- SENSOR GRID ROW 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_co2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CO2"
+                            android:textColor="@color/textMuted"
+                            android:textSize="12sp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="6dp"
+                            android:gravity="bottom"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_co2_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="412"
+                                android:textColor="@color/safe"
+                                android:textSize="22sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="3dp"
+                                android:text=" ppm"
+                                android:textColor="@color/textMuted"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_co2_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_pill_safe_dim"
+                            android:paddingStart="8dp"
+                            android:paddingTop="2dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="2dp"
+                            android:text="Good"
+                            android:textColor="@color/safe"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_pm25"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="PM2.5"
+                            android:textColor="@color/textMuted"
+                            android:textSize="12sp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="6dp"
+                            android:gravity="bottom"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_pm25_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="18"
+                                android:textColor="@color/warning"
+                                android:textSize="22sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="3dp"
+                                android:text=" ug/m3"
+                                android:textColor="@color/textMuted"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_pm25_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_pill_warning_dim"
+                            android:paddingStart="8dp"
+                            android:paddingTop="2dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="2dp"
+                            android:text="Moderate"
+                            android:textColor="@color/warning"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <!-- SENSOR GRID ROW 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_humidity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Humidity"
+                            android:textColor="@color/textMuted"
+                            android:textSize="12sp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="6dp"
+                            android:gravity="bottom"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_humidity_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="62"
+                                android:textColor="@color/safe"
+                                android:textSize="22sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="3dp"
+                                android:text=" %"
+                                android:textColor="@color/textMuted"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_humidity_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_pill_safe_dim"
+                            android:paddingStart="8dp"
+                            android:paddingTop="2dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="2dp"
+                            android:text="Good"
+                            android:textColor="@color/safe"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_temp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Temp"
+                            android:textColor="@color/textMuted"
+                            android:textSize="12sp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="6dp"
+                            android:gravity="bottom"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_temp_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="23"
+                                android:textColor="@color/safe"
+                                android:textSize="22sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="3dp"
+                                android:text=" C"
+                                android:textColor="@color/textMuted"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_temp_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_pill_safe_dim"
+                            android:paddingStart="8dp"
+                            android:paddingTop="2dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="2dp"
+                            android:text="Good"
+                            android:textColor="@color/safe"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@null"
+        app:itemIconTint="@null"
+        app:itemTextColor="@null"
+        app:itemRippleColor="@null"
+        app:menu="@menu/bottom_nav_menu" />
+
+</LinearLayout>
