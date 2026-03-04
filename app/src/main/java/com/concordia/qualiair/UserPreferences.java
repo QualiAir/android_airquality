@@ -29,11 +29,20 @@ import android.content.SharedPreferences;
  * - Keeping data available after the application restarts
  */
 
-/** FUNC-5.3 (Update and overwrite preferances):
+/** FUNC-5.3 (Update and overwrite preferences):
  * supports:
  * 1- update the threshold ranges after validating input
- * 2- The new values will overwrite the previous values and are saved using Sharedpreferences
+ * 2- The new values will overwrite the previous values and are saved using SharedPreferences
  */
+
+/** FUNC-5.4 (Implement Auto-Load on App Start)
+ * supports:
+ * 1- Loading saved preferences when the app starts
+ * 2- Retrieving NH3, CO2, and Dust thresholds from SharedPreferences
+ * 3- Applying the loaded values when the app initializes
+ * 4- Preserving user settings after the app restarts
+ */
+
 
 public class UserPreferences {
 
@@ -207,7 +216,8 @@ public class UserPreferences {
         editor.apply();
     }
 
-    //a function to load all values from SharedPreferences
+    // function to load all values from SharedPreferences
+    // supports automatically loading stored user preferences when the application starts
     public void loadAllPreferences(){
         //user info
         username = sharedPreferences.getString(KEY_USERNAME, "");
@@ -352,7 +362,7 @@ public class UserPreferences {
         }
     }
 
-    //Determines Dust air quality level based on measured value
+    //Determines the Dust air quality level based on the measured value
     public String getDustLevel(int value) {
         if (value >= dustLowMin && value <= dustLowMax) {
             return "Low";
