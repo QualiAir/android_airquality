@@ -36,8 +36,11 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.FAQViewHolder> {
         boolean isExpanded = item.isExpanded();
         holder.tvAnswer.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 
-        // Rotate the arrow icon: 180 degrees if open, 0 if closed
-        holder.ivArrow.setRotation(isExpanded ? 180f : 0f);
+        // Smoothly rotate the arrow icon: 180 degrees if open, 0 if closed
+        holder.ivArrow.animate()
+                .rotation(isExpanded ? 180f : 0f)
+                .setDuration(200)
+                .start();
 
         // Handle the click on the whole row
         holder.itemView.setOnClickListener(v -> {

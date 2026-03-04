@@ -13,9 +13,13 @@ public class FAQActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_faq);
 
+        //link MaterialToolbar in xml
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         //Action Bar and back button
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Frequently Asked Questions");
+            getSupportActionBar().setTitle("FAQ");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 

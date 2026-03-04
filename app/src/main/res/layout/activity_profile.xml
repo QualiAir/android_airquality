@@ -5,7 +5,25 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
     tools:context=".ProfileActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:elevation="0dp">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/surface"
+            app:title="My Profile"
+            app:titleTextColor="@color/text"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/text" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSettings"
@@ -71,19 +89,19 @@
         app:layout_constraintTop_toBottomOf="@+id/lblName" />
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/profilePic"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="100dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/temp_profile"
-        android:padding="2dp"
-        app:strokeWidth="2dp"
-        app:strokeColor="@color/surfaceHigh"
-        app:shapeAppearanceOverlay="@style/CircleImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+    android:id="@+id/profilePic"
+    android:layout_width="150dp"
+    android:layout_height="150dp"
+    android:layout_marginTop="40dp"
+    android:scaleType="centerCrop"
+    android:src="@drawable/temp_profile"
+    android:padding="2dp"
+    app:strokeWidth="2dp"
+    app:strokeColor="@color/surfaceHigh"
+    app:shapeAppearanceOverlay="@style/CircleImage"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+    tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
