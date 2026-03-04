@@ -1,6 +1,6 @@
 package com.concordia.qualiair;
 
-import android.content.Context; // Import Context for getting colors
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
