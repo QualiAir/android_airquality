@@ -29,6 +29,11 @@ import android.content.SharedPreferences;
  * - Keeping data available after the application restarts
  */
 
+/** FUNC-5.3 (Update and overwrite preferances):
+ * supports:
+ * 1- update the threshold ranges after validating input
+ * 2- The new values will overwrite the previous values and are saved using Sharedpreferences
+ */
 
 public class UserPreferences {
 
@@ -217,12 +222,12 @@ public class UserPreferences {
         nh3HighMax = sharedPreferences.getInt(KEY_NH3_HIGH_MAX, 0);
 
         //co2
-        nh3LowMin = sharedPreferences.getInt(KEY_NH3_LOW_MIN, 0);
-        nh3LowMax = sharedPreferences.getInt(KEY_NH3_LOW_MAX, 0);
-        nh3MediumMin = sharedPreferences.getInt(KEY_NH3_MEDIUM_MIN, 0);
-        nh3MediumMax = sharedPreferences.getInt(KEY_NH3_MEDIUM_MAX, 0);
-        nh3HighMin = sharedPreferences.getInt(KEY_NH3_HIGH_MIN, 0);
-        nh3HighMax = sharedPreferences.getInt(KEY_NH3_HIGH_MAX, 0);
+        co2LowMin = sharedPreferences.getInt(KEY_CO2_LOW_MIN, 0);
+        co2LowMax = sharedPreferences.getInt(KEY_CO2_LOW_MAX, 0);
+        co2MediumMin = sharedPreferences.getInt(KEY_CO2_MEDIUM_MIN, 0);
+        co2MediumMax = sharedPreferences.getInt(KEY_CO2_MEDIUM_MAX, 0);
+        co2HighMin = sharedPreferences.getInt(KEY_CO2_HIGH_MIN, 0);
+        co2HighMax = sharedPreferences.getInt(KEY_CO2_HIGH_MAX, 0);
 
         //dust
         dustLowMin = sharedPreferences.getInt(KEY_DUST_LOW_MIN, 0);
@@ -277,6 +282,9 @@ public class UserPreferences {
         this.nh3MediumMax = mediumMax;
         this.nh3HighMin = highMin;
         this.nh3HighMax = highMax;
+
+        // overwrite stored values
+        saveAllPreferences();
     }
 
     //Updates all CO2 threshold ranges at once.
@@ -294,6 +302,9 @@ public class UserPreferences {
         this.co2MediumMax = mediumMax;
         this.co2HighMin = highMin;
         this.co2HighMax = highMax;
+
+        // overwrite stored values
+        saveAllPreferences();
     }
 
     public void updateDustRanges(int lowMin, int lowMax,
@@ -310,6 +321,9 @@ public class UserPreferences {
         this.dustMediumMax = mediumMax;
         this.dustHighMin = highMin;
         this.dustHighMax = highMax;
+
+        // overwrite stored values
+        saveAllPreferences();
     }
 
     //Determines NH3 air quality level based on measured value
