@@ -102,25 +102,29 @@ public class HistoryActivity extends AppCompatActivity {
         timeRangeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Get the text of the item the user selected (e.g., "Daily", "Weekly")
+                //  Key for the backend (history.py)
+                String backendRangeKey;
                 String selectedTimeRange = parent.getItemAtPosition(position).toString();
+                if (selectedTimeRange.equals("Daily")) backendRangeKey = "24h";
+                else if (selectedTimeRange.equals("Weekly")) backendRangeKey = "1w";
+                else if (selectedTimeRange.equals("Monthly")) backendRangeKey = "1m";
+                else backendRangeKey = "1h";
 
-                //TODO in later sprints
-                // This is where we add logic later to load new data based on the selection.
-                // For now, we can show a test message (a "Toast") to confirm it's working.
-                if (selectedTimeRange.equals("Last Hour")) {
-                    // This is the default view, so we don't need to do anything extra yet.
-                    // The button clicks (NH3, CO2, etc.) will handle loading the correct data.
-                } else if (selectedTimeRange.equals("Daily")) {
-                    // TODO:later create a method like loadDailyData()
-                    android.widget.Toast.makeText(HistoryActivity.this, "Daily view is not implemented yet.", android.widget.Toast.LENGTH_SHORT).show();
-                } else if (selectedTimeRange.equals("Weekly")) {
-                    // TODO:later create a method like loadWeeklyData()
-                    android.widget.Toast.makeText(HistoryActivity.this, "Weekly view is not implemented yet.", android.widget.Toast.LENGTH_SHORT).show();
-                } else if (selectedTimeRange.equals("Monthly")) {
-                    // TODO: later create a method like loadMonthlyData()
-                    android.widget.Toast.makeText(HistoryActivity.this, "Monthly view is not implemented yet.", android.widget.Toast.LENGTH_SHORT).show();
+                // Trigger a refresh of the current gas data
+                // Check which gas button is currently "selected" and reload it
+                //the range for pm25 is µg
+                if (yAxisTitleTextView.getText().toString().contains("µg")) {
+                    loadPm25Data();
+                } else if (buttonCo2.getCurrentTextColor() == getColor(R.color.safe)) {
+                    loadCo2Data();
+                } else {
+                    loadNh3Data();
                 }
+
+                // Verify the mapping for the demo
+                android.widget.Toast.makeText(HistoryActivity.this,
+                        "Range updated to: " + backendRangeKey,
+                        android.widget.Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -149,7 +153,7 @@ public class HistoryActivity extends AppCompatActivity {
         lineChart.setScaleEnabled(true);
 
         // left, top, right, bottom
-        lineChart.setExtraOffsets(0f, 20f, 0f, 20f);
+        lineChart.setExtraOffsets(12f, 20f, 12f, 20f);
 
 
         // --- X-Axis (Horizontal) Styling ---
@@ -215,21 +219,57 @@ public class HistoryActivity extends AppCompatActivity {
     //static for now just to showcase the graph
     private void loadNh3Data(){
         yAxisTitleTextView.setText("ppm");
-        readings.clear();
-        readings.add(new Reading("13:45", 55, "High"));
-        readings.add(new Reading("14:00", 38, "Moderate"));
-        readings.add(new Reading("14:15", 30, "Moderate"));
-        readings.add(new Reading("14:30", 45, "High"));
-        readings.add(new Reading("14:45", 52, "High"));
+        readings.clear();        // Get the current spinner selection to decide which "fake" data to show
+        String currentRange = timeRangeSpinner.getSelectedItem().toString();
+
+        if (currentRange.equals("Daily")) {
+            // Simulated 24h data (showing hours)
+            readings.add(new Reading("08:00", 30, "Moderate"));
+            readings.add(new Reading("12:00", 85, "High"));    // High = Above 80 (Alarm)
+            readings.add(new Reading("18:00", 25, "Low"));
+        } else if (currentRange.equals("Weekly")) {
+            // Simulated Weekly data (showing days)
+            readings.add(new Reading("Mon", 20, "Low"));
+            readings.add(new Reading("Wed", 90, "High"));     // High = Above 80
+            readings.add(new Reading("Fri", 45, "Moderate")); // Moderate = Above 40
+        } else if (currentRange.equals("Monthly")) {
+            // Simulated Monthly data (showing months)
+            readings.add(new Reading("Jan", 15, "Low"));
+            readings.add(new Reading("Feb", 50, "Moderate"));
+        } else {
+            // Default "Last Hour" (showing minutes)
+            readings.add(new Reading("13:45", 82, "High"));
+            readings.add(new Reading("14:00", 45, "Moderate"));
+            readings.add(new Reading("14:15", 30, "Low"));
+        }
+
         adapter.notifyDataSetChanged();
         updateChart();
     }
     private void loadCo2Data() {
         yAxisTitleTextView.setText("ppm");
         readings.clear();
-        readings.add(new Reading("13:45", 43, "Moderate"));
-        readings.add(new Reading("14:00", 50, "High"));
-        readings.add(new Reading("14:15", 20, "Moderate"));
+        String currentRange = timeRangeSpinner.getSelectedItem().toString();
+
+        if (currentRange.equals("Daily")) {
+            // Simulated 24h CO2
+            readings.add(new Reading("09:00", 35, "Low"));
+            readings.add(new Reading("15:00", 82, "High"));
+        } else if (currentRange.equals("Weekly")) {
+            // Simulated Weekly CO2
+            readings.add(new Reading("Tue", 42, "Moderate"));
+            readings.add(new Reading("Thu", 30, "Low"));
+        } else if (currentRange.equals("Monthly")) {
+            // Simulated Monthly CO2
+            readings.add(new Reading("Mar", 45, "Moderate"));
+            readings.add(new Reading("Apr", 88, "High"));
+        } else {
+            // Default Last Hour
+            readings.add(new Reading("13:45", 43, "Moderate"));
+            readings.add(new Reading("14:00", 50, "High"));
+            readings.add(new Reading("14:15", 20, "Moderate"));
+        }
+
         adapter.notifyDataSetChanged();
         updateChart();
     }
@@ -237,9 +277,24 @@ public class HistoryActivity extends AppCompatActivity {
     private void loadPm25Data() {
         yAxisTitleTextView.setText("µg/m³");
         readings.clear();
-        readings.add(new Reading("13:45", 12, "Low"));
-        readings.add(new Reading("14:00", 25, "Moderate"));
-        readings.add(new Reading("14:15", 40, "High"));
+        String currentRange = timeRangeSpinner.getSelectedItem().toString();
+
+        if (currentRange.equals("Daily")) {
+            readings.add(new Reading("10:00", 15, "Low"));
+            readings.add(new Reading("20:00", 45, "High"));
+        } else if (currentRange.equals("Weekly")) {
+            readings.add(new Reading("Sat", 10, "Low"));
+            readings.add(new Reading("Sun", 25, "Moderate"));
+        } else if (currentRange.equals("Monthly")) {
+            readings.add(new Reading("May", 30, "Moderate"));
+            readings.add(new Reading("Jun", 12, "Low"));
+        } else {
+            // Default Last Hour
+            readings.add(new Reading("13:45", 12, "Low"));
+            readings.add(new Reading("14:00", 25, "Moderate"));
+            readings.add(new Reading("14:15", 40, "High"));
+        }
+
         adapter.notifyDataSetChanged();
         updateChart();
     }
@@ -263,7 +318,7 @@ public class HistoryActivity extends AppCompatActivity {
         lineDataSet.setLineWidth(3f);
 
         lineDataSet.setCircleColor(getColor(R.color.safe));
-        lineDataSet.setCircleHoleColor(getColor(R.color.safe));
+        lineDataSet.setCircleHoleColor(getColor(R.color.supreme));
         lineDataSet.setCircleRadius(6f);
         lineDataSet.setCircleHoleRadius(4f);
         lineDataSet.setDrawCircleHole(true);

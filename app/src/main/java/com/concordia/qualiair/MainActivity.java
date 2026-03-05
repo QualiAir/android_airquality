@@ -2,15 +2,12 @@ package com.concordia.qualiair;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.graphics.Color;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import android.content.Intent;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-import com.ekn.gruzer.gaugelibrary.HalfGauge;
-import com.ekn.gruzer.gaugelibrary.Range;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,10 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         GaugeView gauge = findViewById(R.id.gauge_nh3);
-        gauge.setMinValue(0);
-        gauge.setMaxValue(50);
-        gauge.setValue(18);
-
+        
         // create UserPreferences
         UserPreferences prefs = new UserPreferences(this);
 
@@ -61,6 +55,6 @@ public class MainActivity extends AppCompatActivity {
             gauge.setMinValue(nh3Min);
             gauge.setMaxValue(nh3Max);
         }
-
+        gauge.setValue(18);
     }
 }
