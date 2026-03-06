@@ -38,5 +38,8 @@ public class MainActivity extends AppCompatActivity {
             gauge.setMaxValue(nh3Max);
         }
 
+        // run a function to test
+    //    prefs.runFuncTest();
     }
+
 }

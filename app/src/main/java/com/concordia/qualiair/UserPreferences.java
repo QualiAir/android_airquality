@@ -2,6 +2,7 @@ package com.concordia.qualiair;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 /** FUNC-5.1 (Design Preferences Data Model)
  * UserPreferences
@@ -41,6 +42,14 @@ import android.content.SharedPreferences;
  * 2- Retrieving NH3, CO2, and Dust thresholds from SharedPreferences
  * 3- Applying the loaded values when the app initializes
  * 4- Preserving user settings after the app restarts
+ */
+
+/** FUNC-5.5 (Test and Validate Preference Functionality)
+ * supports:
+ * 1- testing storing threshold values in SharedPreferences
+ * 2- testing overwriting existing values with new ones
+ * 3- testing loading saved preferences from storage
+ * 4- verifying that saved values persist after updates
  */
 
 
@@ -172,8 +181,8 @@ public class UserPreferences {
     // Dust Keys
     private static final String KEY_DUST_LOW_MIN = "dustLowMin";
     private static final String KEY_DUST_LOW_MAX = "dustLowMax";
-    private static final String KEY_DUST_MEDIUM_MIN= "dustMedMin";
-    private static final String KEY_DUST_MEDIUM_MAX= "dustMedMax";
+    private static final String KEY_DUST_MEDIUM_MIN = "dustMedMin";
+    private static final String KEY_DUST_MEDIUM_MAX = "dustMedMax";
     private static final String KEY_DUST_HIGH_MIN = "dustHighMin";
     private static final String KEY_DUST_HIGH_MAX = "dustHighMax";
 
@@ -185,9 +194,9 @@ public class UserPreferences {
     }
 
     //function to Save the values to SharedPreferences
-    public void saveAllPreferences(){
+    public void saveAllPreferences() {
         editor.putString(KEY_USERNAME, username);
-        editor.putString(KEY_EMAIL,email);
+        editor.putString(KEY_EMAIL, email);
 
         //NH3
         editor.putInt(KEY_NH3_HIGH_MIN, nh3HighMin);
@@ -218,10 +227,10 @@ public class UserPreferences {
 
     // function to load all values from SharedPreferences
     // supports automatically loading stored user preferences when the application starts
-    public void loadAllPreferences(){
+    public void loadAllPreferences() {
         //user info
         username = sharedPreferences.getString(KEY_USERNAME, "");
-        email= sharedPreferences.getString(KEY_EMAIL,"");
+        email = sharedPreferences.getString(KEY_EMAIL, "");
 
         //nh3
         nh3LowMin = sharedPreferences.getInt(KEY_NH3_LOW_MIN, 0);
@@ -251,30 +260,86 @@ public class UserPreferences {
 
 
     // Getters
-    public String getUsername() { return username; }
-    public String getEmail() { return email; }
+    public String getUsername() {
+        return username;
+    }
 
-    public int getNh3LowMin() { return nh3LowMin; }
-    public int getNh3LowMax() { return nh3LowMax; }
-    public int getNh3MediumMin() { return nh3MediumMin; }
-    public int getNh3MediumMax() { return nh3MediumMax; }
-    public int getNh3HighMin() { return nh3HighMin; }
-    public int getNh3HighMax() { return nh3HighMax; }
+    public String getEmail() {
+        return email;
+    }
 
-    public int getCo2LowMin() { return co2LowMin; }
-    public int getCo2LowMax() { return co2LowMax; }
-    public int getCo2MediumMin() { return co2MediumMin; }
-    public int getCo2MediumMax() { return co2MediumMax; }
-    public int getCo2HighMin() { return co2HighMin; }
-    public int getCo2HighMax() { return co2HighMax; }
+    public int getNh3LowMin() {
+        return nh3LowMin;
+    }
+
+    public int getNh3LowMax() {
+        return nh3LowMax;
+    }
+
+    public int getNh3MediumMin() {
+        return nh3MediumMin;
+    }
+
+    public int getNh3MediumMax() {
+        return nh3MediumMax;
+    }
+
+    public int getNh3HighMin() {
+        return nh3HighMin;
+    }
+
+    public int getNh3HighMax() {
+        return nh3HighMax;
+    }
+
+    public int getCo2LowMin() {
+        return co2LowMin;
+    }
+
+    public int getCo2LowMax() {
+        return co2LowMax;
+    }
+
+    public int getCo2MediumMin() {
+        return co2MediumMin;
+    }
+
+    public int getCo2MediumMax() {
+        return co2MediumMax;
+    }
+
+    public int getCo2HighMin() {
+        return co2HighMin;
+    }
+
+    public int getCo2HighMax() {
+        return co2HighMax;
+    }
 
 
-    public int getDustLowMin() { return dustLowMin; }
-    public int getDustLowMax() { return dustLowMax; }
-    public int getDustMediumMin() { return dustMediumMin; }
-    public int getDustMediumMax() { return dustMediumMax; }
-    public int getDustHighMin() { return dustHighMin; }
-    public int getDustHighMax() { return dustHighMax; }
+    public int getDustLowMin() {
+        return dustLowMin;
+    }
+
+    public int getDustLowMax() {
+        return dustLowMax;
+    }
+
+    public int getDustMediumMin() {
+        return dustMediumMin;
+    }
+
+    public int getDustMediumMax() {
+        return dustMediumMax;
+    }
+
+    public int getDustHighMin() {
+        return dustHighMin;
+    }
+
+    public int getDustHighMax() {
+        return dustHighMax;
+    }
 
 
     //Updates all NH3 threshold ranges at once
@@ -374,6 +439,7 @@ public class UserPreferences {
             return "Out of Range";
         }
     }
+
     // Validates that ranges are ordered correctly and do not overlap
     private boolean areRangesValid(int lowMin, int lowMax,
                                    int mediumMin, int mediumMax,
@@ -408,5 +474,49 @@ public class UserPreferences {
         }
 
         return true;
-        }
+    }
+
+    // helper function: printing current values (for testing)
+    public void printAllPreferences(String tag) {
+
+        Log.d("FUNC5_TEST", "----- " + tag + " -----");
+
+        Log.d("FUNC5_TEST",
+                "NH3: Low(" + nh3LowMin + "-" + nh3LowMax + ") "
+                        + "Med(" + nh3MediumMin + "-" + nh3MediumMax + ") "
+                        + "High(" + nh3HighMin + "-" + nh3HighMax + ")");
+
+        Log.d("FUNC5_TEST",
+                "CO2: Low(" + co2LowMin + "-" + co2LowMax + ") "
+                        + "Med(" + co2MediumMin + "-" + co2MediumMax + ") "
+                        + "High(" + co2HighMin + "-" + co2HighMax + ")");
+
+        Log.d("FUNC5_TEST",
+                "Dust: Low(" + dustLowMin + "-" + dustLowMax + ") "
+                        + "Med(" + dustMediumMin + "-" + dustMediumMax + ") "
+                        + "High(" + dustHighMin + "-" + dustHighMax + ")");
+    }
+
+    // FUNC-5.5: Test storing, overwriting, and loading preferences
+    public void runFuncTest() {
+
+        // A) STORE (save initial values)
+        updateNH3Ranges(0, 10, 11, 20, 21, 30);
+        updateCO2Ranges(0, 400, 401, 800, 801, 1200);
+        updateDustRanges(0, 50, 51, 100, 101, 200);
+        printAllPreferences("AFTER STORE");
+
+        // B) OVERWRITE (change values and save again)
+        updateNH3Ranges(0, 5, 6, 15, 16, 25);
+        updateCO2Ranges(0, 300, 301, 700, 701, 1000);
+        updateDustRanges(0, 40, 41, 90, 91, 150);
+        printAllPreferences("AFTER OVERWRITE");
+
+        // C) LOAD (read from SharedPreferences again)
+        loadAllPreferences();
+        printAllPreferences("AFTER LOAD");
+    }
+
+
 }
+
