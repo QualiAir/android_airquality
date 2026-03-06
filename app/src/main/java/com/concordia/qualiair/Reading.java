@@ -2,11 +2,11 @@ package com.concordia.qualiair;
 
 public class Reading {
     private String time;
-    private int value;
+    private float value;//float will allow for better precision
     private String level;
 
     //Constructor
-    public Reading(String time, int value, String level) {
+    public Reading(String time, float value, String level) {
         this.time = time;
         this.value = value;
         this.level = level;
@@ -18,7 +18,7 @@ public class Reading {
         return time;
 
     }
-    public int getValue() {
+    public float getValue() {
 
         return value;
 

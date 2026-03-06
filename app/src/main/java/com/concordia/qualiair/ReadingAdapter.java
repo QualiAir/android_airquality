@@ -57,7 +57,7 @@ public class ReadingAdapter extends RecyclerView.Adapter<ReadingAdapter.ReadingV
         public void bind(Reading reading) {
             // Put the data from the Reading object into TextView
             timeTextView.setText(reading.getTime());
-            valueTextView.setText(String.valueOf(reading.getValue()));
+            valueTextView.setText(String.format("%.1f", reading.getValue()));
             levelTextView.setText(reading.getLevel());
 
             // Chnage the color and background based omn the status

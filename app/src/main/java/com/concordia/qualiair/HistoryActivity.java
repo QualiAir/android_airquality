@@ -34,10 +34,30 @@ public class HistoryActivity extends AppCompatActivity {
     private ReadingAdapter adapter;
 
     private TextView yAxisTitleTextView;
-    private List<Reading> readings =new ArrayList<>();
+    private List<Reading> readings = new ArrayList<>();
+
+    // PM2.5: Based on EPA 2024 AQI Breakpoints
+    private static final float PM25_CAUTION = 9.0f;  // Top of "Good"
+    private static final float PM25_ALARM = 35.4f;   // Top of "Moderate"
+
+    // CO2: Based on Indoor Ventilation Standards (ASHRAE)
+    private static final float CO2_CAUTION = 1000f;  // Stuffy air
+    private static final float CO2_ALARM = 2000f;    // Significant drowsiness/headache
+
+    // NH3: Based on NIOSH Occupational Safety
+    private static final float NH3_CAUTION = 25f;    // Recommended exposure limit
+    private static final float NH3_ALARM = 35f;     // Short-term exposure limit (15 min)
+
+    private float currentCaution = NH3_CAUTION;
+    private float currentAlarm = NH3_ALARM;
+
+    private TextView buttonFilterAlarm;
+    private boolean isFilterActive = false;
+    private List<Reading> filteredReadings = new ArrayList<>();
 
     //drop down menu for daily, weekly, monthly, last hour
     private Spinner timeRangeSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +67,7 @@ public class HistoryActivity extends AppCompatActivity {
         buttonNh3 = findViewById(R.id.button_nh3);
         buttonCo2 = findViewById(R.id.button_co2);
         buttonPm25 = findViewById(R.id.button_pm25);
+        buttonFilterAlarm = findViewById(R.id.button_filter_alarm);
 
         //showing ppm on y axis
         yAxisTitleTextView = findViewById(R.id.y_axis_title);
@@ -63,7 +84,8 @@ public class HistoryActivity extends AppCompatActivity {
         //drop down time at the top right
         timeRangeSpinner = findViewById(R.id.time_range_spinner);
         setupTimeRangeSpinner();
-        adapter= new ReadingAdapter(readings);
+        filteredReadings.addAll(readings); // Initialize with all data
+        adapter = new ReadingAdapter(filteredReadings);
         recyclerView.setAdapter(adapter);
         updateButtonStates(buttonNh3);
         loadNh3Data();
@@ -81,7 +103,49 @@ public class HistoryActivity extends AppCompatActivity {
             updateButtonStates(buttonPm25);
             loadPm25Data();
         });
+
+        buttonFilterAlarm.setOnClickListener(v -> {
+            isFilterActive = !isFilterActive; // Toggle state
+
+            if (isFilterActive) {
+                buttonFilterAlarm.setText("Show All");
+                buttonFilterAlarm.setTextColor(getColor(R.color.danger));
+                buttonFilterAlarm.setBackgroundResource(R.drawable.bg_btn_selected); // Or a specific alert style
+            } else {
+                buttonFilterAlarm.setText("Show Alarms");
+                buttonFilterAlarm.setTextColor(getColor(R.color.textMuted));
+                buttonFilterAlarm.setBackgroundResource(R.drawable.bg_btn_unselected);
+            }
+            applyFilter();
+        });
     }
+
+    private void applyFilter() {
+        filteredReadings.clear();
+        TextView noAlarmsText = findViewById(R.id.text_no_alarms);
+
+        if (isFilterActive) {
+            // Only show readings that meet or exceed the alarm threshold
+            for (Reading r : readings) {
+                if (r.getValue() >= currentAlarm) {
+                    filteredReadings.add(r);
+                }
+            }
+            noAlarmsText.setVisibility(filteredReadings.isEmpty() ? View.VISIBLE : View.GONE);//show message if table empty after filetr
+        } else {
+            // Show everything
+            filteredReadings.addAll(readings);
+            noAlarmsText.setVisibility(View.GONE);//hide message on show all
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    private String getStatus(float value, float caution, float alarm) {
+        if (value >= alarm) return "High";
+        if (value >= caution) return "Moderate";
+        return "Low";
+    }
+
     private void setupTimeRangeSpinner() {
         // Create an adapter to populate the spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -133,6 +197,7 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
     }
+
     private void updateButtonStates(TextView selectedButton) {
         TextView[] allButtons = {buttonNh3, buttonCo2, buttonPm25};
         for (TextView button : allButtons) {
@@ -144,7 +209,7 @@ public class HistoryActivity extends AppCompatActivity {
         }
     }
 
-    private void setupChart(){
+    private void setupChart() {
         lineChart.setDrawGridBackground(false);
         lineChart.getDescription().setEnabled(false);
         lineChart.getLegend().setEnabled(false);
@@ -208,102 +273,152 @@ public class HistoryActivity extends AppCompatActivity {
         //green data line is on top of the alarm and caution line
         leftAxis.setDrawLimitLinesBehindData(true);
     }
-    private void selectButton(TextView button){
+
+    private void selectButton(TextView button) {
         button.setBackgroundResource(R.drawable.bg_btn_selected);
         button.setTextColor(getColor(R.color.safe));
     }
-    private void unselectedButton(TextView button){
+
+    private void unselectedButton(TextView button) {
         button.setBackgroundResource(R.drawable.bg_btn_unselected);
         button.setTextColor(getColor(R.color.textMuted));
     }
+
     //static for now just to showcase the graph
-    private void loadNh3Data(){
+    private void loadNh3Data() {
         yAxisTitleTextView.setText("ppm");
+        currentCaution = NH3_CAUTION;
+        currentAlarm = NH3_ALARM;
+
         readings.clear();        // Get the current spinner selection to decide which "fake" data to show
         String currentRange = timeRangeSpinner.getSelectedItem().toString();
 
         if (currentRange.equals("Daily")) {
             // Simulated 24h data (showing hours)
-            readings.add(new Reading("08:00", 30, "Moderate"));
-            readings.add(new Reading("12:00", 85, "High"));    // High = Above 80 (Alarm)
-            readings.add(new Reading("18:00", 25, "Low"));
+            readings.add(new Reading("08:00", 12f, getStatus(12f, NH3_CAUTION, NH3_ALARM)));
+            readings.add(new Reading("12:00", 40f, getStatus(40f, NH3_CAUTION, NH3_ALARM)));
+            readings.add(new Reading("18:00", 27f, getStatus(27f, NH3_CAUTION, NH3_ALARM)));
         } else if (currentRange.equals("Weekly")) {
             // Simulated Weekly data (showing days)
-            readings.add(new Reading("Mon", 20, "Low"));
-            readings.add(new Reading("Wed", 90, "High"));     // High = Above 80
-            readings.add(new Reading("Fri", 45, "Moderate")); // Moderate = Above 40
+            readings.add(new Reading("Mon", 37f, getStatus(37f, NH3_CAUTION, NH3_ALARM)));
+            readings.add(new Reading("Wed", 20f, getStatus(20f, NH3_CAUTION, NH3_ALARM)));
+            readings.add(new Reading("Fri", 30f, getStatus(30f, NH3_CAUTION, NH3_ALARM)));
         } else if (currentRange.equals("Monthly")) {
             // Simulated Monthly data (showing months)
-            readings.add(new Reading("Jan", 15, "Low"));
-            readings.add(new Reading("Feb", 50, "Moderate"));
+            readings.add(new Reading("Jan", 28f, getStatus(28f, NH3_CAUTION, NH3_ALARM)));
+            readings.add(new Reading("Feb", 15f, getStatus(15f, NH3_CAUTION, NH3_ALARM)));
         } else {
             // Default "Last Hour" (showing minutes)
-            readings.add(new Reading("13:45", 82, "High"));
-            readings.add(new Reading("14:00", 45, "Moderate"));
-            readings.add(new Reading("14:15", 30, "Low"));
+            readings.add(new Reading("13:45", 28f, getStatus(28f, NH3_CAUTION, NH3_ALARM)));
+            readings.add(new Reading("14:00", 36f, getStatus(36f, NH3_CAUTION, NH3_ALARM)));
+            readings.add(new Reading("14:15", 15f, getStatus(15f, NH3_CAUTION, NH3_ALARM)));
         }
 
-        adapter.notifyDataSetChanged();
+        applyFilter(); // checks table if alarm only shows
         updateChart();
     }
+
     private void loadCo2Data() {
         yAxisTitleTextView.setText("ppm");
+        currentCaution = CO2_CAUTION;
+        currentAlarm = CO2_ALARM;
+
         readings.clear();
         String currentRange = timeRangeSpinner.getSelectedItem().toString();
 
         if (currentRange.equals("Daily")) {
             // Simulated 24h CO2
-            readings.add(new Reading("09:00", 35, "Low"));
-            readings.add(new Reading("15:00", 82, "High"));
+            readings.add(new Reading("09:00", 1800f, getStatus(1800f, CO2_CAUTION, CO2_ALARM)));
+            readings.add(new Reading("10:00", 900f, getStatus(900f, CO2_CAUTION, CO2_ALARM)));
+            readings.add(new Reading("14:00", 2200f, getStatus(2200f, CO2_CAUTION, CO2_ALARM)));
         } else if (currentRange.equals("Weekly")) {
             // Simulated Weekly CO2
-            readings.add(new Reading("Tue", 42, "Moderate"));
-            readings.add(new Reading("Thu", 30, "Low"));
+            readings.add(new Reading("Tue", 2800f, getStatus(2800f, CO2_CAUTION, CO2_ALARM)));
+            readings.add(new Reading("Wed", 1700f, getStatus(1700f, CO2_CAUTION, CO2_ALARM)));
+            readings.add(new Reading("Thu", 750f, getStatus(750f, CO2_CAUTION, CO2_ALARM)));
         } else if (currentRange.equals("Monthly")) {
             // Simulated Monthly CO2
-            readings.add(new Reading("Mar", 45, "Moderate"));
-            readings.add(new Reading("Apr", 88, "High"));
+            readings.add(new Reading("Feb", 500f, getStatus(500f, CO2_CAUTION, CO2_ALARM)));
+            readings.add(new Reading("Mar", 1500f, getStatus(1500f, CO2_CAUTION, CO2_ALARM)));
         } else {
             // Default Last Hour
-            readings.add(new Reading("13:45", 43, "Moderate"));
-            readings.add(new Reading("14:00", 50, "High"));
-            readings.add(new Reading("14:15", 20, "Moderate"));
+            readings.add(new Reading("13:45", 800f, getStatus(800f, CO2_CAUTION, CO2_ALARM)));
+            readings.add(new Reading("14:00", 1200f, getStatus(1200f, CO2_CAUTION, CO2_ALARM)));
+            readings.add(new Reading("14:15", 2100f, getStatus(2100f, CO2_CAUTION, CO2_ALARM)));
         }
 
-        adapter.notifyDataSetChanged();
+        applyFilter();
         updateChart();
     }
 
     private void loadPm25Data() {
         yAxisTitleTextView.setText("µg/m³");
+        currentCaution = PM25_CAUTION;
+        currentAlarm = PM25_ALARM;
+
         readings.clear();
         String currentRange = timeRangeSpinner.getSelectedItem().toString();
 
         if (currentRange.equals("Daily")) {
-            readings.add(new Reading("10:00", 15, "Low"));
-            readings.add(new Reading("20:00", 45, "High"));
+            readings.add(new Reading("13:00", 8f, getStatus(8f, PM25_CAUTION, PM25_ALARM)));
+            readings.add(new Reading("14:00", 15f, getStatus(15f, PM25_CAUTION, PM25_ALARM)));
+            readings.add(new Reading("15:00", 42f, getStatus(42f, PM25_CAUTION, PM25_ALARM)));
         } else if (currentRange.equals("Weekly")) {
-            readings.add(new Reading("Sat", 10, "Low"));
-            readings.add(new Reading("Sun", 25, "Moderate"));
+            readings.add(new Reading("Sat", 18f, getStatus(18f, PM25_CAUTION, PM25_ALARM)));
+            readings.add(new Reading("Sun", 5f, getStatus(5f, PM25_CAUTION, PM25_ALARM)));
+            readings.add(new Reading("Mon", 38f, getStatus(38f, PM25_CAUTION, PM25_ALARM)));
         } else if (currentRange.equals("Monthly")) {
-            readings.add(new Reading("May", 30, "Moderate"));
-            readings.add(new Reading("Jun", 12, "Low"));
+            readings.add(new Reading("Jun", 15f, getStatus(15f, PM25_CAUTION, PM25_ALARM)));
+            readings.add(new Reading("Jul", 4f, getStatus(4f, PM25_CAUTION, PM25_ALARM)));
         } else {
             // Default Last Hour
-            readings.add(new Reading("13:45", 12, "Low"));
-            readings.add(new Reading("14:00", 25, "Moderate"));
-            readings.add(new Reading("14:15", 40, "High"));
+            readings.add(new Reading("13:45", 8f, getStatus(8f, PM25_CAUTION, PM25_ALARM)));
+            readings.add(new Reading("14:00", 15f, getStatus(15f, PM25_CAUTION, PM25_ALARM)));
+            readings.add(new Reading("14:15", 40f, getStatus(40f, PM25_CAUTION, PM25_ALARM)));
         }
 
-        adapter.notifyDataSetChanged();
+        applyFilter();
         updateChart();
     }
-    private void updateChart(){
+
+    private void updateChart() {
         if (readings.isEmpty()) {
             lineChart.clear();
             lineChart.invalidate();
             return;
         }
+
+        //for dynamic scaling and limit lines
+        YAxis leftAxis = lineChart.getAxisLeft();
+        leftAxis.removeAllLimitLines();
+
+        //Will set max value 20% above the highest reading
+        float maxValue = 0;
+        for (Reading r : readings) if (r.getValue() > maxValue) maxValue = r.getValue();
+        leftAxis.setAxisMaximum(Math.max(currentAlarm, maxValue) * 1.2f);
+
+        //create alarm limit line
+        LimitLine alarmLimit = new LimitLine(currentAlarm, "Alarm");
+        alarmLimit.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+        alarmLimit.setTextSize(10f);
+        alarmLimit.setTextColor(getColor(R.color.danger)); // Red
+        alarmLimit.setLineWidth(2f);
+        alarmLimit.enableDashedLine(20f, 10f, 0f);
+        alarmLimit.setLineColor(getColor(R.color.danger));
+        leftAxis.addLimitLine(alarmLimit);
+
+        //create caution limit line
+        LimitLine cautionLimit = new LimitLine(currentCaution, "Caution");
+        cautionLimit.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+        cautionLimit.setTextSize(10f);
+        cautionLimit.setTextColor(getColor(R.color.warning)); // Yellow
+        cautionLimit.setLineWidth(2f);
+        cautionLimit.enableDashedLine(20f, 10f, 0f);
+        cautionLimit.setLineColor(getColor(R.color.warning));
+        leftAxis.addLimitLine(cautionLimit);
+
+        leftAxis.setDrawLimitLinesBehindData(true);//limit line stays behind data pointa
+
         lineChart.getXAxis().setValueFormatter(new TimeAxisValueFormatter(readings));
         ArrayList<Entry> chartEntries = new ArrayList<>();
         for (int i = 0; i < readings.size(); i++) {
@@ -313,16 +428,14 @@ public class HistoryActivity extends AppCompatActivity {
 
         LineDataSet lineDataSet = new LineDataSet(chartEntries, "Readings");
 
-
+        //readings line settings
         lineDataSet.setColor(getColor(R.color.safe));
         lineDataSet.setLineWidth(3f);
-
         lineDataSet.setCircleColor(getColor(R.color.safe));
         lineDataSet.setCircleHoleColor(getColor(R.color.supreme));
         lineDataSet.setCircleRadius(6f);
         lineDataSet.setCircleHoleRadius(4f);
         lineDataSet.setDrawCircleHole(true);
-
         lineDataSet.setDrawValues(false);
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
@@ -334,6 +447,7 @@ public class HistoryActivity extends AppCompatActivity {
         lineChart.animateX(500); // Add a simple animation
         lineChart.invalidate();  // Refresh the chart
     }
+
     private static class TimeAxisValueFormatter extends com.github.mikephil.charting.formatter.ValueFormatter {
         private final List<Reading> readings;
 
