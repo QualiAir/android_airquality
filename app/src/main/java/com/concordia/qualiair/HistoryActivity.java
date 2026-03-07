@@ -114,7 +114,6 @@ public class HistoryActivity extends AppCompatActivity {
         });
         fetchDataFromServer("ammonia");
         updateButtonStates(buttonNh3);
-    }
     //create a function that will get the gas , and the range
 
         buttonFilterAlarm.setOnClickListener(v -> {
@@ -314,7 +313,7 @@ public class HistoryActivity extends AppCompatActivity {
             default:
                 cautionValue = 25f; // TLV-TWA
                 alarmValue = 35f;   // TLV-STEL
-                maxView = 60f;
+                maxView = 38f;
                 break;
         }
 
@@ -391,13 +390,13 @@ public class HistoryActivity extends AppCompatActivity {
     lineDataSet.setDrawCircleHole(true);
     lineDataSet.setDrawValues(false); // Keeps the UI clean
 
-    //LineData lineData = new LineData(lineDataSet);
+    LineData lineData = new LineData(lineDataSet);
     //lineChart.setData(lineData);
 
     //lineChart.animateX(500); // 0.5s animation
     //lineChart.invalidate();  // Refresh the chart
 //}
-        LineData lineData = new LineData(dataSets);
+        //LineData lineData = new LineData(dataSets);
         lineChart.setData(lineData);
 
         lineChart.animateX(500); // Add a simple animation
