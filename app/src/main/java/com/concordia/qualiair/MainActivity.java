@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         // create UserPreferences
         UserPreferences prefs = new UserPreferences(this);
 
-        // load saved values -
+        // load saved values
         prefs.loadAllPreferences();
 
         // get NH3 thresholds
@@ -64,4 +64,5 @@ public class MainActivity extends AppCompatActivity {
         }
         gauge.setValue(18);
     }
+
 }
