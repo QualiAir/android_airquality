@@ -106,7 +106,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="CO&#8322;"
+                    android:text="H₂S"
                     android:gravity="center"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"

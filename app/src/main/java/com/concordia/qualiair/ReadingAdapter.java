@@ -13,9 +13,9 @@ public class ReadingAdapter extends RecyclerView.Adapter<ReadingAdapter.ReadingV
 
     private List<Reading> readingList;
 
-    public ReadingAdapter(List<Reading> readingList) {
+    public ReadingAdapter(List<Reading> readings) {
 
-        this.readingList = readingList;
+        this.readingList = readings;
 
     }
 
@@ -36,7 +36,13 @@ public class ReadingAdapter extends RecyclerView.Adapter<ReadingAdapter.ReadingV
 
     @Override
     public int getItemCount() {
+
         return readingList.size();
+
+    }
+    public void updateData(List<Reading> newList) {
+        this.readingList = newList;
+        notifyDataSetChanged();
     }
 
     //The ViewHolder Class holds the views for a single row in the list
@@ -47,7 +53,7 @@ public class ReadingAdapter extends RecyclerView.Adapter<ReadingAdapter.ReadingV
 
         public ReadingViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Connects the variable to the TextViews in the item)reading.xml
+            // Connects the variable to the TextViews in the item) reading.xml
             timeTextView = itemView.findViewById(R.id.timeTextView);
             valueTextView = itemView.findViewById(R.id.valueTextView);
             levelTextView = itemView.findViewById(R.id.levelTextView);
@@ -57,10 +63,11 @@ public class ReadingAdapter extends RecyclerView.Adapter<ReadingAdapter.ReadingV
         public void bind(Reading reading) {
             // Put the data from the Reading object into TextView
             timeTextView.setText(reading.getTime());
-            valueTextView.setText(String.valueOf(reading.getValue()));
+            //valueTextView.setText(String.valueOf(reading.getValue()));
+            valueTextView.setText(reading.getFormattedValue());
             levelTextView.setText(reading.getLevel());
 
-            // Chnage the color and background based omn the status
+            // Change the color and background based on the status
             Context context = itemView.getContext();
             switch (reading.getLevel()) {
                 case "High":
