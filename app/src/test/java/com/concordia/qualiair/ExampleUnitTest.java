@@ -14,4 +14,16 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
+
+    //Test that the UserPreferences class exists
+    @Test
+    public void userPreferences_classExists() {
+        assertNotNull(UserPreferences.class);
+    }
+
+    //test that the UserPreferences class name is correct
+    @Test
+    public void userPreferences_classNameCorrect() {
+        assertEquals("UserPreferences", UserPreferences.class.getSimpleName());
+    }
 }
