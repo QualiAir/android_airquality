@@ -98,7 +98,6 @@ public class GaugeView extends View {
         float nx = cx + (float) Math.cos(angle) * needleLength;
         float ny = cy + (float) Math.sin(angle) * needleLength;
 
-        // --- FIX STARTS HERE ---
         // 1. Get the correct color from the theme
         final TypedValue value = new TypedValue();
         getContext().getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnSurface, value, true);
