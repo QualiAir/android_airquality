@@ -39,8 +39,29 @@ public class HistoryActivity extends AppCompatActivity {
     private List<Reading> readings =new ArrayList<>();
     private ApiService apiService;
     private final String DEVICE_ID="sensor1";
+    //private List<Reading> readings = new ArrayList<>();
+
+    // PM2.5: Based on EPA 2024 AQI Breakpoints
+    private static final float PM25_CAUTION = 9.0f;  // Top of "Good"
+    private static final float PM25_ALARM = 35.4f;   // Top of "Moderate"
+
+    // CO2: Based on Indoor Ventilation Standards (ASHRAE)
+    private static final float H2S_CAUTION = 1f;  // Stuffy air
+    private static final float H2S_ALARM = 5f;    // Significant drowsiness/headache
+
+    // NH3: Based on NIOSH Occupational Safety
+    private static final float NH3_CAUTION = 25f;    // Recommended exposure limit
+    private static final float NH3_ALARM = 35f;     // Short-term exposure limit (15 min)
+
+    private float currentCaution = NH3_CAUTION;
+    private float currentAlarm = NH3_ALARM;
+
+    private TextView buttonFilterAlarm;
+    private boolean isFilterActive = false;
+    private List<Reading> filteredReadings = new ArrayList<>();
 
     private Spinner timeRangeSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +77,7 @@ public class HistoryActivity extends AppCompatActivity {
         buttonNh3 = findViewById(R.id.button_nh3);
         buttonCo2 = findViewById(R.id.button_co2);
         buttonPm25 = findViewById(R.id.button_pm25);
+        buttonFilterAlarm = findViewById(R.id.button_filter_alarm);
 
         //showing ppm on y axis
         yAxisTitleTextView = findViewById(R.id.y_axis_title);
@@ -72,7 +94,8 @@ public class HistoryActivity extends AppCompatActivity {
         //drop down time at the top right
         timeRangeSpinner = findViewById(R.id.time_range_spinner);
         setupTimeRangeSpinner();
-        adapter= new ReadingAdapter(readings);
+        filteredReadings.addAll(readings); // Initialize with all data
+        adapter = new ReadingAdapter(filteredReadings);
         recyclerView.setAdapter(adapter);
 
         //setOnClickListerner for each buton
@@ -93,6 +116,49 @@ public class HistoryActivity extends AppCompatActivity {
         updateButtonStates(buttonNh3);
     }
     //create a function that will get the gas , and the range
+
+        buttonFilterAlarm.setOnClickListener(v -> {
+            isFilterActive = !isFilterActive; // Toggle state
+
+            if (isFilterActive) {
+                buttonFilterAlarm.setText("Show All");
+                buttonFilterAlarm.setTextColor(getColor(R.color.danger));
+                buttonFilterAlarm.setBackgroundResource(R.drawable.bg_btn_selected); // Or a specific alert style
+            } else {
+                buttonFilterAlarm.setText("Show Alarms");
+                buttonFilterAlarm.setTextColor(getColor(R.color.textMuted));
+                buttonFilterAlarm.setBackgroundResource(R.drawable.bg_btn_unselected);
+            }
+            applyFilter();
+        });
+    }
+
+    private void applyFilter() {
+        filteredReadings.clear();
+        TextView noAlarmsText = findViewById(R.id.text_no_alarms);
+
+        if (isFilterActive) {
+            // Only show readings that meet or exceed the alarm threshold
+            for (Reading r : readings) {
+                if (r.getValue() >= currentAlarm) {
+                    filteredReadings.add(r);
+                }
+            }
+            noAlarmsText.setVisibility(filteredReadings.isEmpty() ? View.VISIBLE : View.GONE);//show message if table empty after filetr
+        } else {
+            // Show everything
+            filteredReadings.addAll(readings);
+            noAlarmsText.setVisibility(View.GONE);//hide message on show all
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    private String getStatus(float value, float caution, float alarm) {
+        if (value >= alarm) return "High";
+        if (value >= caution) return "Moderate";
+        return "Low";
+    }
+
     private void setupTimeRangeSpinner() {
         // Create an adapter to populate the spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -192,6 +258,12 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void setupChart(String sensorName){
+        lineChart.setDrawGridBackground(false);
+        lineChart.getDescription().setEnabled(false);
+        lineChart.getLegend().setEnabled(false);
+        lineChart.setTouchEnabled(true);
+        lineChart.setDragEnabled(true);
+        lineChart.setScaleEnabled(true);
 
         if (lineChart == null) return;
 
@@ -269,11 +341,13 @@ public class HistoryActivity extends AppCompatActivity {
 
         lineChart.invalidate(); // Refresh view
     }
-    private void selectButton(TextView button){
+
+    private void selectButton(TextView button) {
         button.setBackgroundResource(R.drawable.bg_btn_selected);
         button.setTextColor(getColor(R.color.safe));
     }
-    private void unselectedButton(TextView button){
+
+    private void unselectedButton(TextView button) {
         button.setBackgroundResource(R.drawable.bg_btn_unselected);
         button.setTextColor(getColor(R.color.textMuted));
     }
@@ -317,12 +391,19 @@ public class HistoryActivity extends AppCompatActivity {
     lineDataSet.setDrawCircleHole(true);
     lineDataSet.setDrawValues(false); // Keeps the UI clean
 
-    LineData lineData = new LineData(lineDataSet);
-    lineChart.setData(lineData);
+    //LineData lineData = new LineData(lineDataSet);
+    //lineChart.setData(lineData);
 
-    lineChart.animateX(500); // 0.5s animation
-    lineChart.invalidate();  // Refresh the chart
-}
+    //lineChart.animateX(500); // 0.5s animation
+    //lineChart.invalidate();  // Refresh the chart
+//}
+        LineData lineData = new LineData(dataSets);
+        lineChart.setData(lineData);
+
+        lineChart.animateX(500); // Add a simple animation
+        lineChart.invalidate();  // Refresh the chart
+    }
+
     private static class TimeAxisValueFormatter extends com.github.mikephil.charting.formatter.ValueFormatter {
         private final List<Reading> readings;
 

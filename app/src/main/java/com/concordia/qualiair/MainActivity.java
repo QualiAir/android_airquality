@@ -28,6 +28,13 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
                     startActivity(intent);
                     return true;
+                } else if (itemId == R.id.nav_faq) {
+                    Intent intent = new Intent(MainActivity.this, FAQActivity.class);
+                    startActivity(intent);
+                    return true;
+                } else if (itemId == R.id.nav_profile) { // Check your menu XML for the exact ID
+                    startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                    return true;
                 }
                 //here we will add other navigation to other activity pages with else if
                 return false;
@@ -40,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         // create UserPreferences
         UserPreferences prefs = new UserPreferences(this);
 
-        // load saved values
+        // load saved values -
         prefs.loadAllPreferences();
 
         // get NH3 thresholds
