@@ -2,9 +2,9 @@
 
 #### Collaborators:
 •	Matthew Lunt, 40137949       Username: Matthew-Lunt   Tutorial Section: EC C <br />
-•	Mari Kajita, 40245510        Username: Marilakkuma    Tutorial Section: EC C <br />
+•	Mari Kajita, 40245510        Username: Marilakkuma    Tutorial Section: EC  <br />
 •	Muthui Mureithi, 40246021    Username: Montoy22       Tutorial Section: EC B <br />
-•	Daniel Diego Garcia, 40188639 <br />
+•	Daniel Diego Garcia, 40188639 Usernane: JesseDG        Tutorial SBection EC B<br />
 •	Janet Keswani, 40246183      Username: janetkeswani    Tutorial Section: EC A <br />
 
 ## Description
@@ -16,7 +16,7 @@
 ## Core Features
 •	
 
-## Langauges
+## Languages
 •	
 
 ## Techniques
