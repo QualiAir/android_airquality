@@ -35,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
                 } else if (itemId == R.id.nav_profile) { // Check your menu XML for the exact ID
                     startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                     return true;
+                } else if (itemId == R.id.nav_devices) {
+                    startActivity(new Intent(MainActivity.this, DeviceActivity2.class));
+                    return true;
                 }
                 //here we will add other navigation to other activity pages with else if
                 return false;
