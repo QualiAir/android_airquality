@@ -45,7 +45,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
-    implementation("com.github.espressif:esp-idf-provisioning-android:lib-2.1.0")
+    implementation(files("libs/esp-idf-provisioning-android-lib-2.1.0.aar"))
+    //implementation("com.github.espressif:esp-idf-provisioning-android:lib-2.1.0")
     implementation("org.greenrobot:eventbus:3.3.1")
 }

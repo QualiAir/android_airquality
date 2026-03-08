@@ -16,7 +16,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("file:///C:/Users/Mari/.gradle/caches/modules-2/files-2.1") }
         maven { url = uri("https://jitpack.io") }
+
     }
 }
 
