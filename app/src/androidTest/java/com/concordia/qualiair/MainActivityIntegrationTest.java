@@ -32,10 +32,26 @@ public class MainActivityIntegrationTest {
 
     @Test
     public void testNavigationToHistory() {
-        // 1. Click the History icon in the navigation bar
+        // Click the History icon in the navigation bar
         onView(withId(R.id.nav_history)).perform(click());
 
-        // 2. Verify that the History screen (with the chart) actually opens
+
         onView(withId(R.id.line_chart)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testNavigationToFaq() {
+        // Click the History icon in the navigation bar
+        onView(withId(R.id.nav_faq)).perform(click());
+
+
+        onView(withId(R.id.rvFaq)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testNavigationToProfile() {
+        // Click the Profile icon in the navigation bar
+        onView(withId(R.id.nav_profile)).perform(click());
+
+
+        onView(withId(R.id.lblName)).check(matches(isDisplayed()));
     }
 }
