@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,16 @@ public class HistoryActivity extends AppCompatActivity {
         buttonPm25 = findViewById(R.id.button_pm25);
         buttonFilterAlarm = findViewById(R.id.button_filter_alarm);
 
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+
+        toolbar.setNavigationOnClickListener(v -> {
+            finish();
+        });
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("History");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         //showing ppm on y axis
         yAxisTitleTextView = findViewById(R.id.y_axis_title);
 

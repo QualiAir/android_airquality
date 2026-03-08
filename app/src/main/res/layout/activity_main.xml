@@ -18,6 +18,15 @@
         android:layout_gravity="center_horizontal"
         android:paddingTop="24dp"
         android:paddingBottom="16dp"/>
+    <TextView
+        android:id="@+id/tv_room_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Room"
+        android:textSize="14sp"
+        android:textColor="@color/textMuted"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="16dp"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
