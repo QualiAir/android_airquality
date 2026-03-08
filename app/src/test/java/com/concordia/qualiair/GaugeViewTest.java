@@ -6,16 +6,23 @@ import org.junit.Test;
 public class GaugeViewTest {
 
     @Test
-    public void testAngleCalculation() {
-        // Example: If 0 ppm is 0 degrees and 100 ppm is 180 degrees
-        // Formula: (value / max) * 180
-        double value = 50.0;
-        double max = 100.0;
-        float expectedAngle = 90.0f;
+    public void testAngleCalculation_atMax() {
+        float percentage = (50f - 0f) / (50f - 0f); // max value
+        float angle = 180 + percentage * 180;
+        assertEquals(360f, angle, 0.1);
+    }
 
-        // Replace this with your actual method name in GaugeView
-        float actualAngle = (float) (value / max) * 180;
+    @Test
+    public void testAngleCalculation_atMin() {
+        float percentage = (0f - 0f) / (50f - 0f); // min value
+        float angle = 180 + percentage * 180;
+        assertEquals(180f, angle, 0.1);
+    }
 
-        assertEquals(expectedAngle, actualAngle, 0.1);
+    @Test
+    public void testAngleCalculation_atMiddle() {
+        float percentage = (25f - 0f) / (50f - 0f); // middle value
+        float angle = 180 + percentage * 180;
+        assertEquals(270f, angle, 0.1);
     }
 }

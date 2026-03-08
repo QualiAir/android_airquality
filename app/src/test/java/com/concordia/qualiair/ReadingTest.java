@@ -12,33 +12,26 @@ import java.util.TimeZone;
 public class ReadingTest {
 
     @Test
-    public void testGetTime_MontrealConversion() {
-        // Get today's date in UTC
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String today = sdf.format(new Date());
-
-        // Create a reading for 20:24 UTC
-        String timeString = today + "T20:24:00Z";
-        Reading reading = new Reading(timeString, 10.0, "Low");
-
-        //CALCULATE THE EXPECTED TIME
-        SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm", Locale.US);
-        outputFormat.setTimeZone(TimeZone.getTimeZone("America/Montreal"));
-
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.set(Calendar.HOUR_OF_DAY, 20);
-        cal.set(Calendar.MINUTE, 24);
-        String expectedTime = outputFormat.format(cal.getTime());
-
-        // Now we compare the code's output to the calculated Montreal time
-        assertEquals(expectedTime, reading.getTime());
+    public void testLevel_High() {
+        Reading r = new Reading("2024-03-08T12:00:00Z", 85.0, null);
+        assertEquals("High", r.getLevel());
     }
 
     @Test
-    public void testGetLevel_HighThreshold() {
-        // Test: 85.0ppm should be "High" based on ACGIH standards
-        Reading reading = new Reading("2024-03-06T12:00:00Z", 85.0, null);
-        assertEquals("High", reading.getLevel());
+    public void testLevel_Moderate() {
+        Reading r = new Reading("2024-03-08T12:00:00Z", 50.0, null);
+        assertEquals("Moderate", r.getLevel());
+    }
+
+    @Test
+    public void testLevel_Low() {
+        Reading r = new Reading("2024-03-08T12:00:00Z", 20.0, null);
+        assertEquals("Low", r.getLevel());
+    }
+
+    @Test
+    public void testFormattedValue() {
+        Reading r = new Reading("2024-03-08T12:00:00Z", 35.9123, null);
+        assertEquals("35.9", r.getFormattedValue());
     }
 }

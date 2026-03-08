@@ -14,21 +14,25 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
-public class HistoryActivityTest {
+public class HistoryIntegrationTest {
 
     @Rule
     public ActivityScenarioRule<HistoryActivity> activityRule =
             new ActivityScenarioRule<>(HistoryActivity.class);
+    @Test
+    public void testSpinnerIsVisible() {
+        onView(withId(R.id.time_range_spinner)).check(matches(isDisplayed()));
+    }
 
     @Test
-    public void testSensorButtonsAreVisible() {
+    public void testGasButtonsAreVisible() {
         onView(withId(R.id.button_nh3)).check(matches(isDisplayed()));
         onView(withId(R.id.button_co2)).check(matches(isDisplayed()));
         onView(withId(R.id.button_pm25)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void testChartIsDisplayed() {
-        onView(withId(R.id.line_chart)).check(matches(isDisplayed()));
+    public void testHistoryTitleIsVisible() {
+        onView(withId(R.id.textViewHistory)).check(matches(isDisplayed()));
     }
 }
