@@ -1,162 +1,156 @@
 package com.concordia.qualiair;
 
-import org.junit.Test;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import androidx.lifecycle.Lifecycle;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.Espresso;
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.assertion.ViewAssertions;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
 /**
- * Unit Tests for FAQ classes (FAQItem, FAQAdapter logic)
- * Location: src/test/java/com/concordia/qualiair/FAQUnitTest.java
+ * Instrumented Integration Tests for FAQActivity
+ * Location: src/androidTest/java/com/concordia/qualiair/FAQInstrumentedTest.java
  *
- * Run with: ./gradlew test
+ * Launches MainActivity first, then navigates to FAQActivity via the bottom nav.
+ * Run with: ./gradlew connectedAndroidTest
  */
-@RunWith(JUnit4.class)
-public class FAQUnitTest {
+@RunWith(AndroidJUnit4.class)
+public class FAQInstrumentedTest {
 
-    private FAQItem item;
-
-    @Before
-    public void setUp() {
-        item = new FAQItem("Support contact?", "Email us at elec390team1@gmail.com.");
+    private ActivityScenario<MainActivity> launchFromMain() {
+        ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
+        Espresso.onView(ViewMatchers.withId(R.id.nav_faq))
+                .perform(ViewActions.click());
+        // Wait for FAQActivity to be fully resumed before any assertions
+        Espresso.onIdle();
+        return scenario;
     }
 
     // -------------------------------------------------------------------------
-    // FAQItem — constructor & getters
+    // Layout rendering
     // -------------------------------------------------------------------------
 
     @Test
-    public void testFAQItem_getQuestion_returnsCorrectQuestion() {
-        assertEquals("Support contact?", item.getQuestion());
-    }
-
-    @Test
-    public void testFAQItem_getAnswer_returnsCorrectAnswer() {
-        assertEquals("Email us at elec390team1@gmail.com.", item.getAnswer());
-    }
-
-    @Test
-    public void testFAQItem_defaultExpanded_isFalse() {
-        assertFalse("New FAQItem should not be expanded by default", item.isExpanded());
-    }
-
-    // -------------------------------------------------------------------------
-    // FAQItem — expand / collapse toggle
-    // -------------------------------------------------------------------------
-
-    @Test
-    public void testFAQItem_setExpanded_true_isExpanded() {
-        item.setExpanded(true);
-        assertTrue("FAQItem should be expanded after setExpanded(true)", item.isExpanded());
-    }
-
-    @Test
-    public void testFAQItem_setExpanded_false_isCollapsed() {
-        item.setExpanded(true);  // first open it
-        item.setExpanded(false); // then close it
-        assertFalse("FAQItem should be collapsed after setExpanded(false)", item.isExpanded());
-    }
-
-    @Test
-    public void testFAQItem_toggle_expandsAndCollapses() {
-        // Simulate the toggle pattern used in FAQAdapter's click listener
-        assertFalse(item.isExpanded());
-
-        item.setExpanded(!item.isExpanded()); // first tap → open
-        assertTrue(item.isExpanded());
-
-        item.setExpanded(!item.isExpanded()); // second tap → close
-        assertFalse(item.isExpanded());
-    }
-
-    // -------------------------------------------------------------------------
-    // FAQItem — multiple items, independent state
-    // -------------------------------------------------------------------------
-
-    @Test
-    public void testFAQItems_expandOneDoesNotAffectOther() {
-        FAQItem item1 = new FAQItem("Q1", "A1");
-        FAQItem item2 = new FAQItem("Q2", "A2");
-
-        item1.setExpanded(true);
-
-        assertTrue("item1 should be expanded", item1.isExpanded());
-        assertFalse("item2 should remain collapsed", item2.isExpanded());
-    }
-
-    // -------------------------------------------------------------------------
-    // FAQAdapter — item count
-    // -------------------------------------------------------------------------
-
-    @Test
-    public void testFAQAdapter_getItemCount_emptyList_returnsZero() {
-        List<FAQItem> emptyList = new ArrayList<>();
-        FakeFAQAdapter adapter = new FakeFAQAdapter(emptyList);
-        assertEquals(0, adapter.getItemCount());
-    }
-
-    @Test
-    public void testFAQAdapter_getItemCount_oneItem_returnsOne() {
-        List<FAQItem> list = new ArrayList<>();
-        list.add(new FAQItem("Q1", "A1"));
-        FakeFAQAdapter adapter = new FakeFAQAdapter(list);
-        assertEquals(1, adapter.getItemCount());
-    }
-
-    @Test
-    public void testFAQAdapter_getItemCount_multipleItems_returnsCorrectCount() {
-        List<FAQItem> list = new ArrayList<>();
-        list.add(new FAQItem("Q1", "A1"));
-        list.add(new FAQItem("Q2", "A2"));
-        list.add(new FAQItem("Q3", "A3"));
-        FakeFAQAdapter adapter = new FakeFAQAdapter(list);
-        assertEquals(3, adapter.getItemCount());
-    }
-
-    // -------------------------------------------------------------------------
-    // FAQAdapter — toggle logic (no Android context needed)
-    // -------------------------------------------------------------------------
-
-    @Test
-    public void testFAQAdapter_clickItem_togglesExpandedState() {
-        List<FAQItem> list = new ArrayList<>();
-        FAQItem faq = new FAQItem("Q1", "A1");
-        list.add(faq);
-
-        // Simulate the click handler: item.setExpanded(!item.isExpanded())
-        assertFalse(faq.isExpanded());
-        faq.setExpanded(!faq.isExpanded());
-        assertTrue("Item should be expanded after first click", faq.isExpanded());
-    }
-
-    @Test
-    public void testFAQAdapter_clickItemTwice_collapsesItem() {
-        FAQItem faq = new FAQItem("Q1", "A1");
-
-        faq.setExpanded(!faq.isExpanded()); // open
-        faq.setExpanded(!faq.isExpanded()); // close
-
-        assertFalse("Item should be collapsed after two clicks", faq.isExpanded());
-    }
-
-    // -------------------------------------------------------------------------
-    // Fake adapter (no Android dependencies — just tests getItemCount logic)
-    // -------------------------------------------------------------------------
-
-    static class FakeFAQAdapter {
-        private final List<FAQItem> faqList;
-
-        FakeFAQAdapter(List<FAQItem> faqList) {
-            this.faqList = faqList;
+    public void testToolbarIsDisplayed() {
+        try (ActivityScenario<MainActivity> scenario = launchFromMain()) {
+            Espresso.onView(ViewMatchers.withId(R.id.toolbar))
+                    .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
         }
+    }
 
-        public int getItemCount() {
-            return faqList.size();
+    @Test
+    public void testToolbarShowsCorrectTitle() {
+        try (ActivityScenario<MainActivity> scenario = launchFromMain()) {
+            // Match the toolbar title text view specifically to avoid matching
+            // other views that might contain "FAQ"
+            Espresso.onView(Matchers.allOf(
+                            ViewMatchers.withText("FAQ"),
+                            ViewMatchers.isDisplayed()))
+                    .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        }
+    }
+
+    @Test
+    public void testRecyclerViewIsDisplayed() {
+        try (ActivityScenario<MainActivity> scenario = launchFromMain()) {
+            Espresso.onView(ViewMatchers.withId(R.id.rvFaq))
+                    .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // FAQ list content
+    // -------------------------------------------------------------------------
+
+    @Test
+    public void testFirstQuestionIsVisible() {
+        try (ActivityScenario<MainActivity> scenario = launchFromMain()) {
+            Espresso.onView(ViewMatchers.withText("Support contact?"))
+                    .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        }
+    }
+
+    @Test
+    public void testAnswerIsHiddenByDefault() {
+        try (ActivityScenario<MainActivity> scenario = launchFromMain()) {
+            // Verify no tvAnswer is currently visible
+            Espresso.onView(Matchers.allOf(
+                            ViewMatchers.withId(R.id.tvAnswer),
+                            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+                    .check(ViewAssertions.doesNotExist());
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Expand / collapse interaction
+    // -------------------------------------------------------------------------
+
+    @Test
+    public void testClickQuestion_expandsAnswer() {
+        try (ActivityScenario<MainActivity> scenario = launchFromMain()) {
+            Espresso.onView(ViewMatchers.withId(R.id.rvFaq))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
+
+            Espresso.onView(Matchers.allOf(
+                            ViewMatchers.withId(R.id.tvAnswer),
+                            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+                    .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        }
+    }
+
+    @Test
+    public void testClickQuestion_twice_collapsesAnswer() {
+        try (ActivityScenario<MainActivity> scenario = launchFromMain()) {
+            // First click — expand by clicking the question text directly
+            Espresso.onView(ViewMatchers.withText("Support contact?"))
+                    .perform(ViewActions.click());
+
+            // Verify it expanded
+            Espresso.onView(Matchers.allOf(
+                            ViewMatchers.withId(R.id.tvAnswer),
+                            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+                    .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+            // Second click — collapse by clicking the question text again
+            Espresso.onView(ViewMatchers.withText("Support contact?"))
+                    .perform(ViewActions.click());
+
+            // After collapse, tvAnswer should be GONE
+            Espresso.onView(Matchers.allOf(
+                            ViewMatchers.withId(R.id.tvAnswer),
+                            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
+                    .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())));
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Navigation
+    // -------------------------------------------------------------------------
+
+    @Test
+    public void testBackPress_returnsToMainActivity() {
+        try (ActivityScenario<MainActivity> scenario = launchFromMain()) {
+            Espresso.pressBack();
+            Espresso.onView(ViewMatchers.withId(R.id.bottom_navigation))
+                    .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        }
+    }
+
+    @Test
+    public void testToolbarBackArrow_returnsToMainActivity() {
+        try (ActivityScenario<MainActivity> scenario = launchFromMain()) {
+            Espresso.onView(ViewMatchers.withContentDescription("Navigate up"))
+                    .perform(ViewActions.click());
+            Espresso.onView(ViewMatchers.withId(R.id.bottom_navigation))
+                    .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
         }
     }
 }

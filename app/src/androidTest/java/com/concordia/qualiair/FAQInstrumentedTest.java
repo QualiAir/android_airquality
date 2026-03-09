@@ -29,6 +29,8 @@ public class FAQInstrumentedTest {
         ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
         Espresso.onView(ViewMatchers.withId(R.id.nav_faq))
                 .perform(ViewActions.click());
+        // Wait for FAQActivity to be fully resumed before any assertions
+        Espresso.onIdle();
         return scenario;
     }
 
@@ -47,7 +49,11 @@ public class FAQInstrumentedTest {
     @Test
     public void testToolbarShowsCorrectTitle() {
         try (ActivityScenario<MainActivity> scenario = launchFromMain()) {
-            Espresso.onView(ViewMatchers.withText("FAQ"))
+            // Match the toolbar title text view specifically to avoid matching
+            // other views that might contain "FAQ"
+            Espresso.onView(Matchers.allOf(
+                            ViewMatchers.withText("FAQ"),
+                            ViewMatchers.isDisplayed()))
                     .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
         }
     }
@@ -75,33 +81,24 @@ public class FAQInstrumentedTest {
     @Test
     public void testAnswerIsHiddenByDefault() {
         try (ActivityScenario<MainActivity> scenario = launchFromMain()) {
-            // FIX: use RecyclerViewActions to target position 0 specifically,
-            // avoiding AmbiguousViewMatcherException when multiple rows share the same answer text
-            Espresso.onView(ViewMatchers.withId(R.id.rvFaq))
-                    .perform(RecyclerViewActions.scrollToPosition(0));
-
+            // Verify no tvAnswer is currently visible
             Espresso.onView(Matchers.allOf(
                             ViewMatchers.withId(R.id.tvAnswer),
-                            ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.rvFaq)),
-                            ViewMatchers.withText("Email us at elec390team1@gmail.com."),
-                            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
-                    .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())));
+                            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+                    .check(ViewAssertions.doesNotExist());
         }
     }
 
     // -------------------------------------------------------------------------
     // Expand / collapse interaction
-    // FIX: click the first RecyclerView item directly to avoid ambiguous matches
     // -------------------------------------------------------------------------
 
     @Test
     public void testClickQuestion_expandsAnswer() {
         try (ActivityScenario<MainActivity> scenario = launchFromMain()) {
-            // Click position 0 in the RecyclerView
             Espresso.onView(ViewMatchers.withId(R.id.rvFaq))
                     .perform(RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
 
-            // Check that an answer with VISIBLE visibility now exists
             Espresso.onView(Matchers.allOf(
                             ViewMatchers.withId(R.id.tvAnswer),
                             ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
@@ -116,15 +113,21 @@ public class FAQInstrumentedTest {
             Espresso.onView(ViewMatchers.withId(R.id.rvFaq))
                     .perform(RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
 
+            // Wait for expand animation to finish
+            Espresso.onIdle();
+
             // Second click — collapse
             Espresso.onView(ViewMatchers.withId(R.id.rvFaq))
                     .perform(RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
 
-            // Answer should be GONE again
+            // Wait for collapse animation to finish
+            Espresso.onIdle();
+
+            // No tvAnswer should be visible
             Espresso.onView(Matchers.allOf(
                             ViewMatchers.withId(R.id.tvAnswer),
-                            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
-                    .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())));
+                            ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+                    .check(ViewAssertions.doesNotExist());
         }
     }
 
