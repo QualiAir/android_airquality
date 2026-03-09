@@ -45,7 +45,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1") {
+        exclude(group = "org.checkerframework", module = "checker")
+        exclude(group = "com.google.protobuf", module = "protobuf-lite")
+    }
     implementation(files("libs/esp-idf-provisioning-android-lib-2.1.0.aar"))
-    //implementation("com.github.espressif:esp-idf-provisioning-android:lib-2.1.0")
     implementation("org.greenrobot:eventbus:3.3.1")
 }

@@ -6,6 +6,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import java.util.Collections;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class HistoryActivity extends AppCompatActivity {
 
     private TextView buttonNh3;
@@ -37,22 +37,21 @@ public class HistoryActivity extends AppCompatActivity {
     private ReadingAdapter adapter;
 
     private TextView yAxisTitleTextView;
-    private List<Reading> readings =new ArrayList<>();
+    private List<Reading> readings = new ArrayList<>();
     private ApiService apiService;
-    private final String DEVICE_ID="sensor1";
-    //private List<Reading> readings = new ArrayList<>();
+    private final String DEVICE_ID = "sensor1";
 
     // PM2.5: Based on EPA 2024 AQI Breakpoints
-    private static final float PM25_CAUTION = 9.0f;  // Top of "Good"
-    private static final float PM25_ALARM = 35.4f;   // Top of "Moderate"
+    private static final float PM25_CAUTION = 102f;
+    private static final float PM25_ALARM = 200f;
 
-    // CO2: Based on Indoor Ventilation Standards (ASHRAE)
-    private static final float H2S_CAUTION = 1f;  // Stuffy air
-    private static final float H2S_ALARM = 5f;    // Significant drowsiness/headache
+    // H2S: Based on Indoor Ventilation Standards (ASHRAE)
+    private static final float H2S_CAUTION = 1f;
+    private static final float H2S_ALARM = 5f;
 
     // NH3: Based on NIOSH Occupational Safety
-    private static final float NH3_CAUTION = 25f;    // Recommended exposure limit
-    private static final float NH3_ALARM = 35f;     // Short-term exposure limit (15 min)
+    private static final float NH3_CAUTION = 25f;
+    private static final float NH3_ALARM = 35f;
 
     private float currentCaution = NH3_CAUTION;
     private float currentAlarm = NH3_ALARM;
@@ -67,73 +66,73 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+
         retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
                 .baseUrl("https://backend-airquality.onrender.com/")
                 .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
                 .build();
-
         this.apiService = retrofit.create(ApiService.class);
 
-        //Buttons
+        // Buttons
         buttonNh3 = findViewById(R.id.button_nh3);
         buttonCo2 = findViewById(R.id.button_co2);
         buttonPm25 = findViewById(R.id.button_pm25);
         buttonFilterAlarm = findViewById(R.id.button_filter_alarm);
 
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
-
-        toolbar.setNavigationOnClickListener(v -> {
-            finish();
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("History");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        //showing ppm on y axis
+
         yAxisTitleTextView = findViewById(R.id.y_axis_title);
 
-        //Chart
+        // Chart
         lineChart = findViewById(R.id.line_chart);
-        // helper function to initialize and configure the LineChart
         setupChart("ammonia");
 
-        //RecyclerView
+        // RecyclerView
         recyclerView = findViewById(R.id.recycler_readings);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //drop down time at the top right
+        // Spinner
         timeRangeSpinner = findViewById(R.id.time_range_spinner);
         setupTimeRangeSpinner();
-        filteredReadings.addAll(readings); // Initialize with all data
+
+        filteredReadings.addAll(readings);
         adapter = new ReadingAdapter(filteredReadings);
         recyclerView.setAdapter(adapter);
 
-        //setOnClickListerner for each buton
+        // Sensor button listeners
         buttonNh3.setOnClickListener(v -> {
             updateButtonStates(buttonNh3);
-            fetchDataFromServer("ammonia"); //call rest api
-
+            resetFilter();
+            fetchDataFromServer("ammonia");
         });
         buttonCo2.setOnClickListener(v -> {
             updateButtonStates(buttonCo2);
-            fetchDataFromServer("hydrogen_sulfide");//call rest api
+            resetFilter();
+            fetchDataFromServer("hydrogen_sulfide");
         });
         buttonPm25.setOnClickListener(v -> {
             updateButtonStates(buttonPm25);
-            fetchDataFromServer("dust");//call rest api
+            resetFilter();
+            fetchDataFromServer("dust");
         });
+
         fetchDataFromServer("ammonia");
         updateButtonStates(buttonNh3);
-    //create a function that will get the gas , and the range
 
+        // Filter alarm button listener
         buttonFilterAlarm.setOnClickListener(v -> {
-            isFilterActive = !isFilterActive; // Toggle state
+            isFilterActive = !isFilterActive;
 
             if (isFilterActive) {
                 buttonFilterAlarm.setText("Show All");
                 buttonFilterAlarm.setTextColor(getColor(R.color.danger));
-                buttonFilterAlarm.setBackgroundResource(R.drawable.bg_btn_selected); // Or a specific alert style
+                buttonFilterAlarm.setBackgroundResource(R.drawable.bg_btn_selected);
             } else {
                 buttonFilterAlarm.setText("Show Alarms");
                 buttonFilterAlarm.setTextColor(getColor(R.color.textMuted));
@@ -143,24 +142,31 @@ public class HistoryActivity extends AppCompatActivity {
         });
     }
 
+    private void resetFilter() {
+        isFilterActive = false;
+        buttonFilterAlarm.setText("Show Alarms");
+        buttonFilterAlarm.setTextColor(getColor(R.color.textMuted));
+        buttonFilterAlarm.setBackgroundResource(R.drawable.bg_btn_unselected);
+    }
+
     private void applyFilter() {
-        filteredReadings.clear();
         TextView noAlarmsText = findViewById(R.id.text_no_alarms);
+        List<Reading> toShow = new ArrayList<>();
 
         if (isFilterActive) {
-            // Only show readings that meet or exceed the alarm threshold
             for (Reading r : readings) {
                 if (r.getValue() >= currentAlarm) {
-                    filteredReadings.add(r);
+                    toShow.add(r);
                 }
             }
-            noAlarmsText.setVisibility(filteredReadings.isEmpty() ? View.VISIBLE : View.GONE);//show message if table empty after filetr
+            noAlarmsText.setVisibility(toShow.isEmpty() ? View.VISIBLE : View.GONE);
         } else {
-            // Show everything
-            filteredReadings.addAll(readings);
-            noAlarmsText.setVisibility(View.GONE);//hide message on show all
+            toShow.addAll(readings);
+            noAlarmsText.setVisibility(View.GONE);
         }
-        adapter.notifyDataSetChanged();
+
+        Collections.reverse(toShow); // newest first
+        adapter.updateData(toShow);  // push fresh list directly to adapter
     }
 
     private String getStatus(float value, float caution, float alarm) {
@@ -170,26 +176,17 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void setupTimeRangeSpinner() {
-        // Create an adapter to populate the spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
-                // Array in strings.xml
                 R.array.time_range_options,
-                // Default Android layout for the selected item view
                 android.R.layout.simple_spinner_item
         );
-
-        // Specify the layout to use when the dropdown list appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Apply this adapter to spinner
         timeRangeSpinner.setAdapter(adapter);
 
-        // Set a listener that will be called when the user selects a new item
         timeRangeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //  Key for the backend (history.py)
                 String backendRangeKey;
                 String selectedTimeRange = parent.getItemAtPosition(position).toString();
                 if (selectedTimeRange.equals("Daily")) backendRangeKey = "24h";
@@ -197,18 +194,15 @@ public class HistoryActivity extends AppCompatActivity {
                 else if (selectedTimeRange.equals("Monthly")) backendRangeKey = "1m";
                 else backendRangeKey = "1h";
 
-                // Determine which sensor key to send to the Python backend
                 String activeSensor = "ammonia";
                 if (yAxisTitleTextView.getText().toString().contains("µg")) {
-                    activeSensor = "dust"; // Key for PM2.5
+                    activeSensor = "dust";
                 } else if (buttonCo2.getCurrentTextColor() == getColor(R.color.safe)) {
-                    activeSensor = "hydrogen_sulfide"; // Key for H2S
+                    activeSensor = "hydrogen_sulfide";
                 }
 
-                // Call the REAL server function
                 fetchDataFromServer(activeSensor);
 
-                // Verify the mapping for the demo
                 android.widget.Toast.makeText(HistoryActivity.this,
                         "Range updated to: " + backendRangeKey,
                         android.widget.Toast.LENGTH_SHORT).show();
@@ -216,44 +210,82 @@ public class HistoryActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // This method is required, but we can leave it empty.
             }
         });
     }
+
     private void fetchDataFromServer(String sensorName) {
+        // FIX 3a — update thresholds for the selected sensor
+        switch (sensorName) {
+            case "hydrogen_sulfide":
+                currentCaution = H2S_CAUTION;
+                currentAlarm = H2S_ALARM;
+                yAxisTitleTextView.setText("H₂S (ppm)");
+                break;
+            case "dust":
+                currentCaution = PM25_CAUTION;
+                currentAlarm = PM25_ALARM;
+                yAxisTitleTextView.setText("PM2.5 (µg/m³)");
+                break;
+            case "ammonia":
+            default:
+                currentCaution = NH3_CAUTION;
+                currentAlarm = NH3_ALARM;
+                yAxisTitleTextView.setText("NH₃ (ppm)");
+                break;
+        }
+
         String selected = timeRangeSpinner.getSelectedItem().toString();
         String rangeKey = "1h";
         if (selected.equals("Daily")) rangeKey = "24h";
         else if (selected.equals("Weekly")) rangeKey = "1w";
         else if (selected.equals("Monthly")) rangeKey = "1m";
+
         setupChart(sensorName);
 
-        // Use the apiService initialized in onCreate
+        // Capture final copies for use inside the callback lambda
+        final float callbackCaution = currentCaution;
+        final float callbackAlarm = currentAlarm;
 
-        HistoryActivity.this.apiService.getHistory(rangeKey, sensorName, this.DEVICE_ID).enqueue(new retrofit2.Callback<HistoryResponse>() {
-            @Override
-            public void onResponse(retrofit2.Call<HistoryResponse> call, retrofit2.Response<HistoryResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Reading> dataFromServer = response.body().getData();
+        HistoryActivity.this.apiService.getHistory(rangeKey, sensorName, this.DEVICE_ID)
+                .enqueue(new retrofit2.Callback<HistoryResponse>() {
+                    @Override
+                    public void onResponse(retrofit2.Call<HistoryResponse> call,
+                                           retrofit2.Response<HistoryResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<Reading> dataFromServer = response.body().getData();
 
-                    if (dataFromServer != null) {
-                        readings.clear();
-                        readings.addAll(dataFromServer);
-                        updateChart();//update chart first
+                            if (dataFromServer != null) {
+                                readings.clear();
+                                readings.addAll(dataFromServer);
 
-                        List<Reading> reversedForTable = new ArrayList<>(dataFromServer);
-                        Collections.reverse(reversedForTable);
+                                // recompute level locally using our thresholds,
+                                // overriding whatever the server sent
+                                for (Reading r : readings) {
+                                    r.setLevel(getStatus(
+                                            (float) r.getValue(),
+                                            callbackCaution,
+                                            callbackAlarm
+                                    ));
+                                }
 
-                        adapter.updateData(reversedForTable);
+                                updateChart();
+
+                                // Build reversed list for table (newest first)
+                                List<Reading> reversedForTable = new ArrayList<>(readings);
+                                Collections.reverse(reversedForTable);
+                                adapter.updateData(reversedForTable);
+                            }
+                        }
                     }
-                }
 
-            }
-            @Override
-            public void onFailure(retrofit2.Call<HistoryResponse> call, Throwable t) {
-                android.widget.Toast.makeText(HistoryActivity.this, "Server waking up... try again", android.widget.Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(retrofit2.Call<HistoryResponse> call, Throwable t) {
+                        android.widget.Toast.makeText(HistoryActivity.this,
+                                "Server waking up... try again",
+                                android.widget.Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void updateButtonStates(TextView selectedButton) {
@@ -267,7 +299,7 @@ public class HistoryActivity extends AppCompatActivity {
         }
     }
 
-    private void setupChart(String sensorName){
+    private void setupChart(String sensorName) {
         lineChart.setDrawGridBackground(false);
         lineChart.getDescription().setEnabled(false);
         lineChart.getLegend().setEnabled(false);
@@ -277,53 +309,44 @@ public class HistoryActivity extends AppCompatActivity {
 
         if (lineChart == null) return;
 
-        // 1. Disable the Right Y-Axis (Removes the extra numbers on the right)
         lineChart.getAxisRight().setEnabled(false);
 
-        // 2. Configure X-Axis (Move Time to Bottom)
         XAxis xAxis = lineChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM); // Puts time labels at the bottom
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setTextColor(getColor(R.color.supreme));
         xAxis.setGranularity(1f);
 
-        // 3. Configure Left Y-Axis (PPM)
         YAxis leftAxis = lineChart.getAxisLeft();
         leftAxis.setDrawGridLines(false);
         leftAxis.setTextColor(getColor(R.color.supreme));
-        leftAxis.removeAllLimitLines(); // Clear old lines so they don't overlap
+        leftAxis.removeAllLimitLines();
 
-        // Basic Configuration
         lineChart.getDescription().setEnabled(false);
         lineChart.getLegend().setEnabled(false);
         lineChart.setExtraOffsets(12f, 40f, 12f, 20f);
 
+        leftAxis.removeAllLimitLines();
 
-        leftAxis.removeAllLimitLines(); // Clear old lines so they don't overlap
-
-        // Variables for the dynamic thresholds
         float alarmValue;
         float cautionValue;
         float maxView;
 
-        // Apply numbers from your teammate's research
         switch (sensorName) {
             case "hydrogen_sulfide":
-                cautionValue = 1f;  // TLV-TWA
-                alarmValue = 5f;    // TLV-STEL
+                cautionValue = 1f;
+                alarmValue = 5f;
                 maxView = 10f;
                 break;
-
-            case "dust": // PM2.5
-                cautionValue = 102f; // Unhealthy average WYND techonologies
-                alarmValue = 200f;   // Very Unhealthy middle
+            case "dust":
+                cautionValue = 102f;
+                alarmValue = 200f;
                 maxView = 300f;
                 break;
-
             case "ammonia":
             default:
-                cautionValue = 25f; // TLV-TWA
-                alarmValue = 35f;   // TLV-STEL
+                cautionValue = 25f;
+                alarmValue = 35f;
                 maxView = 38f;
                 break;
         }
@@ -331,7 +354,6 @@ public class HistoryActivity extends AppCompatActivity {
         leftAxis.setAxisMaximum(maxView);
         leftAxis.setAxisMinimum(0f);
 
-        // --- Red Alarm Line ---
         LimitLine alarmLimit = new LimitLine(alarmValue, "Alarm");
         alarmLimit.setLineColor(getColor(R.color.danger));
         alarmLimit.setTextColor(getColor(R.color.danger));
@@ -340,7 +362,6 @@ public class HistoryActivity extends AppCompatActivity {
         alarmLimit.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
         leftAxis.addLimitLine(alarmLimit);
 
-        // --- Yellow Caution Line ---
         LimitLine cautionLimit = new LimitLine(cautionValue, "Caution");
         cautionLimit.setLineColor(getColor(R.color.warning));
         cautionLimit.setTextColor(getColor(R.color.warning));
@@ -349,7 +370,7 @@ public class HistoryActivity extends AppCompatActivity {
         cautionLimit.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
         leftAxis.addLimitLine(cautionLimit);
 
-        lineChart.invalidate(); // Refresh view
+        lineChart.invalidate();
     }
 
     private void selectButton(TextView button) {
@@ -361,8 +382,8 @@ public class HistoryActivity extends AppCompatActivity {
         button.setBackgroundResource(R.drawable.bg_btn_unselected);
         button.setTextColor(getColor(R.color.textMuted));
     }
+
     private void updateChart() {
-        // Add this safety check
         if (lineChart == null || readings == null || readings.isEmpty()) {
             if (lineChart != null) {
                 lineChart.clear();
@@ -371,47 +392,33 @@ public class HistoryActivity extends AppCompatActivity {
             return;
         }
 
-        // Ensure we don't crash if the formatter fails
         try {
             lineChart.getXAxis().setValueFormatter(new TimeAxisValueFormatter(readings));
-            }
-        catch (Exception e) {
+        } catch (Exception e) {
             android.util.Log.e("CHART_ERROR", "Error setting formatter: " + e.getMessage());
         }
 
         ArrayList<Entry> chartEntries = new ArrayList<>();
         for (int i = 0; i < readings.size(); i++) {
             Reading currentReading = readings.get(i);
-            // Fix: Add (float) cast to resolve "lossy conversion" error
             chartEntries.add(new Entry(i, (float) currentReading.getValue()));
         }
 
-    LineDataSet lineDataSet = new LineDataSet(chartEntries, "Readings");
+        LineDataSet lineDataSet = new LineDataSet(chartEntries, "Readings");
+        lineDataSet.setColor(getColor(R.color.safe));
+        lineDataSet.setLineWidth(3f);
+        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        lineDataSet.setCircleColor(getColor(R.color.safe));
+        lineDataSet.setCircleHoleColor(getColor(R.color.supreme));
+        lineDataSet.setCircleRadius(6f);
+        lineDataSet.setCircleHoleRadius(4f);
+        lineDataSet.setDrawCircleHole(true);
+        lineDataSet.setDrawValues(false);
 
-    // Styling the line (Green theme)
-    lineDataSet.setColor(getColor(R.color.safe));
-    lineDataSet.setLineWidth(3f);
-    lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER); // Smooths the line
-
-    // Styling the points (Hollow ring effect)
-    lineDataSet.setCircleColor(getColor(R.color.safe));
-    lineDataSet.setCircleHoleColor(getColor(R.color.supreme)); // Matches background
-    lineDataSet.setCircleRadius(6f);
-    lineDataSet.setCircleHoleRadius(4f);
-    lineDataSet.setDrawCircleHole(true);
-    lineDataSet.setDrawValues(false); // Keeps the UI clean
-
-    LineData lineData = new LineData(lineDataSet);
-    //lineChart.setData(lineData);
-
-    //lineChart.animateX(500); // 0.5s animation
-    //lineChart.invalidate();  // Refresh the chart
-//}
-        //LineData lineData = new LineData(dataSets);
+        LineData lineData = new LineData(lineDataSet);
         lineChart.setData(lineData);
-
-        lineChart.animateX(500); // Add a simple animation
-        lineChart.invalidate();  // Refresh the chart
+        lineChart.animateX(500);
+        lineChart.invalidate();
     }
 
     private static class TimeAxisValueFormatter extends com.github.mikephil.charting.formatter.ValueFormatter {
