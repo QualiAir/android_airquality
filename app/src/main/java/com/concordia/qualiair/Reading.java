@@ -8,7 +8,6 @@ import java.util.TimeZone;
 public class Reading {
     private String time;
     private double value; // Changed to double to handle decimals like 0.5
-
     private String level;
 
     public Reading() {}
@@ -79,6 +78,10 @@ public class Reading {
         if (value >= 80) return "High";
         if (value >= 40) return "Moderate";
         return "Low";
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 
 }
