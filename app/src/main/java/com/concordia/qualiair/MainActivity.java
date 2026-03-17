@@ -2,11 +2,8 @@ package com.concordia.qualiair;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
-import androidx.annotation.NonNull;
 import android.content.Intent;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -41,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 return true;
             } else if (itemId == R.id.nav_devices) {
-                startActivity(new Intent(MainActivity.this, DeviceActivity2.class));
+                startActivity(new Intent(MainActivity.this, DeviceActivity.class));
                 return true;
             }
             return false;
