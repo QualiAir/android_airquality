@@ -16,20 +16,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected (@NonNull MenuItem item){
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-                    return true;
-                } else if (itemId == R.id.nav_profile) { // Check your menu XML for the exact ID
-                    startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                    return true;
-                } else if (itemId == R.id.nav_devices) {
-                    startActivity(new Intent(MainActivity.this, DeviceActivity2.class));
-                    return true;
-                }
-                //here we will add other navigation to other activity pages with else if
-                return false;
+        // 1. Force the Home icon to be highlighted when this activity starts
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_home) {
+                // We are already on Home. Just return true to keep the highlight.
+                return true;
+            } else if (itemId == R.id.nav_faq) {
+                startActivity(new Intent(MainActivity.this, FAQActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_history) {
                 startActivity(new Intent(MainActivity.this, HistoryActivity.class));
                 return true;
             } else if (itemId == R.id.nav_profile) {
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, DeviceActivity.class));
                 return true;
             }
+            return false;
         });
 
 
@@ -47,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         // create UserPreferences
         UserPreferences prefs = new UserPreferences(this);
 
-        // load saved values -
+        // load saved values
         prefs.loadAllPreferences();
 
         // get NH3 thresholds
@@ -63,5 +66,12 @@ public class MainActivity extends AppCompatActivity {
             gauge.setMaxValue(nh3Max);
         }
         gauge.setValue(18);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.nav_home);
+        }
     }
 }

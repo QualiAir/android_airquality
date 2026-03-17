@@ -40,10 +40,15 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation("com.github.Gruzer:simple-gauge-android:0.3.1")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
-    implementation("com.github.espressif:esp-idf-provisioning-android:lib-2.1.0")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1") {
+        exclude(group = "org.checkerframework", module = "checker")
+        exclude(group = "com.google.protobuf", module = "protobuf-lite")
+    }
+    implementation(files("libs/esp-idf-provisioning-android-lib-2.1.0.aar"))
     implementation("org.greenrobot:eventbus:3.3.1")
 }

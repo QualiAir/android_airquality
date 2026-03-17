@@ -2,17 +2,18 @@ package com.concordia.qualiair;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 /** FUNC-5.1 (Design Preferences Data Model)
  * UserPreferences
 
  * Data model responsible for storing:
  * 1- User account information
- * 2- Air quality threshold ranges for NH3 and CO2 gases and Dust
+ * 2- Air quality threshold ranges for NH3 and H2S gases and Dust
 
  *  Supports:
  * - Save the user information (username, email)
- * - Initializing default ranges  for NH3 and CO2 gases and Dust
+ * - Initializing default ranges  for NH3 and H2S gases and Dust
  * - Updating ranges later
  * - Determining air quality level based on a measured value
  */
@@ -24,7 +25,7 @@ import android.content.SharedPreferences;
 
  * Supports:
  * - Saving user account information
- * - Saving NH3, CO2, and Dust threshold ranges
+ * - Saving NH3, H2S, and Dust threshold ranges
  * - Loading saved preferences when the app starts
  * - Keeping data available after the application restarts
  */
@@ -38,9 +39,17 @@ import android.content.SharedPreferences;
 /** FUNC-5.4 (Implement Auto-Load on App Start)
  * supports:
  * 1- Loading saved preferences when the app starts
- * 2- Retrieving NH3, CO2, and Dust thresholds from SharedPreferences
+ * 2- Retrieving NH3, H2S, and Dust thresholds from SharedPreferences
  * 3- Applying the loaded values when the app initializes
  * 4- Preserving user settings after the app restarts
+ */
+
+/** FUNC-5.5 (Test and Validate Preference Functionality)
+ * supports:
+ * 1- testing storing threshold values in SharedPreferences
+ * 2- testing overwriting existing values with new ones
+ * 3- testing loading saved preferences from storage
+ * 4- verifying that saved values persist after updates
  */
 
 
@@ -60,15 +69,15 @@ public class UserPreferences {
     private int nh3HighMin;
     private int nh3HighMax;
 
-    // CO2 Threshold Ranges
-    private int co2LowMin;
-    private int co2LowMax;
+    // H2S Threshold Ranges
+    private int h2sLowMin;
+    private int h2sLowMax;
 
-    private int co2MediumMin;
-    private int co2MediumMax;
+    private int h2sMediumMin;
+    private int h2sMediumMax;
 
-    private int co2HighMin;
-    private int co2HighMax;
+    private int h2sHighMin;
+    private int h2sHighMax;
 
     // Dust Threshold Ranges
     private int dustLowMin;
@@ -87,9 +96,9 @@ public class UserPreferences {
                            int nh3LowMin, int nh3LowMax,
                            int nh3MediumMin, int nh3MediumMax,
                            int nh3HighMin, int nh3HighMax,
-                           int co2LowMin, int co2LowMax,
-                           int co2MediumMin, int co2MediumMax,
-                           int co2HighMin, int co2HighMax,
+                           int h2sLowMin, int h2sLowMax,
+                           int h2sMediumMin, int h2sMediumMax,
+                           int h2sHighMin, int h2sHighMax,
                            int dustLowMin, int dustLowMax,
                            int dustMediumMin, int dustMediumMax,
                            int dustHighMin, int dustHighMax) {
@@ -101,10 +110,10 @@ public class UserPreferences {
             throw new IllegalArgumentException("Invalid NH3 ranges during initialization.");
         }
 
-        if (!areRangesValid(co2LowMin, co2LowMax,
-                co2MediumMin, co2MediumMax,
-                co2HighMin, co2HighMax)) {
-            throw new IllegalArgumentException("Invalid CO2 ranges during initialization.");
+        if (!areRangesValid(h2sLowMin, h2sLowMax,
+                h2sMediumMin, h2sMediumMax,
+                h2sHighMin, h2sHighMax)) {
+            throw new IllegalArgumentException("Invalid H2S ranges during initialization.");
         }
 
         if (!areRangesValid(dustLowMin, dustLowMax,
@@ -124,13 +133,13 @@ public class UserPreferences {
         this.nh3HighMin = nh3HighMin;
         this.nh3HighMax = nh3HighMax;
 
-        // CO2 initialization
-        this.co2LowMin = co2LowMin;
-        this.co2LowMax = co2LowMax;
-        this.co2MediumMin = co2MediumMin;
-        this.co2MediumMax = co2MediumMax;
-        this.co2HighMin = co2HighMin;
-        this.co2HighMax = co2HighMax;
+        // H2S initialization
+        this.h2sLowMin = h2sLowMin;
+        this.h2sLowMax = h2sLowMax;
+        this.h2sMediumMin = h2sMediumMin;
+        this.h2sMediumMax = h2sMediumMax;
+        this.h2sHighMin = h2sHighMin;
+        this.h2sHighMax = h2sHighMax;
 
         // Dust initialization
         this.dustLowMin = dustLowMin;
@@ -160,20 +169,20 @@ public class UserPreferences {
     private static final String KEY_NH3_HIGH_MIN = "nh3HighMin";
     private static final String KEY_NH3_HIGH_MAX = "nh3HighMax";
 
-    // CO2 keys
-    private static final String KEY_CO2_LOW_MIN = "co2LowMin";
-    private static final String KEY_CO2_LOW_MAX = "co2LowMax";
-    private static final String KEY_CO2_MEDIUM_MIN = "co2MediumMin";
-    private static final String KEY_CO2_MEDIUM_MAX = "co2MediumMax";
-    private static final String KEY_CO2_HIGH_MIN = "co2HighMin";
-    private static final String KEY_CO2_HIGH_MAX = "co2HighMax";
+    // H2S keys
+    private static final String KEY_H2S_LOW_MIN = "h2sLowMin";
+    private static final String KEY_H2S_LOW_MAX = "h2sLowMax";
+    private static final String KEY_H2S_MEDIUM_MIN = "h2sMediumMin";
+    private static final String KEY_H2S_MEDIUM_MAX = "h2sMediumMax";
+    private static final String KEY_H2S_HIGH_MIN = "h2sHighMin";
+    private static final String KEY_H2S_HIGH_MAX = "h2sHighMax";
 
 
     // Dust Keys
     private static final String KEY_DUST_LOW_MIN = "dustLowMin";
     private static final String KEY_DUST_LOW_MAX = "dustLowMax";
-    private static final String KEY_DUST_MEDIUM_MIN= "dustMedMin";
-    private static final String KEY_DUST_MEDIUM_MAX= "dustMedMax";
+    private static final String KEY_DUST_MEDIUM_MIN = "dustMediumMin";
+    private static final String KEY_DUST_MEDIUM_MAX = "dustMediumMax";
     private static final String KEY_DUST_HIGH_MIN = "dustHighMin";
     private static final String KEY_DUST_HIGH_MAX = "dustHighMax";
 
@@ -185,9 +194,9 @@ public class UserPreferences {
     }
 
     //function to Save the values to SharedPreferences
-    public void saveAllPreferences(){
+    public void saveAllPreferences() {
         editor.putString(KEY_USERNAME, username);
-        editor.putString(KEY_EMAIL,email);
+        editor.putString(KEY_EMAIL, email);
 
         //NH3
         editor.putInt(KEY_NH3_HIGH_MIN, nh3HighMin);
@@ -197,13 +206,13 @@ public class UserPreferences {
         editor.putInt(KEY_NH3_LOW_MIN, nh3LowMin);
         editor.putInt(KEY_NH3_LOW_MAX, nh3LowMax);
 
-        //CO2
-        editor.putInt(KEY_CO2_LOW_MIN, co2LowMin);
-        editor.putInt(KEY_CO2_LOW_MAX, co2LowMax);
-        editor.putInt(KEY_CO2_MEDIUM_MIN, co2MediumMin);
-        editor.putInt(KEY_CO2_MEDIUM_MAX, co2MediumMax);
-        editor.putInt(KEY_CO2_HIGH_MIN, co2HighMin);
-        editor.putInt(KEY_CO2_HIGH_MAX, co2HighMax);
+        //H2S
+        editor.putInt(KEY_H2S_LOW_MIN, h2sLowMin);
+        editor.putInt(KEY_H2S_LOW_MAX, h2sLowMax);
+        editor.putInt(KEY_H2S_MEDIUM_MIN, h2sMediumMin);
+        editor.putInt(KEY_H2S_MEDIUM_MAX, h2sMediumMax);
+        editor.putInt(KEY_H2S_HIGH_MIN, h2sHighMin);
+        editor.putInt(KEY_H2S_HIGH_MAX, h2sHighMax);
 
         //Dust
         editor.putInt(KEY_DUST_LOW_MIN, dustLowMin);
@@ -218,10 +227,10 @@ public class UserPreferences {
 
     // function to load all values from SharedPreferences
     // supports automatically loading stored user preferences when the application starts
-    public void loadAllPreferences(){
+    public void loadAllPreferences() {
         //user info
         username = sharedPreferences.getString(KEY_USERNAME, "");
-        email= sharedPreferences.getString(KEY_EMAIL,"");
+        email = sharedPreferences.getString(KEY_EMAIL, "");
 
         //nh3
         nh3LowMin = sharedPreferences.getInt(KEY_NH3_LOW_MIN, 0);
@@ -231,13 +240,13 @@ public class UserPreferences {
         nh3HighMin = sharedPreferences.getInt(KEY_NH3_HIGH_MIN, 0);
         nh3HighMax = sharedPreferences.getInt(KEY_NH3_HIGH_MAX, 0);
 
-        //co2
-        co2LowMin = sharedPreferences.getInt(KEY_CO2_LOW_MIN, 0);
-        co2LowMax = sharedPreferences.getInt(KEY_CO2_LOW_MAX, 0);
-        co2MediumMin = sharedPreferences.getInt(KEY_CO2_MEDIUM_MIN, 0);
-        co2MediumMax = sharedPreferences.getInt(KEY_CO2_MEDIUM_MAX, 0);
-        co2HighMin = sharedPreferences.getInt(KEY_CO2_HIGH_MIN, 0);
-        co2HighMax = sharedPreferences.getInt(KEY_CO2_HIGH_MAX, 0);
+        //h2s
+        h2sLowMin = sharedPreferences.getInt(KEY_H2S_LOW_MIN, 0);
+        h2sLowMax = sharedPreferences.getInt(KEY_H2S_LOW_MAX, 0);
+        h2sMediumMin = sharedPreferences.getInt(KEY_H2S_MEDIUM_MIN, 0);
+        h2sMediumMax = sharedPreferences.getInt(KEY_H2S_MEDIUM_MAX, 0);
+        h2sHighMin = sharedPreferences.getInt(KEY_H2S_HIGH_MIN, 0);
+        h2sHighMax = sharedPreferences.getInt(KEY_H2S_HIGH_MAX, 0);
 
         //dust
         dustLowMin = sharedPreferences.getInt(KEY_DUST_LOW_MIN, 0);
@@ -251,30 +260,86 @@ public class UserPreferences {
 
 
     // Getters
-    public String getUsername() { return username; }
-    public String getEmail() { return email; }
+    public String getUsername() {
+        return username;
+    }
 
-    public int getNh3LowMin() { return nh3LowMin; }
-    public int getNh3LowMax() { return nh3LowMax; }
-    public int getNh3MediumMin() { return nh3MediumMin; }
-    public int getNh3MediumMax() { return nh3MediumMax; }
-    public int getNh3HighMin() { return nh3HighMin; }
-    public int getNh3HighMax() { return nh3HighMax; }
+    public String getEmail() {
+        return email;
+    }
 
-    public int getCo2LowMin() { return co2LowMin; }
-    public int getCo2LowMax() { return co2LowMax; }
-    public int getCo2MediumMin() { return co2MediumMin; }
-    public int getCo2MediumMax() { return co2MediumMax; }
-    public int getCo2HighMin() { return co2HighMin; }
-    public int getCo2HighMax() { return co2HighMax; }
+    public int getNh3LowMin() {
+        return nh3LowMin;
+    }
+
+    public int getNh3LowMax() {
+        return nh3LowMax;
+    }
+
+    public int getNh3MediumMin() {
+        return nh3MediumMin;
+    }
+
+    public int getNh3MediumMax() {
+        return nh3MediumMax;
+    }
+
+    public int getNh3HighMin() {
+        return nh3HighMin;
+    }
+
+    public int getNh3HighMax() {
+        return nh3HighMax;
+    }
+
+    public int getH2SLowMin() {
+        return h2sLowMin;
+    }
+
+    public int getH2SLowMax() {
+        return h2sLowMax;
+    }
+
+    public int getH2SMediumMin() {
+        return h2sMediumMin;
+    }
+
+    public int getH2SMediumMax() {
+        return h2sMediumMax;
+    }
+
+    public int getH2SHighMin() {
+        return h2sHighMin;
+    }
+
+    public int getH2SHighMax() {
+        return h2sHighMax;
+    }
 
 
-    public int getDustLowMin() { return dustLowMin; }
-    public int getDustLowMax() { return dustLowMax; }
-    public int getDustMediumMin() { return dustMediumMin; }
-    public int getDustMediumMax() { return dustMediumMax; }
-    public int getDustHighMin() { return dustHighMin; }
-    public int getDustHighMax() { return dustHighMax; }
+    public int getDustLowMin() {
+        return dustLowMin;
+    }
+
+    public int getDustLowMax() {
+        return dustLowMax;
+    }
+
+    public int getDustMediumMin() {
+        return dustMediumMin;
+    }
+
+    public int getDustMediumMax() {
+        return dustMediumMax;
+    }
+
+    public int getDustHighMin() {
+        return dustHighMin;
+    }
+
+    public int getDustHighMax() {
+        return dustHighMax;
+    }
 
 
     //Updates all NH3 threshold ranges at once
@@ -297,21 +362,21 @@ public class UserPreferences {
         saveAllPreferences();
     }
 
-    //Updates all CO2 threshold ranges at once.
-    public void updateCO2Ranges(int lowMin, int lowMax,
+    //Updates all H2S threshold ranges at once.
+    public void updateH2SRanges(int lowMin, int lowMax,
                                 int mediumMin, int mediumMax,
                                 int highMin, int highMax) {
 
         if (!areRangesValid(lowMin, lowMax, mediumMin, mediumMax, highMin, highMax)) {
-            throw new IllegalArgumentException("Invalid CO2 ranges: overlapping or incorrectly ordered values.");
+            throw new IllegalArgumentException("Invalid H2S ranges: overlapping or incorrectly ordered values.");
         }
 
-        this.co2LowMin = lowMin;
-        this.co2LowMax = lowMax;
-        this.co2MediumMin = mediumMin;
-        this.co2MediumMax = mediumMax;
-        this.co2HighMin = highMin;
-        this.co2HighMax = highMax;
+        this.h2sLowMin = lowMin;
+        this.h2sLowMax = lowMax;
+        this.h2sMediumMin = mediumMin;
+        this.h2sMediumMax = mediumMax;
+        this.h2sHighMin = highMin;
+        this.h2sHighMax = highMax;
 
         // overwrite stored values
         saveAllPreferences();
@@ -349,13 +414,13 @@ public class UserPreferences {
         }
     }
 
-    //Determines CO2 air quality level based on measured value
-    public String getCO2Level(int value) {
-        if (value >= co2LowMin && value <= co2LowMax) {
+    //Determines H2S air quality level based on measured value
+    public String getH2SLevel(int value) {
+        if (value >= h2sLowMin && value <= h2sLowMax) {
             return "Low";
-        } else if (value >= co2MediumMin && value <= co2MediumMax) {
+        } else if (value >= h2sMediumMin && value <= h2sMediumMax) {
             return "Medium";
-        } else if (value >= co2HighMin && value <= co2HighMax) {
+        } else if (value >= h2sHighMin && value <= h2sHighMax) {
             return "High";
         } else {
             return "Out of Range";
@@ -374,6 +439,7 @@ public class UserPreferences {
             return "Out of Range";
         }
     }
+
     // Validates that ranges are ordered correctly and do not overlap
     private boolean areRangesValid(int lowMin, int lowMax,
                                    int mediumMin, int mediumMax,
@@ -408,5 +474,49 @@ public class UserPreferences {
         }
 
         return true;
-        }
+    }
+
+    // helper function: printing current values (for testing)
+    public void printAllPreferences(String tag) {
+
+        Log.d("FUNC5_TEST", "----- " + tag + " -----");
+
+        Log.d("FUNC5_TEST",
+                "NH3: Low(" + nh3LowMin + "-" + nh3LowMax + ") "
+                        + "Med(" + nh3MediumMin + "-" + nh3MediumMax + ") "
+                        + "High(" + nh3HighMin + "-" + nh3HighMax + ")");
+
+        Log.d("FUNC5_TEST",
+                "H2S: Low(" + h2sLowMin + "-" + h2sLowMax + ") "
+                        + "Med(" + h2sMediumMin + "-" + h2sMediumMax + ") "
+                        + "High(" + h2sHighMin + "-" + h2sHighMax + ")");
+
+        Log.d("FUNC5_TEST",
+                "Dust: Low(" + dustLowMin + "-" + dustLowMax + ") "
+                        + "Med(" + dustMediumMin + "-" + dustMediumMax + ") "
+                        + "High(" + dustHighMin + "-" + dustHighMax + ")");
+    }
+
+    // FUNC-5.5: Test storing, overwriting, and loading preferences
+    public void runFuncTest() {
+
+        // A) STORE (save initial values)
+        updateNH3Ranges(0, 10, 11, 20, 21, 30);
+        updateH2SRanges(0, 10, 11, 20, 21, 50);
+        updateDustRanges(0, 50, 51, 100, 101, 200);
+        printAllPreferences("AFTER STORE");
+
+        // B) OVERWRITE (change values and save again)
+        updateNH3Ranges(0, 5, 6, 15, 16, 25);
+        updateH2SRanges(0, 5, 6, 15, 16, 30);
+        updateDustRanges(0, 40, 41, 90, 91, 150);
+        printAllPreferences("AFTER OVERWRITE");
+
+        // C) LOAD (read from SharedPreferences again)
+        loadAllPreferences();
+        printAllPreferences("AFTER LOAD");
+    }
+
+
 }
+
