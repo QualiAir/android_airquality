@@ -2,11 +2,8 @@ package com.concordia.qualiair;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
-import androidx.annotation.NonNull;
 import android.content.Intent;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,14 +20,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected (@NonNull MenuItem item){
 
-                int itemId = item.getItemId();
-                if (itemId == R.id.nav_history) {
-                    Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
-                    startActivity(intent);
-                    return true;
-                } else if (itemId == R.id.nav_faq) {
-                    Intent intent = new Intent(MainActivity.this, FAQActivity.class);
-                    startActivity(intent);
                     return true;
                 } else if (itemId == R.id.nav_profile) { // Check your menu XML for the exact ID
                     startActivity(new Intent(MainActivity.this, ProfileActivity.class));
@@ -41,6 +30,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 //here we will add other navigation to other activity pages with else if
                 return false;
+                startActivity(new Intent(MainActivity.this, HistoryActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_devices) {
+                startActivity(new Intent(MainActivity.this, DeviceActivity.class));
+                return true;
             }
         });
 

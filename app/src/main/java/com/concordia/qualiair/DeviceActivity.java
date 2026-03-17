@@ -19,12 +19,12 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.espressif.provisioning.ESPProvisionManager;
 import com.espressif.provisioning.listeners.BleScanListener;
 
-public class DeviceActivity2 extends AppCompatActivity {
+public class DeviceActivity extends AppCompatActivity {
 
     private ESPProvisionManager provisionManager;
     private static final int REQUEST_PERMISSIONS = 1;
-    private static final String TAG = "MainActivity";
-    private boolean deviceFound = false;//to solve problem of not bieng able to visit provisioning twice
+    private static final String TAG = "DeviceActivity";
+    private boolean deviceFound = false;//to solve problem of not being able to visit provisioning twice
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +146,7 @@ public class DeviceActivity2 extends AppCompatActivity {
                 @Override
                 public void scanStartFailed() {
                     runOnUiThread(() ->
-                            Toast.makeText(DeviceActivity2.this,
+                            Toast.makeText(DeviceActivity.this,
                                     "Scan failed to start", Toast.LENGTH_SHORT).show());
                 }
 
@@ -156,7 +156,7 @@ public class DeviceActivity2 extends AppCompatActivity {
                     deviceFound = true;
                     // Check permission before calling getName() or stopBleScan()
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        if (ContextCompat.checkSelfPermission(DeviceActivity2.this,
+                        if (ContextCompat.checkSelfPermission(DeviceActivity.this,
                                 Manifest.permission.BLUETOOTH_CONNECT)
                                 != PackageManager.PERMISSION_GRANTED) {
                             Log.e(TAG, "BLUETOOTH_CONNECT permission not granted");
@@ -173,7 +173,7 @@ public class DeviceActivity2 extends AppCompatActivity {
                     }
 
                     runOnUiThread(() -> {
-                        Intent intent = new Intent(DeviceActivity2.this, ProvisioningActivity.class);
+                        Intent intent = new Intent(DeviceActivity.this, ProvisioningActivity.class);
                         intent.putExtra("device", device);
                         startActivity(intent);
                     });
@@ -188,7 +188,7 @@ public class DeviceActivity2 extends AppCompatActivity {
                 public void onFailure(Exception e) {
                     Log.e(TAG, "Scan error: " + e.getMessage());
                     runOnUiThread(() ->
-                            Toast.makeText(DeviceActivity2.this,
+                            Toast.makeText(DeviceActivity.this,
                                     "Scan error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                 }
             });
