@@ -20,7 +20,7 @@ import org.junit.runner.RunWith;
  * Run with: ./gradlew connectedAndroidTest
  */
 @RunWith(AndroidJUnit4.class)
-public class FAQUnitTest {
+public class FAQInstrumentalTest {
 
     private ActivityScenario<MainActivity> launchFromMain() {
         ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);

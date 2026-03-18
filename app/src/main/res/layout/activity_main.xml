@@ -60,12 +60,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="Real-time NH3"
+                        android:text="Real-time Reading"
                         android:textColor="@color/textMuted"
                         android:textSize="13sp" />
 
                     <com.concordia.qualiair.GaugeView
-                        android:id="@+id/gauge_nh3"
+                        android:id="@+id/gauge_main"
                         android:layout_width="match_parent"
                         android:layout_height="200dp" />
 
@@ -74,15 +74,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="-20dp"
-                        android:text="18"
+                        android:text=""
                         android:textColor="@color/text"
                         android:textSize="36sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tv_gauge_unit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ppm"
+                        android:text=""
                         android:textColor="@color/textMuted"
                         android:textSize="12sp" />
 
@@ -91,13 +92,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:background="@drawable/bg_pill_safe"
                         android:paddingStart="16dp"
                         android:paddingTop="4dp"
                         android:paddingEnd="16dp"
                         android:paddingBottom="4dp"
-                        android:text="Good"
-                        android:textColor="@color/safe"
+                        android:text=""
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
@@ -189,7 +188,46 @@
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
+            <!-- SENSOR SELECTOR BUTTONS -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="14dp">
 
+                <Button
+                    android:id="@+id/btn_select_NH3"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:text="NH&#8323;"
+                    android:textSize="11sp"
+                    app:cornerRadius="20dp" />
+
+                <Button
+                    android:id="@+id/btn_select_H2S"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:text="H₂S"
+                    android:textSize="11sp"
+                    app:cornerRadius="20dp" />
+
+                <Button
+                    android:id="@+id/btn_select_PM25"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:text="PM2.5"
+                    android:textSize="11sp"
+                    app:cornerRadius="20dp" />
+            </LinearLayout>
             <!-- SENSOR GRID ROW 1 -->
             <LinearLayout
                 android:layout_width="match_parent"
