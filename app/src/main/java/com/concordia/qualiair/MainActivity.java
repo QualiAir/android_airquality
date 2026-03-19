@@ -28,27 +28,16 @@ public class MainActivity extends AppCompatActivity {
     private Button btnH2S;
     private Button btnPm25;
 
-    private MqttClient mqttClient;
+    private TextView tvPressureValue;
+    private TextView tvHumidityValue;
+    private TextView tvTempValue;
 
-    //initialize latest value from InfluxDB
-    private float latestNH3 = 0f;
-    private float latestH2S = 0f;
-    private float latestPM25 = 0f;
+    private MqttClient mqttClient;
 
     // --- Currently selected sensor ---
     private String selectedSensor = "nh3"; // default to NH3
 
-    // Thresholds
-    // NH3 (ppm)
-    private static final float NH3_CAUTION = 25f;
-    private static final float NH3_ALARM = 35f;
-    // H2S (ppm)
-    private static final float H2S_CAUTION = 1f;
-    private static final float H2S_ALARM = 5f;
-    // PM2.5 (µg/m³)
-    private static final float PM25_CAUTION = 102f;
-    private static final float PM25_ALARM = 200f;
-
+    private AirQualityMonitor monitor = new AirQualityMonitor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +79,11 @@ public class MainActivity extends AppCompatActivity {
         tvGaugeStatus = findViewById(R.id.tv_gauge_status);
         tvGaugeUnit = findViewById(R.id.tv_gauge_unit);
 
+        tvPressureValue = findViewById(R.id.tv_pressure_value);
+        tvHumidityValue = findViewById(R.id.tv_humidity_value);
+        tvTempValue = findViewById(R.id.tv_temp_value);
+
+
         //Sensor selector buttons
         btnNh3 = findViewById(R.id.btn_select_NH3);
         btnH2S = findViewById(R.id.btn_select_H2S);
@@ -98,15 +92,15 @@ public class MainActivity extends AppCompatActivity {
         //Button  set on click listeners
         btnNh3.setOnClickListener(v -> {
             selectedSensor = "nh3";
-            updateGaugeDisplay(latestNH3);
+            updateGaugeDisplay(monitor.getLatest("nh3"));
         });
         btnH2S.setOnClickListener(v -> {
             selectedSensor = "h2s";
-            updateGaugeDisplay(latestH2S);
+            updateGaugeDisplay(monitor.getLatest("h2s"));
         });
         btnPm25.setOnClickListener(v -> {
             selectedSensor = "pm25";
-            updateGaugeDisplay(latestPM25);
+            updateGaugeDisplay(monitor.getLatest("pm25"));
         });
 
         //Setting up gauge range for default sensor (NH3)
@@ -136,45 +130,47 @@ public class MainActivity extends AppCompatActivity {
                 gaugeMain.setMinValue(0);
                 gaugeMain.setMaxValue(35);
                 tvGaugeUnit.setText("ppm");
-                updateStatus(value, NH3_CAUTION, NH3_ALARM);
                 maxValue=35f;
                 break;
             case "h2s":
                 gaugeMain.setMinValue(0);
                 gaugeMain.setMaxValue(10);
                 tvGaugeUnit.setText("ppm");
-                updateStatus(value, H2S_CAUTION, H2S_ALARM);
                 maxValue=10f;
                 break;
             case "pm25":
                 gaugeMain.setMinValue(0);
                 gaugeMain.setMaxValue(250);
                 tvGaugeUnit.setText("µg/m³");
-                updateStatus(value, PM25_CAUTION, PM25_ALARM);
                 maxValue=250;
                 break;
         }
+        applyStatusStyle(monitor.getStatus(selectedSensor));
         float clampedValue= Math.min(value,maxValue);//so if the value is beyond, it will stay in the red zone far right
         gaugeMain.setValue(clampedValue);
         tvGaugeValue.setText(String.format("%.1f", value));
 
     }
 
-    private void updateStatus(float value, float caution, float alarm) {
-        if (value >= alarm) {
-            tvGaugeStatus.setText("High");
+private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
+    switch (status) {
+        case ALARM:
+            tvGaugeStatus.setText("Alarm");
             tvGaugeStatus.setTextColor(getColor(R.color.danger));
             tvGaugeStatus.setBackgroundResource(R.drawable.bg_pill_danger_dim);
-        } else if (value >= caution) {
-            tvGaugeStatus.setText("Moderate");
+            break;
+        case CAUTION:
+            tvGaugeStatus.setText("Caution");
             tvGaugeStatus.setTextColor(getColor(R.color.warning));
             tvGaugeStatus.setBackgroundResource(R.drawable.bg_pill_warning_dim);
-        } else {
+            break;
+        default:
             tvGaugeStatus.setText("Good");
             tvGaugeStatus.setTextColor(getColor(R.color.safe));
             tvGaugeStatus.setBackgroundResource(R.drawable.bg_pill_safe);
-        }
+            break;
     }
+}
     private void connectToHiveMQ() {
         String broker = BuildConfig.MQTT_BROKER;
         String clientId = "android-" + System.currentTimeMillis();
@@ -202,14 +198,26 @@ public class MainActivity extends AppCompatActivity {
                         float h2s  = (float) json.getDouble("hydrogen_sulfide");
                         float pm25 = (float) json.getDouble("dust");
 
+                        float humidity=(float) json.getDouble("humidity");
+                        float pressure=(float) json.getDouble("pressure");
+                        float temp=(float) json.getDouble("temperature");
+
+
                         runOnUiThread(() -> {
-                            latestNH3  = nh3;
-                            latestH2S  = h2s;
-                            latestPM25 = pm25;
+                            tvPressureValue.setText(String.format("%.0f", pressure));
+                            tvHumidityValue.setText(String.format("%.0f", humidity));
+                            tvTempValue.setText(String.format("%.0f", temp));
+                            monitor.update(nh3, h2s, pm25);
                             switch (selectedSensor) {
-                                case "nh3":  updateGaugeDisplay(latestNH3);  break;
-                                case "h2s":  updateGaugeDisplay(latestH2S);  break;
-                                case "pm25": updateGaugeDisplay(latestPM25); break;
+                                case "nh3":
+                                    updateGaugeDisplay(monitor.getLatest("nh3"));
+                                    break;
+                                case "h2s":
+                                    updateGaugeDisplay(monitor.getLatest("h2s"));
+                                    break;
+                                case "pm25":
+                                    updateGaugeDisplay(monitor.getLatest("pm25"));
+                                    break;
                             }
                         });
                     } catch (org.json.JSONException e) {
@@ -225,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     mqttClient.connect(options);
                     Log.d("MQTT", "Connected to HiveMQ!");
-                    mqttClient.subscribe("qualiair/test", 1);
+                    mqttClient.subscribe("qualiair/gauge_test", 1);//qualiair/gauge_test
                 } catch (MqttException e) {
                     Log.e("MQTT", "Connection failed", e);
                 }

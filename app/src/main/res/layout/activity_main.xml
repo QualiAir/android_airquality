@@ -7,7 +7,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,15 +17,8 @@
         android:layout_gravity="center_horizontal"
         android:paddingTop="24dp"
         android:paddingBottom="16dp"/>
-    <TextView
-        android:id="@+id/tv_room_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="My Room"
-        android:textSize="14sp"
-        android:textColor="@color/textMuted"
-        android:layout_gravity="center_horizontal"
-        android:paddingBottom="16dp"/>
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -39,7 +31,7 @@
             android:orientation="vertical"
             android:padding="14dp">
 
-            <!-- NH3 GAUGE -->
+            <!-- GAUGE CARD -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_gauge"
                 android:layout_width="match_parent"
@@ -109,10 +101,9 @@
                         android:textSize="12sp" />
 
                 </LinearLayout>
-
             </androidx.cardview.widget.CardView>
 
-            <!-- NH3 LEVEL PILLS -->
+            <!-- LEVEL PILLS CARD -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_levels"
                 android:layout_width="match_parent"
@@ -184,10 +175,9 @@
                             android:textStyle="bold" />
 
                     </LinearLayout>
-
                 </LinearLayout>
-
             </androidx.cardview.widget.CardView>
+
             <!-- SENSOR SELECTOR BUTTONS -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -203,8 +193,8 @@
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="4dp"
-                    android:text="NH&#8323;"
-                    android:textSize="11sp"
+                    android:text="Ammonia"
+                    android:textSize="10sp"
                     app:cornerRadius="20dp" />
 
                 <Button
@@ -214,8 +204,8 @@
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="4dp"
-                    android:text="H₂S"
-                    android:textSize="11sp"
+                    android:text="Hydrogen Sulfide"
+                    android:textSize="9sp"
                     app:cornerRadius="20dp" />
 
                 <Button
@@ -224,24 +214,25 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
-                    android:text="PM2.5"
+                    android:text="Dust"
                     android:textSize="11sp"
                     app:cornerRadius="20dp" />
             </LinearLayout>
-            <!-- SENSOR GRID ROW 1 -->
+
+            <!-- SENSOR GRID - Pressure, Humidity, Temp -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:weightSum="3">
 
+                <!-- Pressure -->
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/card_co2"
+                    android:id="@+id/card_pressure"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
                     android:layout_weight="1"
+                    android:layout_marginEnd="5dp"
                     app:cardBackgroundColor="@color/surface"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp">
@@ -250,44 +241,35 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="14dp">
+                        android:padding="12dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="CO2"
+                            android:text="Pressure"
                             android:textColor="@color/textMuted"
-                            android:textSize="12sp" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="6dp"
-                            android:gravity="bottom"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/tv_co2_value"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="412"
-                                android:textColor="@color/safe"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="3dp"
-                                android:text=" ppm"
-                                android:textColor="@color/textMuted"
-                                android:textSize="10sp" />
-
-                        </LinearLayout>
+                            android:textSize="11sp" />
 
                         <TextView
-                            android:id="@+id/tv_co2_status"
+                            android:id="@+id/tv_pressure_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="@color/safe"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="4dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="hPa"
+                            android:textColor="@color/textMuted"
+                            android:textSize="10sp"
+                            android:layout_marginBottom="6dp"/>
+
+                        <TextView
+                            android:id="@+id/tv_pressure_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_pill_safe_dim"
@@ -297,94 +279,18 @@
                             android:paddingBottom="2dp"
                             android:text="Good"
                             android:textColor="@color/safe"
-                            android:textSize="10sp" />
+                            android:textSize="10sp"/>
 
                     </LinearLayout>
-
                 </androidx.cardview.widget.CardView>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/card_pm25"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_weight="1"
-                    app:cardBackgroundColor="@color/surface"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="14dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="PM2.5"
-                            android:textColor="@color/textMuted"
-                            android:textSize="12sp" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="6dp"
-                            android:gravity="bottom"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/tv_pm25_value"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="18"
-                                android:textColor="@color/warning"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="3dp"
-                                android:text=" ug/m3"
-                                android:textColor="@color/textMuted"
-                                android:textSize="10sp" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/tv_pm25_status"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_pill_warning_dim"
-                            android:paddingStart="8dp"
-                            android:paddingTop="2dp"
-                            android:paddingEnd="8dp"
-                            android:paddingBottom="2dp"
-                            android:text="Moderate"
-                            android:textColor="@color/warning"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-            </LinearLayout>
-
-            <!-- SENSOR GRID ROW 2 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
+                <!-- Humidity -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_humidity"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
                     android:layout_weight="1"
+                    android:layout_marginEnd="5dp"
                     app:cardBackgroundColor="@color/surface"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp">
@@ -393,41 +299,32 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="14dp">
+                        android:padding="12dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Humidity"
                             android:textColor="@color/textMuted"
-                            android:textSize="12sp" />
+                            android:textSize="11sp" />
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/tv_humidity_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="6dp"
-                            android:gravity="bottom"
-                            android:orientation="horizontal">
+                            android:text="--"
+                            android:textColor="@color/safe"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="4dp"/>
 
-                            <TextView
-                                android:id="@+id/tv_humidity_value"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="62"
-                                android:textColor="@color/safe"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="3dp"
-                                android:text=" %"
-                                android:textColor="@color/textMuted"
-                                android:textSize="10sp" />
-
-                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="%"
+                            android:textColor="@color/textMuted"
+                            android:textSize="10sp"
+                            android:layout_marginBottom="6dp"/>
 
                         <TextView
                             android:id="@+id/tv_humidity_status"
@@ -440,17 +337,16 @@
                             android:paddingBottom="2dp"
                             android:text="Good"
                             android:textColor="@color/safe"
-                            android:textSize="10sp" />
+                            android:textSize="10sp"/>
 
                     </LinearLayout>
-
                 </androidx.cardview.widget.CardView>
 
+                <!-- Temp -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_temp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
                     android:layout_weight="1"
                     app:cardBackgroundColor="@color/surface"
                     app:cardCornerRadius="16dp"
@@ -460,41 +356,32 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="14dp">
+                        android:padding="12dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Temp"
                             android:textColor="@color/textMuted"
-                            android:textSize="12sp" />
+                            android:textSize="11sp" />
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/tv_temp_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="6dp"
-                            android:gravity="bottom"
-                            android:orientation="horizontal">
+                            android:text="--"
+                            android:textColor="@color/safe"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="4dp"/>
 
-                            <TextView
-                                android:id="@+id/tv_temp_value"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="23"
-                                android:textColor="@color/safe"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="3dp"
-                                android:text=" C"
-                                android:textColor="@color/textMuted"
-                                android:textSize="10sp" />
-
-                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="°C"
+                            android:textColor="@color/textMuted"
+                            android:textSize="10sp"
+                            android:layout_marginBottom="6dp"/>
 
                         <TextView
                             android:id="@+id/tv_temp_status"
@@ -507,18 +394,15 @@
                             android:paddingBottom="2dp"
                             android:text="Good"
                             android:textColor="@color/safe"
-                            android:textSize="10sp" />
+                            android:textSize="10sp"/>
 
                     </LinearLayout>
-
                 </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
         </LinearLayout>
-
     </ScrollView>
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
