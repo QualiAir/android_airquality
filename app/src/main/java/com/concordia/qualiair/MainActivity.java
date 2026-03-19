@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.nav_home);
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // 1. Force the Home icon to be highlighted when this activity starts
         bottomNavigationView.setSelectedItemId(R.id.nav_home);

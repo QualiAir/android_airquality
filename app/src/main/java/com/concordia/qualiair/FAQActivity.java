@@ -30,6 +30,10 @@ public class FAQActivity extends AppCompatActivity {
         //list of questions and answers
         List<FAQItem> faqList = new ArrayList<>();
         faqList.add(new FAQItem("Support contact?", "Email us at elec390team1@gmail.com."));
+        faqList.add(new FAQItem("Where can I find more information on Hydrogen Sulfide?", "We have looked at a few sources and decided to base our preset levels on the data provided by the tables in this link: https://www.osha.gov/chemicaldata/652"));
+        faqList.add(new FAQItem("Where can I find more information on Ammonia?", "We have looked at a few sources and decided to base our preset levels on the data provided by the tables in this link: https://www.osha.gov/chemicaldata/623"));
+        faqList.add(new FAQItem("Where can I find more information on Particulate Matter?", "We have looked at a few sources and decided to base our preset levels on the data provided by the tables in this link: https://www.epa.gov/criteria-air-pollutants/naaqs-table"));
+
 
         //Adapter
         FAQAdapter adapter = new FAQAdapter(faqList);
