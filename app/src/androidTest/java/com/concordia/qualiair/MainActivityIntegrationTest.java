@@ -24,7 +24,7 @@ public class MainActivityIntegrationTest {
     @Test
     public void testUIComponentsVisible() {
         // Verify the Ammonia Gauge is displayed on the screen
-        onView(withId(R.id.gauge_nh3)).check(matches(isDisplayed()));
+        onView(withId(R.id.gauge_main)).check(matches(isDisplayed()));
 
         // Verify the Navigation Bar is present
         onView(withId(R.id.bottom_navigation)).check(matches(isDisplayed()));
