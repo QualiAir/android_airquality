@@ -298,19 +298,19 @@
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.imageview.ShapeableImageView
-    android:id="@+id/profilePic"
-    android:layout_width="150dp"
-    android:layout_height="150dp"
-    android:layout_marginTop="40dp"
-    android:scaleType="centerCrop"
-    android:src="@drawable/temp_profile"
-    android:padding="2dp"
-    app:strokeWidth="2dp"
-    app:strokeColor="@color/surfaceHigh"
-    app:shapeAppearanceOverlay="@style/CircleImage"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-    tools:srcCompat="@tools:sample/avatars" />
+        android:id="@+id/profilePic"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="40dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/temp_profile"
+        android:padding="2dp"
+        app:strokeWidth="2dp"
+        app:strokeColor="@color/surfaceHigh"
+        app:shapeAppearanceOverlay="@style/CircleImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -112,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
         UserPreferences prefs = new UserPreferences(this);
         prefs.loadAllPreferences();
 
-        int nh3Max = prefs.getNh3HighMax();
+        float nh3Max = getSharedPreferences("QualiAirPreferences", MODE_PRIVATE)
+                .getFloat(ThresholdLevels.KEY_NH3_ALARM, ThresholdLevels.NORMAL.nh3Alarm);
         gaugeMain.setMinValue(0);
         if (nh3Max == 0) {
             gaugeMain.setMaxValue(50);
