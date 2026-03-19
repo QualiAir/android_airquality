@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         alertManager = new AlertManager(this);
 
+
+
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // 1. Force the Home icon to be highlighted when this activity starts
@@ -108,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Setting up gauge range for default sensor (NH3)
         setupGaugeRanges();
+
     }
 
     private void setupGaugeRanges() {

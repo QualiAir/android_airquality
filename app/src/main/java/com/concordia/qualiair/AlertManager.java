@@ -29,7 +29,7 @@ public class AlertManager {
     private void startTimer(final AirQualityMonitor monitor){
         if(timerRunning) return;
         timerRunning=true;
-        Log.d("AlertManager", "Caution detected- staring 5 s timer");
+        Log.d("AlertManager", "Caution detected- starting 5 s timer");
 
         pendingAlert= new Runnable(){
             @Override
@@ -49,7 +49,7 @@ public class AlertManager {
         if(pendingAlert!=null){
             handler.removeCallbacks(pendingAlert);
             pendingAlert=null;
-            Log.d("AlertManager","Value back to Good -timer cncelled");
+            Log.d("AlertManager","Value back to Good -timer cancelled");
         }
         timerRunning=false;
     }
@@ -62,7 +62,6 @@ public class AlertManager {
     }
 
     private void fireAlert(AirQualityMonitor monitor) {
-        // TODO: COM-2.3 — send notification here
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle("Air Quality Alert")
