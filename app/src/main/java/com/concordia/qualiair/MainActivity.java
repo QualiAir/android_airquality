@@ -1,8 +1,10 @@
 package com.concordia.qualiair;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.content.Intent;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.widget.TextView;
 import android.util.Log;
@@ -47,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         alertManager = new AlertManager(this);
 
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.nav_home);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // 1. Force the Home icon to be highlighted when this activity starts
@@ -115,7 +115,8 @@ public class MainActivity extends AppCompatActivity {
         UserPreferences prefs = new UserPreferences(this);
         prefs.loadAllPreferences();
 
-        int nh3Max = prefs.getNh3HighMax();
+        float nh3Max = getSharedPreferences("QualiAirPreferences", MODE_PRIVATE)
+                .getFloat(ThresholdLevels.KEY_NH3_ALARM, ThresholdLevels.NORMAL.nh3Alarm);
         gaugeMain.setMinValue(0);
         if (nh3Max == 0) {
             gaugeMain.setMaxValue(50);
