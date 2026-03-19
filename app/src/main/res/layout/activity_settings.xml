@@ -44,6 +44,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
+        <!-- ic_settings used until ic_camera is added via Vector Asset -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnChangePic"
             style="@style/Widget.Material3.Button.TonalButton"
@@ -54,7 +55,7 @@
             android:textColor="@color/text"
             app:backgroundTint="@color/surfaceHigh"
             app:cornerRadius="12dp"
-            app:icon="@drawable/ic_camera"
+            app:icon="@drawable/ic_settings"
             app:iconGravity="textStart"
             app:iconPadding="8dp"
             app:iconTint="@color/text"
@@ -114,7 +115,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Sensitivity preset -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilSensitivity"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -136,14 +136,18 @@
                 android:id="@+id/dropdownSensitivity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="56dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:inputType="none"
-                android:focusable="false"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
                 android:cursorVisible="false"
-                android:textColor="@color/text" />
+                android:textColor="@color/text"
+                android:textSize="16sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Custom thresholds card (hidden unless Custom is selected) -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardCustomThresholds"
             android:layout_width="0dp"
@@ -345,7 +349,7 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Save button — constrained to cardCustomThresholds so it shifts down correctly -->
+        <!-- save button anchored to cardCustomThresholds -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
             style="@style/Widget.Material3.Button"
@@ -361,23 +365,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardCustomThresholds" />
-
-        <!-- Save button now correctly anchored to tilEmail -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSave"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="32dp"
-            android:text="Save Changes"
-            app:cornerRadius="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tilEmail" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

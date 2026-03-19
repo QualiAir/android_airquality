@@ -74,7 +74,17 @@ public class ProfileActivity extends AppCompatActivity {
         String savedUri = getSharedPreferences("QualiAirPreferences", MODE_PRIVATE)
                 .getString("profile_pic_uri", null);
         if (savedUri != null) {
-            profilePic.setImageURI(Uri.parse(savedUri));
+            try {
+                Uri uri = Uri.parse(savedUri);
+                getContentResolver().takePersistableUriPermission(
+                        uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                profilePic.setImageURI(uri);
+            } catch (Exception e) {
+                // URI permission expired — clear it and show default
+                getSharedPreferences("QualiAirPreferences", MODE_PRIVATE)
+                        .edit().remove("profile_pic_uri").apply();
+                profilePic.setImageResource(R.drawable.temp_profile);
+            }
         }
 
         SharedPreferences prefs = getSharedPreferences("QualiAirPreferences", MODE_PRIVATE);

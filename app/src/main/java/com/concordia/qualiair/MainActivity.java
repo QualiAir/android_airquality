@@ -1,8 +1,10 @@
 package com.concordia.qualiair;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.content.Intent;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
@@ -44,27 +46,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         GaugeView gauge = findViewById(R.id.gauge_nh3);
-        
-        // create UserPreferences
-        UserPreferences prefs = new UserPreferences(this);
-
-        // load saved values
-        prefs.loadAllPreferences();
 
         // get NH3 thresholds
-        int nh3Min = prefs.getNh3LowMin();
-        int nh3Max = prefs.getNh3HighMax();
+        float nh3Min = getSharedPreferences("QualiAirPreferences", MODE_PRIVATE).getFloat(ThresholdLevels.KEY_NH3_CAUTION, ThresholdLevels.NORMAL.nh3Caution);
+        float nh3Max = getSharedPreferences("QualiAirPreferences", MODE_PRIVATE).getFloat(ThresholdLevels.KEY_NH3_ALARM, ThresholdLevels.NORMAL.nh3Alarm);
 
-        // if there is no saved value for NH3, use the defaults
-        if (nh3Max == 0) {
-            gauge.setMinValue(0);
-            gauge.setMaxValue(50);
-        } else {
-            gauge.setMinValue(nh3Min);
-            gauge.setMaxValue(nh3Max);
-        }
+        gauge.setMinValue(0);
+        gauge.setMaxValue(nh3Max * 1.5f);//some overhead allowed, sensor can read above alarm value
         gauge.setValue(18);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
