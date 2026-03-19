@@ -28,9 +28,11 @@ public class ProvisioningActivity extends AppCompatActivity {
     private TextView tvStatus;
     private static final String TAG = "ProvisioningActivity";
     private static final String PROV_SERVICE_UUID = "1775244d-6b43-439b-877c-060f2d9bed07";
+    private final String POP ="TEAM1abcd1234";
 
     private int retryCount = 0;
     private static final int MAX_RETRIES = 3;
+    private boolean isActivityDestroyed = false;
     private BluetoothDevice currentDevice;
 
     @Override
@@ -54,8 +56,12 @@ public class ProvisioningActivity extends AppCompatActivity {
         findViewById(R.id.btnProvision).setEnabled(false);
 
         currentDevice = getIntent().getParcelableExtra("device");
-
-        connectToDevice(currentDevice);
+        if (currentDevice == null) {
+            tvStatus.setText("Status: No device received");
+            return;
+        }
+        //displays device name on LOgcat
+        Log.d(TAG, "currentDevice is: " + currentDevice);
 
         findViewById(R.id.btnProvision).setOnClickListener(v -> {
             String ssid = ((EditText) findViewById(R.id.etSSID))
@@ -67,14 +73,12 @@ public class ProvisioningActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please enter SSID", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             sendCredentials(ssid, password);
         });
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        startActivity(new Intent(this, MainActivity.class));
         finish();
         return true;
     }
@@ -83,6 +87,8 @@ public class ProvisioningActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        connectToDevice(currentDevice);//waiting for everything to settle before attempting to connect
+        Log.d(TAG, "onSTART() called connectToDevice()");
     }
 
     @Override
@@ -91,17 +97,33 @@ public class ProvisioningActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isActivityDestroyed = true;
+        if (espDevice != null) {
+            espDevice.disconnectDevice();
+        }
+    }
+
+
+
     private void connectToDevice(BluetoothDevice bluetoothDevice) {
+        Log.d(TAG, "connectToDevice() running");
         tvStatus.setText("Status: Connecting... (attempt " + (retryCount + 1) + "/" + MAX_RETRIES + ")");
 
-        // Always recreate espDevice fresh on each attempt
+        if (espDevice != null) {
+            espDevice.disconnectDevice(); // disconnect old one that is already running
+        }
+
+        // recreating espDevice
         espDevice = provisionManager.createESPDevice(
                 ESPConstants.TransportType.TRANSPORT_BLE,
                 ESPConstants.SecurityType.SECURITY_1
         );
 
-        // Set PoP if your ESP32 uses one — change or remove if not needed
-        espDevice.setProofOfPossession("TEAM1abcd1234");
+        // Setting POP
+        espDevice.setProofOfPossession(POP);
 
         espDevice.connectBLEDevice(bluetoothDevice, PROV_SERVICE_UUID);
     }
@@ -122,8 +144,10 @@ public class ProvisioningActivity extends AppCompatActivity {
                     retryCount++;
                     tvStatus.setText("Status: Failed, retrying... ("
                             + retryCount + "/" + MAX_RETRIES + ")");
-                    new android.os.Handler(getMainLooper()).postDelayed(
-                            () -> connectToDevice(currentDevice), 2000);
+                    //waits 1 sec and if activity is not destroyed(no back button pressed) then retry
+                    //
+                    new android.os.Handler(getMainLooper()).postDelayed(() -> {
+                        if (!isActivityDestroyed) connectToDevice(currentDevice);}, 1000);
                 } else {
                     retryCount = 0;
                     tvStatus.setText("Status: Could not connect after "
@@ -142,6 +166,7 @@ public class ProvisioningActivity extends AppCompatActivity {
     }
 
     private void sendCredentials(String ssid, String password) {
+        Log.d(TAG, "sendCredentials() running");
         tvStatus.setText("Status: Sending credentials...");
         findViewById(R.id.btnProvision).setEnabled(false);
 
