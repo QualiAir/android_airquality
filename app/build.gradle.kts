@@ -4,9 +4,7 @@ plugins {
 
 android {
     namespace = "com.concordia.qualiair"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.concordia.qualiair"
@@ -42,6 +40,10 @@ dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    
+    // Manual dependency for the local ESP Provisioning AAR
+    implementation("com.google.protobuf:protobuf-javalite:3.25.1")
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -50,5 +52,6 @@ dependencies {
         exclude(group = "com.google.protobuf", module = "protobuf-lite")
     }
     implementation(files("libs/esp-idf-provisioning-android-lib-2.1.0.aar"))
+    implementation(libs.tink.android)
     implementation("org.greenrobot:eventbus:3.3.1")
 }
