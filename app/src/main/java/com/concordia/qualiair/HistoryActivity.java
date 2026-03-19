@@ -41,20 +41,9 @@ public class HistoryActivity extends AppCompatActivity {
     private ApiService apiService;
     private final String DEVICE_ID = "sensor1";
 
-    // PM2.5: Based on EPA 2024 AQI Breakpoints
-    private static final float PM25_CAUTION = 102f;
-    private static final float PM25_ALARM = 200f;
 
-    // H2S: Based on Indoor Ventilation Standards (ASHRAE)
-    private static final float H2S_CAUTION = 1f;
-    private static final float H2S_ALARM = 5f;
-
-    // NH3: Based on NIOSH Occupational Safety
-    private static final float NH3_CAUTION = 25f;
-    private static final float NH3_ALARM = 35f;
-
-    private float currentCaution = NH3_CAUTION;
-    private float currentAlarm = NH3_ALARM;
+    private float currentCaution = ThresholdLevels.NORMAL.nh3Caution;
+    private float currentAlarm = ThresholdLevels.NORMAL.nh3Alarm;
 
     private TextView buttonFilterAlarm;
     private boolean isFilterActive = false;
@@ -142,6 +131,11 @@ public class HistoryActivity extends AppCompatActivity {
         });
     }
 
+    private float getSavedThreshold(String key, float defaultVal) {
+        return getSharedPreferences("QualiAirPreferences", MODE_PRIVATE)
+                .getFloat(key, defaultVal);
+    }
+
     private void resetFilter() {
         isFilterActive = false;
         buttonFilterAlarm.setText("Show Alarms");
@@ -218,19 +212,19 @@ public class HistoryActivity extends AppCompatActivity {
         // FIX 3a — update thresholds for the selected sensor
         switch (sensorName) {
             case "hydrogen_sulfide":
-                currentCaution = H2S_CAUTION;
-                currentAlarm = H2S_ALARM;
+                currentCaution = getSavedThreshold(ThresholdLevels.KEY_H2S_CAUTION,  ThresholdLevels.NORMAL.h2sCaution);
+                currentAlarm   = getSavedThreshold(ThresholdLevels.KEY_H2S_ALARM,    ThresholdLevels.NORMAL.h2sAlarm);
                 yAxisTitleTextView.setText("H₂S (ppm)");
                 break;
             case "dust":
-                currentCaution = PM25_CAUTION;
-                currentAlarm = PM25_ALARM;
+                currentCaution = getSavedThreshold(ThresholdLevels.KEY_PM25_CAUTION, ThresholdLevels.NORMAL.pm25Caution);
+                currentAlarm   = getSavedThreshold(ThresholdLevels.KEY_PM25_ALARM,   ThresholdLevels.NORMAL.pm25Alarm);
                 yAxisTitleTextView.setText("PM2.5 (µg/m³)");
                 break;
             case "ammonia":
             default:
-                currentCaution = NH3_CAUTION;
-                currentAlarm = NH3_ALARM;
+                currentCaution = getSavedThreshold(ThresholdLevels.KEY_NH3_CAUTION,  ThresholdLevels.NORMAL.nh3Caution);
+                currentAlarm   = getSavedThreshold(ThresholdLevels.KEY_NH3_ALARM,    ThresholdLevels.NORMAL.nh3Alarm);
                 yAxisTitleTextView.setText("NH₃ (ppm)");
                 break;
         }
@@ -328,28 +322,19 @@ public class HistoryActivity extends AppCompatActivity {
 
         leftAxis.removeAllLimitLines();
 
-        float alarmValue;
-        float cautionValue;
-        float maxView;
-
-        switch (sensorName) {
-            case "hydrogen_sulfide":
-                cautionValue = 1f;
-                alarmValue = 5f;
-                maxView = 10f;
-                break;
-            case "dust":
-                cautionValue = 102f;
-                alarmValue = 200f;
-                maxView = 300f;
-                break;
-            case "ammonia":
-            default:
-                cautionValue = 25f;
-                alarmValue = 35f;
-                maxView = 38f;
-                break;
-        }
+        float cautionValue = getSavedThreshold(
+                sensorName.equals("hydrogen_sulfide") ? ThresholdLevels.KEY_H2S_CAUTION  :
+                        sensorName.equals("dust")             ? ThresholdLevels.KEY_PM25_CAUTION : ThresholdLevels.KEY_NH3_CAUTION,
+                sensorName.equals("hydrogen_sulfide") ? ThresholdLevels.NORMAL.h2sCaution  :
+                        sensorName.equals("dust")             ? ThresholdLevels.NORMAL.pm25Caution : ThresholdLevels.NORMAL.nh3Caution
+        );
+        float alarmValue = getSavedThreshold(
+                sensorName.equals("hydrogen_sulfide") ? ThresholdLevels.KEY_H2S_ALARM  :
+                        sensorName.equals("dust")             ? ThresholdLevels.KEY_PM25_ALARM : ThresholdLevels.KEY_NH3_ALARM,
+                sensorName.equals("hydrogen_sulfide") ? ThresholdLevels.NORMAL.h2sAlarm  :
+                        sensorName.equals("dust")             ? ThresholdLevels.NORMAL.pm25Alarm : ThresholdLevels.NORMAL.nh3Alarm
+        );
+        float maxView = alarmValue * 1.5f;
 
         leftAxis.setAxisMaximum(maxView);
         leftAxis.setAxisMinimum(0f);
