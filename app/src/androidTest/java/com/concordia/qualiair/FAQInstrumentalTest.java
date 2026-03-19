@@ -1,6 +1,5 @@
 package com.concordia.qualiair;
 
-import androidx.lifecycle.Lifecycle;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
@@ -13,8 +12,6 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
-
 /**
  * Instrumented Integration Tests for FAQActivity
  * Location: src/androidTest/java/com/concordia/qualiair/FAQInstrumentedTest.java
@@ -23,7 +20,7 @@ import static org.junit.Assert.*;
  * Run with: ./gradlew connectedAndroidTest
  */
 @RunWith(AndroidJUnit4.class)
-public class FAQInstrumentedTest {
+public class FAQInstrumentalTest {
 
     private ActivityScenario<MainActivity> launchFromMain() {
         ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);

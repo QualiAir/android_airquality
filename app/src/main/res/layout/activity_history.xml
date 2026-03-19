@@ -112,7 +112,8 @@
                     android:gravity="center"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:text="NH&#8323;"
+                    android:text="Ammonia;"
+                    android:textSize="12sp"
                     android:textColor="@color/safe" />
 
                 <TextView
@@ -120,7 +121,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="H₂S"
+                    android:text="Hydrogen Sulfide"
+                    android:textSize="10sp"
                     android:gravity="center"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
@@ -138,7 +140,8 @@
                     android:gravity="center"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:text="PM2.5"
+                    android:text="Dust"
+                    android:textSize="12sp"
                     android:textColor="@color/textMuted" />
 
             </LinearLayout>
