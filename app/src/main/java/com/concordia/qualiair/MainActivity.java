@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     private MqttClient mqttClient;
 
+    private AlertManager alertManager;
+
     // --- Currently selected sensor ---
     private String selectedSensor = "nh3"; // default to NH3
 
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        alertManager = new AlertManager(this);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_home);
@@ -208,6 +211,7 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
                             tvHumidityValue.setText(String.format("%.0f", humidity));
                             tvTempValue.setText(String.format("%.0f", temp));
                             monitor.update(nh3, h2s, pm25);
+                            alertManager.onNewReading(monitor);
                             switch (selectedSensor) {
                                 case "nh3":
                                     updateGaugeDisplay(monitor.getLatest("nh3"));
@@ -233,7 +237,7 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
                 try {
                     mqttClient.connect(options);
                     Log.d("MQTT", "Connected to HiveMQ!");
-                    mqttClient.subscribe("qualiair/gauge_test", 1);//qualiair/gauge_test
+                    mqttClient.subscribe("qualiair/test", 1);//qualiair/gauge_test
                 } catch (MqttException e) {
                     Log.e("MQTT", "Connection failed", e);
                 }

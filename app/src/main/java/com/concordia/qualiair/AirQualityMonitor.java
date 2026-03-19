@@ -65,5 +65,10 @@ public class AirQualityMonitor {
         }
         return StatusLevel.GOOD;
     }
+    public boolean isAnyCaution() {
+            return getStatus("nh3")  != StatusLevel.GOOD
+                || getStatus("h2s")  != StatusLevel.GOOD
+                || getStatus("pm25") != StatusLevel.GOOD;
+    }
 
 }
