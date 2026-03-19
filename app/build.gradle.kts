@@ -4,9 +4,7 @@ plugins {
 
 android {
     namespace = "com.concordia.qualiair"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.concordia.qualiair"
@@ -61,5 +59,6 @@ dependencies {
         exclude(group = "com.google.protobuf", module = "protobuf-lite")
     }
     implementation(files("libs/esp-idf-provisioning-android-lib-2.1.0.aar"))
+    implementation(libs.tink.android)
     implementation("org.greenrobot:eventbus:3.3.1")
 }

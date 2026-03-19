@@ -32,11 +32,15 @@ public class DeviceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_device2);
 
         provisionManager = ESPProvisionManager.getInstance(getApplicationContext());
-        //requests for location and usage of bluetooth
-        requestPermissions();
+
+        //requests for location and usage of bluetooth if it hasnt been done
+        if (!hasPermissions() && savedInstanceState == null) {
+            requestPermissions();
+        }
 
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         // back arrow
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -133,7 +137,8 @@ public class DeviceActivity extends AppCompatActivity {
     }
 
     private void startScan() {
-        // Extra safety check before calling BLE APIs
+        deviceFound=false;
+        // checking to see state of permissions
         if (!hasPermissions()) {
             Toast.makeText(this, "Missing permissions", Toast.LENGTH_SHORT).show();
             return;
@@ -145,8 +150,7 @@ public class DeviceActivity extends AppCompatActivity {
 
                 @Override
                 public void scanStartFailed() {
-                    runOnUiThread(() ->
-                            Toast.makeText(DeviceActivity.this,
+                    runOnUiThread(() -> Toast.makeText(DeviceActivity.this,
                                     "Scan failed to start", Toast.LENGTH_SHORT).show());
                 }
 
@@ -174,14 +178,19 @@ public class DeviceActivity extends AppCompatActivity {
 
                     runOnUiThread(() -> {
                         Intent intent = new Intent(DeviceActivity.this, ProvisioningActivity.class);
-                        intent.putExtra("device", device);
+                        intent.putExtra("device", device);//sending found device object to provisioning activity
                         startActivity(intent);
                     });
                 }
 
                 @Override
                 public void scanCompleted() {
-                    Log.i(TAG, "Scan completed");
+                    runOnUiThread(() -> {findViewById(R.id.btnScan).setEnabled(true);
+                        if (!deviceFound) {
+                            Toast.makeText(DeviceActivity.this,
+                                    "No QualiAir device found nearby", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
 
                 @Override
