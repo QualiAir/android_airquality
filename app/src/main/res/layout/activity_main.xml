@@ -123,7 +123,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="NH3 Levels"
+                        android:text="Levels"
                         android:textColor="@color/textMuted"
                         android:textSize="13sp" />
 
