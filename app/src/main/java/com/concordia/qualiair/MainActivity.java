@@ -108,13 +108,11 @@ public class MainActivity extends AppCompatActivity {
             updateGaugeDisplay(monitor.getLatest("pm25"));
         });
 
-        //Setting up gauge range for default sensor (NH3)
         setupGaugeRanges();
 
     }
 
     private void setupGaugeRanges() {
-        // create UserPreferences
         UserPreferences prefs = new UserPreferences(this);
         prefs.loadAllPreferences();
 
@@ -153,7 +151,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         applyStatusStyle(monitor.getStatus(selectedSensor));
-        float clampedValue= Math.min(value,maxValue);//so if the value is beyond, it will stay in the red zone far right
+        //so if the value is beyond, it will stay in the red zone far right
+        float clampedValue= Math.min(value,maxValue);
         gaugeMain.setValue(clampedValue);
         tvGaugeValue.setText(String.format("%.1f", value));
 
@@ -188,6 +187,9 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
             MqttConnectOptions options = new MqttConnectOptions();
             options.setAutomaticReconnect(true);
             options.setCleanSession(true);
+            options.setUserName(BuildConfig.MQTT_USERNAME);
+            options.setPassword(BuildConfig.MQTT_PASSWORD.toCharArray());
+
 
             mqttClient.setCallback(new MqttCallback() {
                 @Override
@@ -206,7 +208,7 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
                         float pm25 = (float) json.getDouble("dust");
 
                         float humidity=(float) json.getDouble("humidity");
-                        float pressure=(float) json.getDouble("pressure");
+                        float pressure=(float) json.optDouble("pressure",0.0);
                         float temp=(float) json.getDouble("temperature");
 
 
@@ -241,7 +243,7 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
                 try {
                     mqttClient.connect(options);
                     Log.d("MQTT", "Connected to HiveMQ!");
-                    mqttClient.subscribe("qualiair/test", 1);//qualiair/gauge_test
+                    mqttClient.subscribe("qualiair/data", 1);
                 } catch (MqttException e) {
                     Log.e("MQTT", "Connection failed", e);
                 }

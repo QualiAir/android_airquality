@@ -1,5 +1,13 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
 }
 
 android {
@@ -14,9 +22,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "MQTT_BROKER", "\"tcp://test.mosquitto.org:1883\"")
-        buildConfigField("String", "MQTT_USERNAME", "\"\"")
-        buildConfigField("String", "MQTT_PASSWORD", "\"\"")
+        buildConfigField("String", "MQTT_BROKER", "\"${localProperties["MQTT_BROKER"] ?: "tcp://test.mosquitto.org:1883"}\"")
+        buildConfigField("String", "MQTT_USERNAME", "\"${localProperties["MQTT_USERNAME"] ?: ""}\"")
+        buildConfigField("String", "MQTT_PASSWORD", "\"${localProperties["MQTT_PASSWORD"] ?: ""}\"")
     }
 
     buildTypes {
