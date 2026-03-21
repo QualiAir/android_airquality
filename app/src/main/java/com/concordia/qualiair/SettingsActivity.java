@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import androidx.appcompat.app.AlertDialog;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -89,6 +90,11 @@ public class SettingsActivity extends AppCompatActivity {
         // Show/hide custom card based on selection
         dropdownSensitivity.setOnItemClickListener((parent, view, position, id) -> {
             String selected = options[position];
+
+            if (selected.equals("Custom")) {
+                showCustomDialog();
+            }
+
             toggleCustomCard(selected);
             if (!selected.equals("Custom")) {
                 prefillCustomFields(ThresholdLevels.fromPreference(
@@ -173,8 +179,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void toggleCustomCard(String preset) {
-        cardCustomThresholds.setVisibility(
-                preset.equals("Custom") ? View.VISIBLE : View.GONE);
+        cardCustomThresholds.setVisibility(View.GONE);
     }
 
     private void prefillCustomFields(ThresholdLevels.Thresholds t) {
@@ -233,5 +238,116 @@ public class SettingsActivity extends AppCompatActivity {
             field.setError("Invalid number");
             throw new IllegalArgumentException();
         }
+    }
+
+    private void showCustomDialog() {
+
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_custom_thresholds, null);
+
+        TextInputEditText etNh3CautionDialog = dialogView.findViewById(R.id.etNh3Caution);
+        TextInputEditText etNh3AlarmDialog   = dialogView.findViewById(R.id.etNh3Alarm);
+        TextInputEditText etH2sCautionDialog = dialogView.findViewById(R.id.etH2sCaution);
+        TextInputEditText etH2sAlarmDialog   = dialogView.findViewById(R.id.etH2sAlarm);
+        TextInputEditText etPm25CautionDialog = dialogView.findViewById(R.id.etPm25Caution);
+        TextInputEditText etPm25AlarmDialog   = dialogView.findViewById(R.id.etPm25Alarm);
+
+        // preload from existing card values
+        etNh3CautionDialog.setText(etNh3Caution.getText());
+        etNh3AlarmDialog.setText(etNh3Alarm.getText());
+        etH2sCautionDialog.setText(etH2sCaution.getText());
+        etH2sAlarmDialog.setText(etH2sAlarm.getText());
+        etPm25CautionDialog.setText(etPm25Caution.getText());
+        etPm25AlarmDialog.setText(etPm25Alarm.getText());
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Custom Thresholds")
+                .setView(dialogView)
+                .setPositiveButton("Save", null)
+                .setNegativeButton("Cancel", null)
+                .create();
+
+        dialog.setOnShowListener(d -> {
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                try {
+
+                    // clear previous errors
+                    etNh3CautionDialog.setError(null);
+                    etNh3AlarmDialog.setError(null);
+                    etH2sCautionDialog.setError(null);
+                    etH2sAlarmDialog.setError(null);
+                    etPm25CautionDialog.setError(null);
+                    etPm25AlarmDialog.setError(null);
+
+                    float nh3C = Float.parseFloat(etNh3CautionDialog.getText().toString());
+                    float nh3A = Float.parseFloat(etNh3AlarmDialog.getText().toString());
+                    float h2sC = Float.parseFloat(etH2sCautionDialog.getText().toString());
+                    float h2sA = Float.parseFloat(etH2sAlarmDialog.getText().toString());
+                    float pm25C = Float.parseFloat(etPm25CautionDialog.getText().toString());
+                    float pm25A = Float.parseFloat(etPm25AlarmDialog.getText().toString());
+
+                    if (nh3C >= nh3A || h2sC >= h2sA || pm25C >= pm25A) {
+                        Snackbar.make(findViewById(R.id.btnSave), "Caution must be < Alarm", Snackbar.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // enforce max = default (Normal)
+                    ThresholdLevels.Thresholds defaultT =
+                            ThresholdLevels.fromPreference("Normal", 0,0,0,0,0,0);
+
+                    // NH3
+                    if (nh3C > defaultT.nh3Caution) {
+                        etNh3CautionDialog.setError("Max: " + defaultT.nh3Caution);
+                        return;
+                    }
+                    if (nh3A > defaultT.nh3Alarm) {
+                        etNh3AlarmDialog.setError("Max: " + defaultT.nh3Alarm);
+                        return;
+                    }
+
+                    // H2S
+                    if (h2sC > defaultT.h2sCaution) {
+                        etH2sCautionDialog.setError("Max: " + defaultT.h2sCaution);
+                        return;
+                    }
+                    if (h2sA > defaultT.h2sAlarm) {
+                        etH2sAlarmDialog.setError("Max: " + defaultT.h2sAlarm);
+                        return;
+                    }
+
+                    // PM2.5
+                    if (pm25C > defaultT.pm25Caution) {
+                        etPm25CautionDialog.setError("Max: " + defaultT.pm25Caution);
+                        return;
+                    }
+                    if (pm25A > defaultT.pm25Alarm) {
+                        etPm25AlarmDialog.setError("Max: " + defaultT.pm25Alarm);
+                        return;
+                    }
+
+                    // copy values BACK into your existing card fields
+                    etNh3Caution.setText(String.valueOf(nh3C));
+                    etNh3Alarm.setText(String.valueOf(nh3A));
+                    etH2sCaution.setText(String.valueOf(h2sC));
+                    etH2sAlarm.setText(String.valueOf(h2sA));
+                    etPm25Caution.setText(String.valueOf(pm25C));
+                    etPm25Alarm.setText(String.valueOf(pm25A));
+
+                    dropdownSensitivity.setText("Custom", false);
+
+                    dialog.dismiss();
+
+                } catch (Exception e) {
+                    Snackbar.make(findViewById(R.id.btnSave), "Invalid input", Snackbar.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+        dialog.show();
+
+        dialog.getWindow().setLayout(
+                (int)(getResources().getDisplayMetrics().widthPixels * 0.9),
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+        );
     }
 }
