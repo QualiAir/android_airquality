@@ -3,6 +3,7 @@ package com.concordia.qualiair;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Build;
 import android.content.Intent;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -49,6 +50,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         alertManager = new AlertManager(this);
 
+        // Request notification permission on Android 13+
+        if (Build.VERSION.SDK_INT >= 33) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
+                    != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                        1001
+                );
+            }
+        }
 
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -203,13 +214,13 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
                     Log.d("MQTT", "Payload: " + payload);
                     try {
                         org.json.JSONObject json = new org.json.JSONObject(payload);
-                        float nh3  = (float) json.getDouble("ammonia");
-                        float h2s  = (float) json.getDouble("hydrogen_sulfide");
-                        float pm25 = (float) json.getDouble("dust");
+                        float nh3  = (float) json.optDouble("ammonia");
+                        float h2s  = (float) json.optDouble("hydrogen_sulfide");
+                        float pm25 = (float) json.optDouble("dust");
 
-                        float humidity=(float) json.getDouble("humidity");
+                        float humidity=(float) json.optDouble("humidity");
                         float pressure=(float) json.optDouble("pressure",0.0);
-                        float temp=(float) json.getDouble("temperature");
+                        float temp=(float) json.optDouble("temperature");
 
 
                         runOnUiThread(() -> {
@@ -243,7 +254,7 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
                 try {
                     mqttClient.connect(options);
                     Log.d("MQTT", "Connected to HiveMQ!");
-                    mqttClient.subscribe("qualiair/data", 1);
+                    mqttClient.subscribe("qualiair/gauge_test", 1);
                 } catch (MqttException e) {
                     Log.e("MQTT", "Connection failed", e);
                 }
