@@ -18,6 +18,10 @@ public class AlertManager {
     private static final String CHANNEL_ID = "qualiair_caution";
     private static final int NOTIF_ID=1001;
 
+    private static final String ALARM_CHANNEL_ID = "qualiair_alarm";
+    private static final int ALARM_NOTIF_ID = 1002;
+    private android.media.Ringtone alarmRingtone;
+    private boolean alarmPlaying = false;
 
 
     public AlertManager(Context context)
@@ -25,6 +29,7 @@ public class AlertManager {
         this.context=context;
         this.handler = new Handler(Looper.getMainLooper());
         createNotificationChannel();
+        createAlarmNotificationChannel();
     }
     private void startTimer(final AirQualityMonitor monitor){
         if(timerRunning) return;
@@ -53,10 +58,31 @@ public class AlertManager {
         }
         timerRunning=false;
     }
+    private void startAlarm(AirQualityMonitor monitor) {
+        fireAlarmNotification();
+        if (alarmPlaying) return;
+        alarmPlaying = true;
+        android.net.Uri alarmUri = android.media.RingtoneManager.getDefaultUri(
+                android.media.RingtoneManager.TYPE_ALARM);
+        alarmRingtone = android.media.RingtoneManager.getRingtone(context, alarmUri);
+        if (alarmRingtone != null) alarmRingtone.play();
+    }
+
+    private void stopAlarm() {
+        if (alarmRingtone != null && alarmRingtone.isPlaying()) {
+            alarmRingtone.stop();
+        }
+        alarmPlaying = false;
+    }
     public void onNewReading(AirQualityMonitor monitor) {
-        if (monitor.isAnyCaution()) {
+        if (monitor.isAnyAlarm()) {
+            startAlarm(monitor);
+            cancelTimer();
+        } else if (monitor.isAnyCaution()) {
+            stopAlarm();
             startTimer(monitor);
         } else {
+            stopAlarm();
             cancelTimer();
         }
     }
@@ -90,6 +116,37 @@ public class AlertManager {
             if(nm!=null){
                 nm.createNotificationChannel(channel);
             }
+        }
+    }
+
+    private void fireAlarmNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, ALARM_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("⚠️ ALARM: Unsafe Air Quality!")
+                .setContentText("Dangerous contaminant levels detected! Leave the area!")
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
+                .setAutoCancel(true);
+
+        NotificationManager nm =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (nm != null) {
+            nm.notify(ALARM_NOTIF_ID, builder.build());
+        }
+    }
+
+    private void createAlarmNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    ALARM_CHANNEL_ID,
+                    "Air Quality ALARM",
+                    NotificationManager.IMPORTANCE_MAX
+            );
+            channel.setDescription("Emergency alarm when air quality is dangerous");
+            channel.enableVibration(true);
+            NotificationManager nm =
+                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (nm != null) nm.createNotificationChannel(channel);
         }
     }
 }

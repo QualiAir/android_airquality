@@ -7,4 +7,16 @@
     <attr name="gradStart" format="color" />
     <attr name="gradEnd" format="color" />
     <attr name="supreme" format="color"/>
+    <declare-styleable name="GaugeView">
+        <attr name="gaugeMinValue"       format="float" />
+        <attr name="gaugeMaxValue"       format="float" />
+        <attr name="gaugeCautionValue"   format="float" />
+        <attr name="gaugeAlarmValue"     format="float" />
+        <attr name="gaugeStrokeWidth"    format="dimension" />
+        <attr name="gaugeColorLow"       format="color" />
+        <attr name="gaugeColorCaution"   format="color" />
+        <attr name="gaugeColorAlarm"     format="color" />
+        <attr name="gaugeColorBg"        format="color" />
+        <attr name="gaugeColorNeedle"    format="color" />
+    </declare-styleable>
 </resources>

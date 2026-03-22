@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Build;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.widget.TextView;
@@ -124,46 +125,53 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupGaugeRanges() {
-        UserPreferences prefs = new UserPreferences(this);
-        prefs.loadAllPreferences();
 
-        float nh3Max = getSharedPreferences("QualiAirPreferences", MODE_PRIVATE)
-                .getFloat(ThresholdLevels.KEY_NH3_ALARM, ThresholdLevels.NORMAL.nh3Alarm);
-        gaugeMain.setMinValue(0);
-        if (nh3Max == 0) {
-            gaugeMain.setMaxValue(50);
-        } else {
-            gaugeMain.setMaxValue(nh3Max);
-        }
+
+        SharedPreferences savedPrefs = getSharedPreferences("QualiAirPreferences", MODE_PRIVATE);
+        String preset = savedPrefs.getString(ThresholdLevels.KEY_SENSITIVITY, "Normal");
+        float nh3C  = savedPrefs.getFloat(ThresholdLevels.KEY_NH3_CAUTION,  ThresholdLevels.NORMAL.nh3Caution);
+        float nh3A  = savedPrefs.getFloat(ThresholdLevels.KEY_NH3_ALARM,    ThresholdLevels.NORMAL.nh3Alarm);
+        float h2sC  = savedPrefs.getFloat(ThresholdLevels.KEY_H2S_CAUTION,  ThresholdLevels.NORMAL.h2sCaution);
+        float h2sA  = savedPrefs.getFloat(ThresholdLevels.KEY_H2S_ALARM,    ThresholdLevels.NORMAL.h2sAlarm);
+        float pm25C = savedPrefs.getFloat(ThresholdLevels.KEY_PM25_CAUTION, ThresholdLevels.NORMAL.pm25Caution);
+        float pm25A = savedPrefs.getFloat(ThresholdLevels.KEY_PM25_ALARM,   ThresholdLevels.NORMAL.pm25Alarm);
+        monitor.updateThresholds(ThresholdLevels.fromPreference(preset, nh3C, nh3A, h2sC, h2sA, pm25C, pm25A));
+
+        ThresholdLevels.Thresholds t = ThresholdLevels.fromPreference(preset, nh3C, nh3A, h2sC, h2sA, pm25C, pm25A);
+        monitor.updateThresholds(t);
+        gaugeMain.applyPreset(t, "NH3");
         gaugeMain.setValue(0);
     }
 
     private void updateGaugeDisplay(float value) {
-        //update the gauge range and unit based on the chosen sensor
-        float maxValue=250f;
+        SharedPreferences savedPrefs = getSharedPreferences("QualiAirPreferences", MODE_PRIVATE);
+        String preset = savedPrefs.getString(ThresholdLevels.KEY_SENSITIVITY, "Normal");
+        ThresholdLevels.Thresholds t = ThresholdLevels.fromPreference(preset,
+                savedPrefs.getFloat(ThresholdLevels.KEY_NH3_CAUTION,  ThresholdLevels.NORMAL.nh3Caution),
+                savedPrefs.getFloat(ThresholdLevels.KEY_NH3_ALARM,    ThresholdLevels.NORMAL.nh3Alarm),
+                savedPrefs.getFloat(ThresholdLevels.KEY_H2S_CAUTION,  ThresholdLevels.NORMAL.h2sCaution),
+                savedPrefs.getFloat(ThresholdLevels.KEY_H2S_ALARM,    ThresholdLevels.NORMAL.h2sAlarm),
+                savedPrefs.getFloat(ThresholdLevels.KEY_PM25_CAUTION, ThresholdLevels.NORMAL.pm25Caution),
+                savedPrefs.getFloat(ThresholdLevels.KEY_PM25_ALARM,   ThresholdLevels.NORMAL.pm25Alarm)
+        );
+
         switch (selectedSensor) {
             case "nh3":
-                gaugeMain.setMinValue(0);
-                gaugeMain.setMaxValue(35);
+                gaugeMain.applyPreset(t,"NH3");
                 tvGaugeUnit.setText("ppm");
-                maxValue=35f;
                 break;
             case "h2s":
-                gaugeMain.setMinValue(0);
-                gaugeMain.setMaxValue(10);
+                gaugeMain.applyPreset(t,"H2S");
                 tvGaugeUnit.setText("ppm");
-                maxValue=10f;
                 break;
             case "pm25":
-                gaugeMain.setMinValue(0);
-                gaugeMain.setMaxValue(250);
+                gaugeMain.applyPreset(t,"PM25");
                 tvGaugeUnit.setText("µg/m³");
-                maxValue=250;
                 break;
         }
+        ;
         applyStatusStyle(monitor.getStatus(selectedSensor));
-        //so if the value is beyond, it will stay in the red zone far right
-        float clampedValue= Math.min(value,maxValue);
+        float clampedValue= Math.min(value,gaugeMain.getMaxValue());
         gaugeMain.setValue(clampedValue);
         tvGaugeValue.setText(String.format("%.1f", value));
 
