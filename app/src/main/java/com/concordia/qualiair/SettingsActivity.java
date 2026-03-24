@@ -333,6 +333,16 @@ public class SettingsActivity extends AppCompatActivity {
                     etPm25Caution.setText(String.valueOf(pm25C));
                     etPm25Alarm.setText(String.valueOf(pm25A));
 
+                    sharedPrefs.edit()
+                            .putString(ThresholdLevels.KEY_SENSITIVITY, "Custom")
+                            .putFloat(ThresholdLevels.KEY_NH3_CAUTION,  nh3C)
+                            .putFloat(ThresholdLevels.KEY_NH3_ALARM,    nh3A)
+                            .putFloat(ThresholdLevels.KEY_H2S_CAUTION,  h2sC)
+                            .putFloat(ThresholdLevels.KEY_H2S_ALARM,    h2sA)
+                            .putFloat(ThresholdLevels.KEY_PM25_CAUTION, pm25C)
+                            .putFloat(ThresholdLevels.KEY_PM25_ALARM,   pm25A)
+                            .apply();
+
                     dropdownSensitivity.setText("Custom", false);
 
                     dialog.dismiss();
