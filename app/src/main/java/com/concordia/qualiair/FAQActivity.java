@@ -6,6 +6,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class FAQActivity extends AppCompatActivity {
 
     @Override
@@ -46,6 +49,31 @@ public class FAQActivity extends AppCompatActivity {
         //Adapter
         FAQAdapter adapter = new FAQAdapter(faqList);
         rvFaq.setAdapter(adapter);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setSelectedItemId(R.id.nav_faq); // highlight current tab
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_faq) {
+                return true; // already here
+            } else if (itemId == R.id.nav_home) {
+                startActivity(new Intent(FAQActivity.this, MainActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_history) {
+                startActivity(new Intent(FAQActivity.this, HistoryActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                startActivity(new Intent(FAQActivity.this, ProfileActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_devices) {
+                startActivity(new Intent(FAQActivity.this, DeviceActivity.class));
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
