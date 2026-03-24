@@ -75,5 +75,6 @@ dependencies {
     }
     implementation(files("libs/esp-idf-provisioning-android-lib-2.1.0.aar"))
     implementation(libs.tink.android)
+    implementation(libs.protobuf.javalite)
     implementation("org.greenrobot:eventbus:3.3.1")
 }
