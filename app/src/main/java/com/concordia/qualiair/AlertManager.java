@@ -89,8 +89,8 @@ public class AlertManager {
 
     private void fireAlert(AirQualityMonitor monitor) {
         String sensors = "";
-        if (monitor.getStatus("nh3") != AirQualityMonitor.StatusLevel.GOOD) sensors += "NH₃ ";
-        if (monitor.getStatus("h2s") != AirQualityMonitor.StatusLevel.GOOD) sensors += "H₂S ";
+        if (monitor.getStatus("nh3") != AirQualityMonitor.StatusLevel.GOOD) sensors += "Ammonia ";
+        if (monitor.getStatus("h2s") != AirQualityMonitor.StatusLevel.GOOD) sensors += "Hydrogen Sulfide ";
         if (monitor.getStatus("pm25") != AirQualityMonitor.StatusLevel.GOOD) sensors += "Dust ";
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
