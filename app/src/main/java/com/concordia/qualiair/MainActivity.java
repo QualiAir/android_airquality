@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
 
+import com.concordia.qualiair.Device.DeviceActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.widget.TextView;
 import android.util.Log;
@@ -243,7 +244,7 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
                 try {
                     mqttClient.connect(options);
                     Log.d("MQTT", "Connected to HiveMQ!");
-                    mqttClient.subscribe("qualiair/data", 1);
+                    mqttClient.subscribe("qualiair/test_gauge", 1);
                 } catch (MqttException e) {
                     Log.e("MQTT", "Connection failed", e);
                 }
