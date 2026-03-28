@@ -14,14 +14,25 @@ public class AirQualityMonitor {
 
     // Thresholds
     // NH3 (ppm)
-    private static final float NH3_CAUTION = 25f;
-    private static final float NH3_ALARM = 35f;
+    // Thresholds (non-final so they can be updated from settings)
+// NH3 (ppm)
+    private float NH3_CAUTION = 25f;
+    private float NH3_ALARM = 35f;
     // H2S (ppm)
-    private static final float H2S_CAUTION = 1f;
-    private static final float H2S_ALARM = 5f;
+    private float H2S_CAUTION = 1f;
+    private float H2S_ALARM = 5f;
     // PM2.5 (µg/m³)
-    private static final float PM25_CAUTION = 102f;
-    private static final float PM25_ALARM = 200f;
+    private float PM25_CAUTION = 12f;
+    private float PM25_ALARM = 35f;
+
+    public void updateThresholds(ThresholdLevels.Thresholds t) {
+        NH3_CAUTION  = t.nh3Caution;
+        NH3_ALARM    = t.nh3Alarm;
+        H2S_CAUTION  = t.h2sCaution;
+        H2S_ALARM    = t.h2sAlarm;
+        PM25_CAUTION = t.pm25Caution;
+        PM25_ALARM   = t.pm25Alarm;
+    }
 
     // Called from MainActivity when MQTT message arrives
     public void update(float nh3, float h2s, float pm25) {
@@ -65,5 +76,33 @@ public class AirQualityMonitor {
         }
         return StatusLevel.GOOD;
     }
+    public float getCautionThreshold(String sensor) {
+        switch (sensor) {
+            case "nh3":  return NH3_CAUTION;
+            case "h2s":  return H2S_CAUTION;
+            case "pm25": return PM25_CAUTION;
+            default:     return 0f;
+        }
+    }
+
+    public float getAlarmThreshold(String sensor) {
+        switch (sensor) {
+            case "nh3":  return NH3_ALARM;
+            case "h2s":  return H2S_ALARM;
+            case "pm25": return PM25_ALARM;
+            default:     return 0f;
+        }
+    }
+    public boolean isAnyCaution() {
+            return getStatus("nh3")  != StatusLevel.GOOD
+                || getStatus("h2s")  != StatusLevel.GOOD
+                || getStatus("pm25") != StatusLevel.GOOD;
+    }
+    public boolean isAnyAlarm() {
+        return getStatus("nh3")  == StatusLevel.ALARM
+                || getStatus("h2s")  == StatusLevel.ALARM
+                || getStatus("pm25") == StatusLevel.ALARM;
+    }
+
 
 }

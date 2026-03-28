@@ -41,4 +41,17 @@
     <style name="CircleImage">
         <item name="cornerSize">50%</item>
     </style>
+
+    <!-- add these below -->
+    <style name="GaugeNormal">
+        <item name="gaugeCautionValue">25</item>
+        <item name="gaugeAlarmValue">35</item>
+        <item name="gaugeMaxValue">50</item>
+    </style>
+
+    <style name="GaugeSensitive">
+        <item name="gaugeCautionValue">10</item>
+        <item name="gaugeAlarmValue">20</item>
+        <item name="gaugeMaxValue">28</item>
+    </style>
 </resources>

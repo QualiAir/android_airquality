@@ -49,10 +49,11 @@
                     android:padding="14dp">
 
                     <TextView
+                        android:id="@+id/tv_gauge_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="Real-time Reading"
+                        android:text="Ammonia Reading"
                         android:textColor="@color/textMuted"
                         android:textSize="13sp" />
 
@@ -124,7 +125,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="NH3 Levels"
+                        android:text="Levels"
                         android:textColor="@color/textMuted"
                         android:textSize="13sp" />
 
@@ -135,6 +136,7 @@
                         android:weightSum="3">
 
                         <TextView
+                            android:id="@+id/tv_level_low"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
@@ -149,6 +151,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_level_moderate"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
@@ -163,6 +166,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_level_high"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -231,7 +235,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_pressure"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginEnd="5dp"
                     app:cardBackgroundColor="@color/surface"
@@ -247,7 +251,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Pressure"
+                            android:text="Atmospheric\nPressure"
                             android:textColor="@color/textMuted"
                             android:textSize="11sp" />
 
@@ -289,7 +293,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_humidity"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginEnd="5dp"
                     app:cardBackgroundColor="@color/surface"
@@ -305,7 +309,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Humidity"
+                            android:text="Humidity\n"
                             android:textColor="@color/textMuted"
                             android:textSize="11sp" />
 
@@ -347,7 +351,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_temp"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     app:cardBackgroundColor="@color/surface"
                     app:cardCornerRadius="16dp"
@@ -362,7 +366,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Temp"
+                            android:text="Temp\n"
                             android:textColor="@color/textMuted"
                             android:textSize="11sp" />
 
