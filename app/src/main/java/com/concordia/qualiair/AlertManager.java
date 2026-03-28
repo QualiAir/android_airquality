@@ -59,7 +59,7 @@ public class AlertManager {
         timerRunning=false;
     }
     private void startAlarm(AirQualityMonitor monitor) {
-        fireAlarmNotification();
+        fireAlarmNotification(monitor);
         if (alarmPlaying) return;
         alarmPlaying = true;
         android.net.Uri alarmUri = android.media.RingtoneManager.getDefaultUri(
@@ -88,10 +88,15 @@ public class AlertManager {
     }
 
     private void fireAlert(AirQualityMonitor monitor) {
+        String sensors = "";
+        if (monitor.getStatus("nh3") != AirQualityMonitor.StatusLevel.GOOD) sensors += "Ammonia ";
+        if (monitor.getStatus("h2s") != AirQualityMonitor.StatusLevel.GOOD) sensors += "Hydrogen Sulfide ";
+        if (monitor.getStatus("pm25") != AirQualityMonitor.StatusLevel.GOOD) sensors += "Dust ";
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle("Air Quality Alert")
-                .setContentText("Caution: elevated contaminant levels detected")
+                .setContentText("Caution: " + sensors.trim() + " elevated")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setDefaults(NotificationCompat.DEFAULT_SOUND | NotificationCompat.DEFAULT_VIBRATE)
                 .setAutoCancel(true);
@@ -119,11 +124,15 @@ public class AlertManager {
         }
     }
 
-    private void fireAlarmNotification() {
+    private void fireAlarmNotification(AirQualityMonitor monitor) {
+        String sensors = "";
+        if (monitor.getStatus("nh3") == AirQualityMonitor.StatusLevel.ALARM) sensors += "NH₃ ";
+        if (monitor.getStatus("h2s") == AirQualityMonitor.StatusLevel.ALARM) sensors += "H₂S ";
+        if (monitor.getStatus("pm25") == AirQualityMonitor.StatusLevel.ALARM) sensors += "Dust ";
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, ALARM_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle("⚠️ ALARM: Unsafe Air Quality!")
-                .setContentText("Dangerous contaminant levels detected! Leave the area!")
+                .setContentText("Dangerous levels: " + sensors.trim() + " — Leave the area!")
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
                 .setAutoCancel(true);
