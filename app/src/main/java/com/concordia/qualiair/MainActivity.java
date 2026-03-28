@@ -279,6 +279,7 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
             if (bottomNavigationView != null) {
                 bottomNavigationView.setSelectedItemId(R.id.nav_home);
             }
+            setupGaugeRanges();
             connectToHiveMQ();
         }
         @Override
