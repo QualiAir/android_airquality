@@ -316,7 +316,7 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
                 try {
                     mqttClient.connect(options);
                     Log.d("MQTT", "Connected to HiveMQ!");
-                    mqttClient.subscribe("qualiair/gauge_test", 1);
+                    mqttClient.subscribe("qualiair/data", 1);//qualiair/data for real reading,
                 } catch (MqttException e) {
                     Log.e("MQTT", "Connection failed", e);
                 }
