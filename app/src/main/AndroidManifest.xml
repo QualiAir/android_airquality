@@ -45,12 +45,6 @@
             android:name=".Device.DiscoveryActivity2"
             android:exported="false" />
         <activity
-            android:name=".ProvisioningActivity"
-            android:exported="false" />
-        <activity
-            android:name=".DiscoveryActivity"
-            android:exported="false" />
-        <activity
             android:name=".HistoryActivity"
             android:exported="false" />
         <activity
