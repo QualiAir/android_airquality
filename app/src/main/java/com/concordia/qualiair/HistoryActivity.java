@@ -1,5 +1,6 @@
 package com.concordia.qualiair;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,6 +23,8 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +131,31 @@ public class HistoryActivity extends AppCompatActivity {
                 buttonFilterAlarm.setBackgroundResource(R.drawable.bg_btn_unselected);
             }
             applyFilter();
+        });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setSelectedItemId(R.id.nav_history); // highlight current tab
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_history) {
+                return true; // already here
+            } else if (itemId == R.id.nav_home) {
+                startActivity(new Intent(HistoryActivity.this, MainActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_devices) {
+                startActivity(new Intent(HistoryActivity.this, DeviceActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                startActivity(new Intent(HistoryActivity.this, ProfileActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_faq) {
+                startActivity(new Intent(HistoryActivity.this, FAQActivity.class));
+                return true;
+            }
+            return false;
         });
     }
 

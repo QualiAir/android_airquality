@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -58,6 +59,31 @@ public class ProfileActivity extends AppCompatActivity {
         btnLogOut.setOnClickListener(v -> {
             // Perform logout logic (clear prefs, etc.) and go to Login
             finishAffinity(); // Close all activities in stack
+        });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setSelectedItemId(R.id.nav_profile); // highlight current tab
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_profile) {
+                return true; // already here
+            } else if (itemId == R.id.nav_home) {
+                startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_devices) {
+                startActivity(new Intent(ProfileActivity.this, DeviceActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_history) {
+                startActivity(new Intent(ProfileActivity.this, HistoryActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_faq) {
+                startActivity(new Intent(ProfileActivity.this, FAQActivity.class));
+                return true;
+            }
+            return false;
         });
     }
 

@@ -3,14 +3,16 @@ package com.concordia.qualiair;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Build;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import com.concordia.qualiair.Device.DeviceActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.widget.TextView;
 import android.util.Log;
 import android.widget.Button;
-
+import com.google.android.material.button.MaterialButton;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -27,15 +29,21 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvGaugeValue;
     private TextView tvGaugeStatus;
     private TextView tvGaugeUnit;
-    private Button btnNh3;
-    private Button btnH2S;
-    private Button btnPm25;
+    private MaterialButton btnNh3;
+    private MaterialButton btnH2S;
+    private MaterialButton btnPm25;
 
     private TextView tvPressureValue;
     private TextView tvHumidityValue;
     private TextView tvTempValue;
 
     private MqttClient mqttClient;
+
+    private TextView tvGaugeLabel;
+
+    private TextView tvLevelLow;
+    private TextView tvLevelModerate;
+    private TextView tvLevelHigh;
 
     private AlertManager alertManager;
 
@@ -50,6 +58,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         alertManager = new AlertManager(this);
 
+        // Request notification permission on Android 13+
+        if (Build.VERSION.SDK_INT >= 33) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
+                    != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                        1001
+                );
+            }
+        }
 
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -95,17 +113,30 @@ public class MainActivity extends AppCompatActivity {
         btnH2S = findViewById(R.id.btn_select_H2S);
         btnPm25 = findViewById(R.id.btn_select_PM25);
 
+        tvGaugeLabel = findViewById(R.id.tv_gauge_label);
+
+        //under the gauge
+        tvLevelLow      = findViewById(R.id.tv_level_low);
+        tvLevelModerate = findViewById(R.id.tv_level_moderate);
+        tvLevelHigh     = findViewById(R.id.tv_level_high);
+
         //Button  set on click listeners
         btnNh3.setOnClickListener(v -> {
             selectedSensor = "nh3";
+            tvGaugeLabel.setText("Ammonia Reading");
+            updateSelectedButton(btnNh3);
             updateGaugeDisplay(monitor.getLatest("nh3"));
         });
         btnH2S.setOnClickListener(v -> {
             selectedSensor = "h2s";
+            tvGaugeLabel.setText("Hydrogen Sulfide Reading");
+            updateSelectedButton(btnH2S);
             updateGaugeDisplay(monitor.getLatest("h2s"));
         });
         btnPm25.setOnClickListener(v -> {
             selectedSensor = "pm25";
+            tvGaugeLabel.setText("Dust Reading");
+            updateSelectedButton(btnPm25);
             updateGaugeDisplay(monitor.getLatest("pm25"));
         });
 
@@ -114,48 +145,61 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupGaugeRanges() {
-        UserPreferences prefs = new UserPreferences(this);
-        prefs.loadAllPreferences();
 
-        float nh3Max = getSharedPreferences("QualiAirPreferences", MODE_PRIVATE)
-                .getFloat(ThresholdLevels.KEY_NH3_ALARM, ThresholdLevels.NORMAL.nh3Alarm);
-        gaugeMain.setMinValue(0);
-        if (nh3Max == 0) {
-            gaugeMain.setMaxValue(50);
-        } else {
-            gaugeMain.setMaxValue(nh3Max);
-        }
+
+        SharedPreferences savedPrefs = getSharedPreferences("QualiAirPreferences", MODE_PRIVATE);
+        String preset = savedPrefs.getString(ThresholdLevels.KEY_SENSITIVITY, "Normal");
+        float nh3C  = savedPrefs.getFloat(ThresholdLevels.KEY_NH3_CAUTION,  ThresholdLevels.NORMAL.nh3Caution);
+        float nh3A  = savedPrefs.getFloat(ThresholdLevels.KEY_NH3_ALARM,    ThresholdLevels.NORMAL.nh3Alarm);
+        float h2sC  = savedPrefs.getFloat(ThresholdLevels.KEY_H2S_CAUTION,  ThresholdLevels.NORMAL.h2sCaution);
+        float h2sA  = savedPrefs.getFloat(ThresholdLevels.KEY_H2S_ALARM,    ThresholdLevels.NORMAL.h2sAlarm);
+        float pm25C = savedPrefs.getFloat(ThresholdLevels.KEY_PM25_CAUTION, ThresholdLevels.NORMAL.pm25Caution);
+        float pm25A = savedPrefs.getFloat(ThresholdLevels.KEY_PM25_ALARM,   ThresholdLevels.NORMAL.pm25Alarm);
+        monitor.updateThresholds(ThresholdLevels.fromPreference(preset, nh3C, nh3A, h2sC, h2sA, pm25C, pm25A));
+
+        ThresholdLevels.Thresholds t = ThresholdLevels.fromPreference(preset, nh3C, nh3A, h2sC, h2sA, pm25C, pm25A);
+        monitor.updateThresholds(t);
+        gaugeMain.applyPreset(t, "NH3");
         gaugeMain.setValue(0);
+        updateSelectedButton(btnNh3);
+
+        updateLevelPills(selectedSensor);
     }
 
     private void updateGaugeDisplay(float value) {
-        //update the gauge range and unit based on the chosen sensor
-        float maxValue=250f;
+        SharedPreferences savedPrefs = getSharedPreferences("QualiAirPreferences", MODE_PRIVATE);
+        String preset = savedPrefs.getString(ThresholdLevels.KEY_SENSITIVITY, "Normal");
+        ThresholdLevels.Thresholds t = ThresholdLevels.fromPreference(preset,
+                savedPrefs.getFloat(ThresholdLevels.KEY_NH3_CAUTION,  ThresholdLevels.NORMAL.nh3Caution),
+                savedPrefs.getFloat(ThresholdLevels.KEY_NH3_ALARM,    ThresholdLevels.NORMAL.nh3Alarm),
+                savedPrefs.getFloat(ThresholdLevels.KEY_H2S_CAUTION,  ThresholdLevels.NORMAL.h2sCaution),
+                savedPrefs.getFloat(ThresholdLevels.KEY_H2S_ALARM,    ThresholdLevels.NORMAL.h2sAlarm),
+                savedPrefs.getFloat(ThresholdLevels.KEY_PM25_CAUTION, ThresholdLevels.NORMAL.pm25Caution),
+                savedPrefs.getFloat(ThresholdLevels.KEY_PM25_ALARM,   ThresholdLevels.NORMAL.pm25Alarm)
+        );
+
         switch (selectedSensor) {
             case "nh3":
-                gaugeMain.setMinValue(0);
-                gaugeMain.setMaxValue(35);
+                gaugeMain.applyPreset(t,"NH3");
                 tvGaugeUnit.setText("ppm");
-                maxValue=35f;
+                tvGaugeValue.setText(String.format("%.1f", value));
                 break;
             case "h2s":
-                gaugeMain.setMinValue(0);
-                gaugeMain.setMaxValue(10);
+                gaugeMain.applyPreset(t,"H2S");
                 tvGaugeUnit.setText("ppm");
-                maxValue=10f;
+                tvGaugeValue.setText(String.format("%.1f", value));
                 break;
             case "pm25":
-                gaugeMain.setMinValue(0);
-                gaugeMain.setMaxValue(250);
+                gaugeMain.applyPreset(t,"PM25");
                 tvGaugeUnit.setText("µg/m³");
-                maxValue=250;
+                tvGaugeValue.setText(String.format("%.4f", value));
                 break;
-        }
+        };
         applyStatusStyle(monitor.getStatus(selectedSensor));
-        //so if the value is beyond, it will stay in the red zone far right
-        float clampedValue= Math.min(value,maxValue);
+        float clampedValue= Math.min(value,gaugeMain.getMaxValue());
         gaugeMain.setValue(clampedValue);
-        tvGaugeValue.setText(String.format("%.1f", value));
+
+        updateLevelPills(selectedSensor);
 
     }
 
@@ -178,6 +222,35 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
             break;
     }
 }
+    private void updateSelectedButton(MaterialButton active) {
+        btnNh3.setStrokeColorResource(R.color.textMuted);
+        btnH2S.setStrokeColorResource(R.color.textMuted);
+        btnPm25.setStrokeColorResource(R.color.textMuted);
+
+        btnNh3.setTextColor(getColor(R.color.textMuted));
+        btnH2S.setTextColor(getColor(R.color.textMuted));
+        btnPm25.setTextColor(getColor(R.color.textMuted));
+
+        //default stroke
+        btnNh3.setStrokeWidth(2);
+        btnH2S.setStrokeWidth(2);
+        btnPm25.setStrokeWidth(2);
+
+        //for the selected button
+        active.setStrokeColorResource(R.color.accent);
+        active.setTextColor(getColor(R.color.accent));
+        active.setStrokeWidth(6);
+    }
+
+    private void updateLevelPills(String sensor) {
+        float caution = monitor.getCautionThreshold(sensor);
+        float alarm   = monitor.getAlarmThreshold(sensor);
+        String unit   = sensor.equals("pm25") ? "µg/m³" : "ppm";
+
+        tvLevelLow.setText(String.format("< %.1f %s", caution, unit));
+        tvLevelModerate.setText(String.format("%.1f–<%.1f %s", caution, alarm, unit));
+        tvLevelHigh.setText(String.format("≥ %.1f %s", alarm, unit));
+    }
     private void connectToHiveMQ() {
         String broker = BuildConfig.MQTT_BROKER;
         String clientId = "android-" + System.currentTimeMillis();
@@ -204,19 +277,19 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
                     Log.d("MQTT", "Payload: " + payload);
                     try {
                         org.json.JSONObject json = new org.json.JSONObject(payload);
-                        float nh3  = (float) json.getDouble("ammonia");
-                        float h2s  = (float) json.getDouble("hydrogen_sulfide");
-                        float pm25 = (float) json.getDouble("dust");
+                        float nh3  = (float) json.optDouble("ammonia");
+                        float h2s  = (float) json.optDouble("hydrogen_sulfide");
+                        float pm25 = (float) json.optDouble("dust");
 
-                        float humidity=(float) json.getDouble("humidity");
+                        float humidity=(float) json.optDouble("humidity");
                         float pressure=(float) json.optDouble("pressure",0.0);
-                        float temp=(float) json.getDouble("temperature");
+                        float temp=(float) json.optDouble("temperature");
 
 
                         runOnUiThread(() -> {
-                            tvPressureValue.setText(String.format("%.0f", pressure));
-                            tvHumidityValue.setText(String.format("%.0f", humidity));
-                            tvTempValue.setText(String.format("%.0f", temp));
+                            tvPressureValue.setText(String.format("%.1f", pressure));
+                            tvHumidityValue.setText(String.format("%.1f", humidity));
+                            tvTempValue.setText(String.format("%.1f", temp));
                             monitor.update(nh3, h2s, pm25);
                             alertManager.onNewReading(monitor);
                             switch (selectedSensor) {
@@ -244,7 +317,7 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
                 try {
                     mqttClient.connect(options);
                     Log.d("MQTT", "Connected to HiveMQ!");
-                    mqttClient.subscribe("qualiair/test_gauge", 1);
+                    mqttClient.subscribe("qualiair/data", 1);//qualiair/data for real reading,
                 } catch (MqttException e) {
                     Log.e("MQTT", "Connection failed", e);
                 }
@@ -261,6 +334,7 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
             if (bottomNavigationView != null) {
                 bottomNavigationView.setSelectedItemId(R.id.nav_home);
             }
+            setupGaugeRanges();
             connectToHiveMQ();
         }
         @Override
