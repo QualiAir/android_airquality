@@ -273,18 +273,7 @@
                             android:textSize="10sp"
                             android:layout_marginBottom="6dp"/>
 
-                        <TextView
-                            android:id="@+id/tv_pressure_status"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_pill_safe_dim"
-                            android:paddingStart="8dp"
-                            android:paddingTop="2dp"
-                            android:paddingEnd="8dp"
-                            android:paddingBottom="2dp"
-                            android:text="Good"
-                            android:textColor="@color/safe"
-                            android:textSize="10sp"/>
+
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -331,18 +320,7 @@
                             android:textSize="10sp"
                             android:layout_marginBottom="6dp"/>
 
-                        <TextView
-                            android:id="@+id/tv_humidity_status"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_pill_safe_dim"
-                            android:paddingStart="8dp"
-                            android:paddingTop="2dp"
-                            android:paddingEnd="8dp"
-                            android:paddingBottom="2dp"
-                            android:text="Good"
-                            android:textColor="@color/safe"
-                            android:textSize="10sp"/>
+
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -388,18 +366,6 @@
                             android:textSize="10sp"
                             android:layout_marginBottom="6dp"/>
 
-                        <TextView
-                            android:id="@+id/tv_temp_status"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_pill_safe_dim"
-                            android:paddingStart="8dp"
-                            android:paddingTop="2dp"
-                            android:paddingEnd="8dp"
-                            android:paddingBottom="2dp"
-                            android:text="Good"
-                            android:textColor="@color/safe"
-                            android:textSize="10sp"/>
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
