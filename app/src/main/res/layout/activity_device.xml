@@ -17,7 +17,7 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:title="Devices"
-        app:titleTextColor="#F0F4FF"
+        app:titleTextColor="@color/text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="MY DEVICES"
+        android:text="DEVICES"
         android:textColor="#6B7280"
         android:textSize="11sp"
         android:letterSpacing="0.1"

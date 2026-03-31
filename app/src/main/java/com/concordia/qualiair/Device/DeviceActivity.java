@@ -38,8 +38,10 @@ public class DeviceActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> finish());
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Devices");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         bleConnectionMaker = new BLEConnectionMaker(this);
