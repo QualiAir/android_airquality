@@ -344,7 +344,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Temp\n"
+                            android:text="Temperature\n"
                             android:textColor="@color/textMuted"
                             android:textSize="11sp" />
 
