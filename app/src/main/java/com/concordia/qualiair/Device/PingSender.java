@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 
 /*
@@ -49,42 +50,113 @@ import java.net.URL;
         private void poll() {
             if (!isRunning) return;
 
-            // Run network call on background thread
             new Thread(() -> {
                 try {
-                    URL url = new URL("http://" + deviceIp + "/device-info");
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("GET");
-                    connection.setConnectTimeout(5000);
-                    connection.setReadTimeout(5000);
+                    //only works if phone and esp32 are in the same LAN(same home wifi as phone, same hotspot as phone)
+                    InetAddress address = InetAddress.getByName(deviceIp);
+                    boolean reachable = address.isReachable(5000); // 5 second timeout
 
-                    int responseCode = connection.getResponseCode();
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        BufferedReader reader = new BufferedReader(
-                                new InputStreamReader(connection.getInputStream()));
-                        StringBuilder response = new StringBuilder();
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            response.append(line);
-                        }
-                        reader.close();
-
-                        JSONObject json = new JSONObject(response.toString());
-                        handler.post(() -> callback.onReceived(json));
+                    if (reachable) {
+                        handler.post(() -> callback.onReceived(null)); // device is online
                     } else {
-                        handler.post(() -> callback.onError("HTTP error: " + responseCode));
+                        handler.post(() -> callback.onError("Device unreachable"));
                     }
-                    connection.disconnect();
 
                 } catch (Exception e) {
-                    Log.e(TAG, "Poll failed: " + e.getMessage());
+                    Log.e(TAG, "Ping failed: " + e.getMessage());
                     handler.post(() -> callback.onError(e.getMessage()));
-                }
 
-                // Schedule next poll
-                if (isRunning) {
-                    handler.postDelayed(this::poll, POLL_INTERVAL_MS);
+                } finally {
+                    if (isRunning) {
+                        handler.postDelayed(this::poll, POLL_INTERVAL_MS);
+                    }
                 }
             }).start();
+
+
+//            if (!isRunning) return;
+//
+//            new Thread(() -> {
+//                HttpURLConnection connection = null;
+//                try {
+//                    URL url = new URL("http://" + deviceIp + "/device-info");
+//                    connection = (HttpURLConnection) url.openConnection();
+//                    connection.setRequestMethod("GET");
+//                    connection.setConnectTimeout(5000);
+//                    connection.setReadTimeout(5000);
+//
+//                    int responseCode = connection.getResponseCode();
+//                    if (responseCode == HttpURLConnection.HTTP_OK) {
+//                        BufferedReader reader = new BufferedReader(
+//                                new InputStreamReader(connection.getInputStream()));
+//                        StringBuilder response = new StringBuilder();
+//                        String line;
+//                        while ((line = reader.readLine()) != null) {
+//                            response.append(line);
+//                        }
+//                        reader.close();
+//
+//                        JSONObject json = new JSONObject(response.toString());
+//                        handler.post(() -> callback.onReceived(json));
+//                    } else {
+//                        handler.post(() -> callback.onError("HTTP error: " + responseCode));
+//                    }
+//
+//                } catch (Exception e) {
+//                    Log.e(TAG, "Poll failed: " + e.getMessage());
+//                    handler.post(() -> callback.onError(e.getMessage()));
+//
+//                } finally {
+//                    // Always disconnect, even if exception was thrown
+//                    if (connection != null) connection.disconnect();
+//
+//                    // Always schedule next poll on main thread, regardless of success or failure
+//                    if (isRunning) {
+//                        handler.postDelayed(this::poll, POLL_INTERVAL_MS);
+//                    }
+//                }
+//            }).start();
         }
+
+//        private void poll() {
+//            if (!isRunning) return;
+//
+//            // Run network call on background thread
+//            new Thread(() -> {
+//                try {
+//                    URL url = new URL("http://" + deviceIp + "/device-info");
+//                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//                    connection.setRequestMethod("GET");
+//                    connection.setConnectTimeout(5000);
+//                    connection.setReadTimeout(5000);
+//
+//                    int responseCode = connection.getResponseCode();
+//                    if (responseCode == HttpURLConnection.HTTP_OK) {
+//                        BufferedReader reader = new BufferedReader(
+//                                new InputStreamReader(connection.getInputStream()));
+//                        StringBuilder response = new StringBuilder();
+//                        String line;
+//                        while ((line = reader.readLine()) != null) {
+//                            response.append(line);
+//                        }
+//                        reader.close();
+//
+//                        JSONObject json = new JSONObject(response.toString());
+//                        handler.post(() -> callback.onReceived(json));
+//                    } else {
+//                        handler.post(() -> callback.onError("HTTP error: " + responseCode));
+//                    }
+//                    connection.disconnect();
+//
+//                } catch (Exception e) {
+//                    Log.e(TAG, "Poll failed: " + e.getMessage());
+//                    handler.post(() -> callback.onError(e.getMessage()));
+//                }
+//
+//                // Schedule next poll
+//                if (isRunning) {
+//                    handler.postDelayed(this::poll, POLL_INTERVAL_MS);
+//                }
+//            }).start();
+//        }
     }

@@ -9,6 +9,7 @@ public class Device {
     private String password;
     private int rssi; //signal strength
     private String ipAddress;
+    private String deviceIDESP32;
 
     private transient BluetoothDevice bleDevice;//transient wont be saved in sharedpref
 
@@ -69,4 +70,6 @@ public class Device {
         return ipAddress;
     }
     public BluetoothDevice getBleDevice() { return bleDevice; }
+    public void setDeviceIDESP32(String str){this.deviceIDESP32=str;}
+    public String getDeviceIDESP32(){return deviceIDESP32;}
 }

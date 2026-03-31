@@ -191,7 +191,7 @@
                 android:gravity="center"
                 android:layout_marginBottom="14dp">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_select_NH3"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
@@ -202,7 +202,7 @@
                     android:textSize="10sp"
                     app:cornerRadius="20dp" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_select_H2S"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
@@ -213,7 +213,7 @@
                     android:textSize="9sp"
                     app:cornerRadius="20dp" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_select_PM25"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"

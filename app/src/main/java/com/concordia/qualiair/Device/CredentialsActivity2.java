@@ -75,11 +75,12 @@ public class CredentialsActivity2 extends AppCompatActivity {
                     password,
                     new BLEConnectionMaker.ProvisionCallback() {
                         @Override
-                        public void onSuccess(String ipAddress) {
+                        public void onSuccess(String ipAddress, String deviceIDESP32) {
                             Device device = new Device(finalCustomName);
                             device.setSsid(ssid);
                             device.setPassword(password);
                             device.setStatusTrue();
+                            device.setDeviceIDESP32(deviceIDESP32);
 
                             // Save IP if we got one
                             if (ipAddress != null && !ipAddress.equals("0.0.0.0")) {

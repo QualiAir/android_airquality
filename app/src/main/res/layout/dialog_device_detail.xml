@@ -7,11 +7,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="Connect to Device"
         android:textColor="#F0F4FF"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvDialogDeviceName"
@@ -22,13 +22,6 @@
         android:textStyle="bold"
         android:layout_marginBottom="4dp"/>
 
-    <TextView
-        android:id="@+id/tvDialogSSID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#6B7280"
-        android:textSize="13sp"
-        android:layout_marginBottom="20dp"/>
 
     <TextView
         android:id="@+id/tvDialogStatus"
@@ -39,29 +32,31 @@
         android:textSize="13sp"
         android:layout_marginBottom="20dp"/>
 
+    <TextView
+        android:id="@+id/tvDialogSSID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#6B7280"
+        android:textSize="13sp"
+        android:layout_marginBottom="20dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end">
+        android:layout_height="110dp"
+        android:gravity="end"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btnDialogCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:text="Cancel"
-            android:textColor="#6B7280"
-            android:backgroundTint="#1F2937"/>
-
-        <Button
-            android:id="@+id/btnDialogConnect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Connect"
-            android:textColor="#0A0F1E"
-            android:backgroundTint="#00D4AA"/>
+            android:backgroundTint="#1F2937"
+            android:text="Close"
+            android:textColor="#6B7280" />
 
     </LinearLayout>
+
+
 
 </LinearLayout>
