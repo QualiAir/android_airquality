@@ -18,6 +18,8 @@ import com.google.android.material.appbar.MaterialToolbar;
 
 import com.espressif.provisioning.ESPProvisionManager;
 import com.espressif.provisioning.listeners.BleScanListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.content.Intent;
 
 public class DeviceActivity extends AppCompatActivity {
 
@@ -61,7 +63,32 @@ public class DeviceActivity extends AppCompatActivity {
                 requestPermissions();
             }
         });
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setSelectedItemId(R.id.nav_devices); // highlight current tab
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_devices) {
+                return true; // already here
+            } else if (itemId == R.id.nav_home) {
+                startActivity(new Intent(DeviceActivity.this, MainActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_history) {
+                startActivity(new Intent(DeviceActivity.this, HistoryActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                startActivity(new Intent(DeviceActivity.this, ProfileActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_faq) {
+                startActivity(new Intent(DeviceActivity.this, FAQActivity.class));
+                return true;
+            }
+            return false;
+        });
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {

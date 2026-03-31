@@ -27,10 +27,19 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="NH₃ (ppm)"
+                android:text="Ammonia - NH₃ (ppm)"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:paddingBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Caution: up to 25 ppm | Alarm: up to 35 ppm"
+                android:textSize="12sp"
+                android:alpha="0.7"
+                android:paddingBottom="12dp"/>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,10 +80,19 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="H₂S (ppm)"
+                android:text="Hydrogen Sulfide - H₂S (ppm)"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:paddingBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Caution: up to 1 ppm | Alarm: up to 5 ppm"
+                android:textSize="12sp"
+                android:alpha="0.7"
+                android:paddingBottom="12dp"/>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -115,10 +133,19 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="PM2.5 (µg/m³)"
+                android:text="Fine Dust - PM2.5 (µg/m³)"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:paddingBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Caution: up to 12 ppm | Alarm: up to 35 ppm"
+                android:textSize="12sp"
+                android:alpha="0.7"
+                android:paddingBottom="12dp"/>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
