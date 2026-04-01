@@ -20,6 +20,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView lblPm25Caution, lblPm25Alarm;
     private ShapeableImageView profilePic;
     private UserPreferences userPreferences;
+    private TextView ModeValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> finish());
+        ModeValue = findViewById(R.id.lblModeValue);
 
         // back arrow
         if (getSupportActionBar() != null) {
@@ -101,6 +103,9 @@ public class ProfileActivity extends AppCompatActivity {
         lblH2sAlarm.setText(h2sA    + " ppm");
         lblPm25Caution.setText(pm25C + " µg/m³");
         lblPm25Alarm.setText(pm25A   + " µg/m³");
+
+       String mode = prefs.getString(ThresholdLevels.KEY_SENSITIVITY, "Normal");
+        ModeValue.setText(" — " + mode);
     }
 
     // Back arrow click
