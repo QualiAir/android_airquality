@@ -89,7 +89,7 @@
                     android:layout_gravity="bottom|end"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="4dp"
-                    android:text="Time"
+                    android:text="Date and Time"
                     android:textColor="@color/supreme"
                     android:textSize="10sp" />
 
@@ -113,7 +113,7 @@
                     android:gravity="center"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:text="Ammonia;"
+                    android:text="Ammonia"
                     android:textSize="12sp"
                     android:textColor="@color/safe" />
 
@@ -196,7 +196,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:text="Time"
+                        android:text="Date and Time"
                         android:textColor="@color/textMuted"
                         android:textSize="12sp" />
 
