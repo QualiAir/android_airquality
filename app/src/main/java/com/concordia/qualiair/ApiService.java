@@ -3,6 +3,7 @@ package com.concordia.qualiair;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import retrofit2.http.POST;
 public interface ApiService {
     //rest api call, retrofit to all, (from main.py file on android_backend)
     @GET("history")
@@ -11,5 +12,9 @@ public interface ApiService {
         @Query("sensor") String sensor,
         @Query("device_id") String deviceId
     );
+    @POST("register-token")
+    Call<Void> registerToken(@Query("token") String token);
 
+    @POST("update-thresholds")
+    Call<Void> updateThresholds(@Body ThresholdLevels.Thresholds thresholds);
 }

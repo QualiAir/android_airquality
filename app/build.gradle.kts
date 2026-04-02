@@ -2,6 +2,7 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 val localProperties = Properties()
@@ -77,4 +78,7 @@ dependencies {
     implementation(libs.tink.android)
     implementation(libs.protobuf.javalite)
     implementation("org.greenrobot:eventbus:3.3.1")
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-messaging")
 }
