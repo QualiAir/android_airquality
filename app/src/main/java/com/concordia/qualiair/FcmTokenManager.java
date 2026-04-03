@@ -22,8 +22,13 @@ public class FcmTokenManager {
         // Create the ApiService using the Retrofit instance (connects the menu to the waiter)
         ApiService apiService = retrofit.create(ApiService.class);
 
-        // Prepare the API call to send the token to the /register-token endpoint
-        Call<Void> call = apiService.registerToken(token);
+        // Get device_id from SharedPreferences
+        String deviceId = context.getSharedPreferences("QualiAirPreferences", Context.MODE_PRIVATE)
+                .getString("device_id", "unknown_device");
+
+        // Create request object with device_id and token
+        Call<Void> call = apiService.registerToken(new RegisterRequest(deviceId, token));
+
         // Execute the call in the background so it doesn't freeze the app
         call.enqueue(new Callback<Void>() {
 
@@ -57,8 +62,12 @@ public class FcmTokenManager {
         // Create the ApiService using the Retrofit instance
         ApiService apiService = retrofit.create(ApiService.class);
 
-        // Prepare the API call to send thresholds to /update-thresholds endpoint
-        Call<Void> call = apiService.updateThresholds(thresholds);
+        // Get device_id from SharedPreferences
+        String deviceId = context.getSharedPreferences("QualiAirPreferences", Context.MODE_PRIVATE)
+                .getString("device_id", "unknown_device");
+
+        // Create request object with device_id and thresholds
+        Call<Void> call = apiService.updateThresholds(new ThresholdUpdateRequest(deviceId, thresholds));
 
         // Execute the call in the background so it doesn't freeze the app
         call.enqueue(new Callback<Void>() {
