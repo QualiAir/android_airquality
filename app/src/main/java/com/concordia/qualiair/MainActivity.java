@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
     private AirQualityMonitor monitor = new AirQualityMonitor();
 
+    SharedPreferences prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
+    boolean isFirstLaunch = prefs.getBoolean("isFirstLaunch", true);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,6 +144,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setupGaugeRanges();
+
+        if (isFirstLaunch) {
+            // make this a one time thing
+            prefs.edit().putBoolean("isFirstLaunch", false).apply();
+
+            // auto sends to device activity
+            Intent intent = new Intent(MainActivity.this, DeviceActivity.class);
+            startActivity(intent);
+            finish(); // prevents going back to MainActivity
+        }
 
     }
 
