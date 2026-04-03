@@ -52,8 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AirQualityMonitor monitor = new AirQualityMonitor();
 
-    SharedPreferences prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
-    boolean isFirstLaunch = prefs.getBoolean("isFirstLaunch", true);
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setupGaugeRanges();
+        prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
+        boolean isFirstLaunch = prefs.getBoolean("isFirstLaunch", true);
 
         if (isFirstLaunch) {
             // make this a one time thing
