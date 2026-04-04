@@ -13,7 +13,7 @@ import java.net.URL;
 
 /*
 * Sends pings to devices in device activity to confirm that they are online
-* Still havent implemented using ip address.
+* using ip address.
 * */
 
 
@@ -74,89 +74,4 @@ import java.net.URL;
             }).start();
 
 
-//            if (!isRunning) return;
-//
-//            new Thread(() -> {
-//                HttpURLConnection connection = null;
-//                try {
-//                    URL url = new URL("http://" + deviceIp + "/device-info");
-//                    connection = (HttpURLConnection) url.openConnection();
-//                    connection.setRequestMethod("GET");
-//                    connection.setConnectTimeout(5000);
-//                    connection.setReadTimeout(5000);
-//
-//                    int responseCode = connection.getResponseCode();
-//                    if (responseCode == HttpURLConnection.HTTP_OK) {
-//                        BufferedReader reader = new BufferedReader(
-//                                new InputStreamReader(connection.getInputStream()));
-//                        StringBuilder response = new StringBuilder();
-//                        String line;
-//                        while ((line = reader.readLine()) != null) {
-//                            response.append(line);
-//                        }
-//                        reader.close();
-//
-//                        JSONObject json = new JSONObject(response.toString());
-//                        handler.post(() -> callback.onReceived(json));
-//                    } else {
-//                        handler.post(() -> callback.onError("HTTP error: " + responseCode));
-//                    }
-//
-//                } catch (Exception e) {
-//                    Log.e(TAG, "Poll failed: " + e.getMessage());
-//                    handler.post(() -> callback.onError(e.getMessage()));
-//
-//                } finally {
-//                    // Always disconnect, even if exception was thrown
-//                    if (connection != null) connection.disconnect();
-//
-//                    // Always schedule next poll on main thread, regardless of success or failure
-//                    if (isRunning) {
-//                        handler.postDelayed(this::poll, POLL_INTERVAL_MS);
-//                    }
-//                }
-//            }).start();
-        }
-
-//        private void poll() {
-//            if (!isRunning) return;
-//
-//            // Run network call on background thread
-//            new Thread(() -> {
-//                try {
-//                    URL url = new URL("http://" + deviceIp + "/device-info");
-//                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//                    connection.setRequestMethod("GET");
-//                    connection.setConnectTimeout(5000);
-//                    connection.setReadTimeout(5000);
-//
-//                    int responseCode = connection.getResponseCode();
-//                    if (responseCode == HttpURLConnection.HTTP_OK) {
-//                        BufferedReader reader = new BufferedReader(
-//                                new InputStreamReader(connection.getInputStream()));
-//                        StringBuilder response = new StringBuilder();
-//                        String line;
-//                        while ((line = reader.readLine()) != null) {
-//                            response.append(line);
-//                        }
-//                        reader.close();
-//
-//                        JSONObject json = new JSONObject(response.toString());
-//                        handler.post(() -> callback.onReceived(json));
-//                    } else {
-//                        handler.post(() -> callback.onError("HTTP error: " + responseCode));
-//                    }
-//                    connection.disconnect();
-//
-//                } catch (Exception e) {
-//                    Log.e(TAG, "Poll failed: " + e.getMessage());
-//                    handler.post(() -> callback.onError(e.getMessage()));
-//                }
-//
-//                // Schedule next poll
-//                if (isRunning) {
-//                    handler.postDelayed(this::poll, POLL_INTERVAL_MS);
-//                }
-//            }).start();
-//        }
     }
