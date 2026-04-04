@@ -61,7 +61,8 @@
         app:iconTint="@color/danger"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSettings"/>
 
     <TextView
         android:id="@+id/lblName"
@@ -74,7 +75,8 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profilePic" />
+        app:layout_constraintTop_toBottomOf="@+id/profilePic"
+        app:layout_constraintBottom_toTopOf="@+id/lblEmail"/>
 
     <TextView
         android:id="@+id/lblEmail"
@@ -86,7 +88,8 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lblName" />
+        app:layout_constraintTop_toBottomOf="@+id/lblName"
+        app:layout_constraintBottom_toTopOf="@+id/cardThresholds"/>
 
     <!-- Thresholds card -->
     <androidx.cardview.widget.CardView
@@ -94,11 +97,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginTop="28dp"
         app:cardBackgroundColor="@color/surface"
         app:cardCornerRadius="16dp"
         app:cardElevation="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnSettings"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lblEmail">
@@ -112,9 +116,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -128,10 +132,10 @@
                     android:id="@+id/lblModeValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:text=""
                     android:textColor="@color/textMuted"
-                    android:textSize="14sp"
-                    android:layout_marginStart="8dp" />
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -328,6 +332,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        app:layout_constraintBottom_toTopOf="@+id/lblName"
         tools:srcCompat="@tools:sample/avatars" />
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
