@@ -13,7 +13,7 @@ import java.net.URL;
 
 /*
 * Sends pings to devices in device activity to confirm that they are online
-* using ip address.
+* Still havent implemented using ip address.
 * */
 
 
@@ -73,5 +73,7 @@ import java.net.URL;
                 }
             }).start();
 
-
+            
+        }
+        
     }
