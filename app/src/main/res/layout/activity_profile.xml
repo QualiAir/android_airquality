@@ -54,7 +54,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        android:text="Reset to default Settings"
+        android:text="Reset Profile"
         android:textColor="@color/danger"
         app:cornerRadius="16dp"
         app:iconGravity="textStart"
