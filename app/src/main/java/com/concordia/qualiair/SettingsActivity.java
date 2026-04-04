@@ -173,6 +173,18 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
             editor.apply();
+
+            // Send updated thresholds to backend so background notifications use correct values
+            ThresholdLevels.Thresholds backendThresholds = ThresholdLevels.fromPreference(
+                    preset,
+                    sharedPrefs.getFloat(ThresholdLevels.KEY_NH3_CAUTION, ThresholdLevels.NORMAL.nh3Caution),
+                    sharedPrefs.getFloat(ThresholdLevels.KEY_NH3_ALARM, ThresholdLevels.NORMAL.nh3Alarm),
+                    sharedPrefs.getFloat(ThresholdLevels.KEY_H2S_CAUTION, ThresholdLevels.NORMAL.h2sCaution),
+                    sharedPrefs.getFloat(ThresholdLevels.KEY_H2S_ALARM, ThresholdLevels.NORMAL.h2sAlarm),
+                    sharedPrefs.getFloat(ThresholdLevels.KEY_PM25_CAUTION, ThresholdLevels.NORMAL.pm25Caution),
+                    sharedPrefs.getFloat(ThresholdLevels.KEY_PM25_ALARM, ThresholdLevels.NORMAL.pm25Alarm)
+            );
+            FcmTokenManager.sendThresholdsToBackend(this, backendThresholds);
             Snackbar.make(btnSave, "Settings saved!", Snackbar.LENGTH_SHORT).show();
             finish();
         });
