@@ -8,6 +8,7 @@ import java.util.List;
 
 import android.content.Intent;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.concordia.qualiair.Device.DeviceActivity;
 
 public class FAQActivity extends AppCompatActivity {
 

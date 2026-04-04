@@ -7,6 +7,7 @@ import android.os.Build;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import com.concordia.qualiair.Device.DeviceActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.widget.TextView;
 import android.util.Log;
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private String selectedSensor = "nh3"; // default to NH3
 
     private AirQualityMonitor monitor = new AirQualityMonitor();
+
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +143,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setupGaugeRanges();
+        prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
+        boolean isFirstLaunch = prefs.getBoolean("isFirstLaunch", true);
+
+        if (isFirstLaunch) {
+            // make this a one time thing
+            prefs.edit().putBoolean("isFirstLaunch", false).apply();
+
+            // auto sends to device activity
+            Intent intent = new Intent(MainActivity.this, DeviceActivity.class);
+            startActivity(intent);
+            finish(); // prevents going back to MainActivity
+        }
 
     }
 
