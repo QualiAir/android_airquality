@@ -159,10 +159,10 @@ public class MainActivity extends AppCompatActivity {
         ThresholdLevels.Thresholds t = ThresholdLevels.fromPreference(preset, nh3C, nh3A, h2sC, h2sA, pm25C, pm25A);
         monitor.updateThresholds(t);
         gaugeMain.applyPreset(t, "NH3");
-        gaugeMain.setValue(0);
         updateSelectedButton(btnNh3);
 
-        updateLevelPills(selectedSensor);
+        //opening app starts with 0.0 so it doesn't look broke and inconsisten
+        updateGaugeDisplay(0f);
     }
 
     private void updateGaugeDisplay(float value) {

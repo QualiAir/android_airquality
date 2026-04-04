@@ -289,6 +289,7 @@ public class HistoryActivity extends AppCompatActivity {
                                             callbackCaution,
                                             callbackAlarm
                                     ));
+                                    r.setSensor(sensorName);
                                 }
 
                                 updateChart();
@@ -338,6 +339,7 @@ public class HistoryActivity extends AppCompatActivity {
         xAxis.setDrawGridLines(false);
         xAxis.setTextColor(getColor(R.color.supreme));
         xAxis.setGranularity(1f);
+        xAxis.setLabelCount(4, false);
 
         YAxis leftAxis = lineChart.getAxisLeft();
         leftAxis.setDrawGridLines(false);
@@ -346,7 +348,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         lineChart.getDescription().setEnabled(false);
         lineChart.getLegend().setEnabled(false);
-        lineChart.setExtraOffsets(12f, 40f, 12f, 20f);
+        lineChart.setExtraOffsets(12f, 40f, 12f, 40f);
 
         leftAxis.removeAllLimitLines();
 
@@ -362,10 +364,10 @@ public class HistoryActivity extends AppCompatActivity {
                 sensorName.equals("hydrogen_sulfide") ? ThresholdLevels.NORMAL.h2sAlarm  :
                         sensorName.equals("dust")             ? ThresholdLevels.NORMAL.pm25Alarm : ThresholdLevels.NORMAL.nh3Alarm
         );
-        float maxView = alarmValue * 1.5f;
-
-        leftAxis.setAxisMaximum(maxView);
-        leftAxis.setAxisMinimum(0f);
+//        float maxView = alarmValue * 1.5f;
+//
+//        leftAxis.setAxisMaximum(maxView);
+//        leftAxis.setAxisMinimum(0f);
 
         LimitLine alarmLimit = new LimitLine(alarmValue, "Alarm");
         alarmLimit.setLineColor(getColor(R.color.danger));
@@ -416,6 +418,18 @@ public class HistoryActivity extends AppCompatActivity {
             Reading currentReading = readings.get(i);
             chartEntries.add(new Entry(i, (float) currentReading.getValue()));
         }
+        //MAKE GRAPH DYNAMIC
+        // Find the actual max value in the data
+        float maxVal = 0f;
+        for (Entry e : chartEntries) {
+            if (e.getY() > maxVal) maxVal = e.getY();
+        }
+
+        // Set axis to fit data with padding, but always show at least up to alarm line
+        YAxis leftAxis = lineChart.getAxisLeft();
+        float dynamicMax = Math.max(maxVal * 1.2f, currentAlarm * 1.2f);
+        leftAxis.setAxisMaximum(dynamicMax);
+        leftAxis.setAxisMinimum(0f);
 
         LineDataSet lineDataSet = new LineDataSet(chartEntries, "Readings");
         lineDataSet.setColor(getColor(R.color.safe));
