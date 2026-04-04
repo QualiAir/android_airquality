@@ -57,10 +57,9 @@
         android:text="Reset to default Settings"
         android:textColor="@color/danger"
         app:cornerRadius="16dp"
-        app:icon="@drawable/ic_logout"
         app:iconGravity="textStart"
         app:iconTint="@color/danger"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

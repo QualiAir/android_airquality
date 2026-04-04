@@ -56,16 +56,16 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(new Intent(this, SettingsActivity.class));
         });
 
-        //Logout button
+        //Reset button
         MaterialButton btnDefaultSettings = findViewById(R.id.btnDefaultSettings);
         btnDefaultSettings.setOnClickListener(v -> {
             new androidx.appcompat.app.AlertDialog.Builder(this)
                     .setTitle("Reset Settings")
-                    .setMessage("This will restore all thresholds to their default values. Continue?")
-                    .setPositiveButton("Reset", (dialog, which) -> {
+                    .setMessage("This will restore all thresholds and profile info to their default values. Continue?")                    .setPositiveButton("Reset", (dialog, which) -> {
                         SharedPreferences prefs = getSharedPreferences("QualiAirPreferences", MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
 
+                        // Reset thresholds
                         editor.putFloat(ThresholdLevels.KEY_NH3_CAUTION,  ThresholdLevels.NORMAL.nh3Caution);
                         editor.putFloat(ThresholdLevels.KEY_NH3_ALARM,    ThresholdLevels.NORMAL.nh3Alarm);
                         editor.putFloat(ThresholdLevels.KEY_H2S_CAUTION,  ThresholdLevels.NORMAL.h2sCaution);
@@ -73,9 +73,20 @@ public class ProfileActivity extends AppCompatActivity {
                         editor.putFloat(ThresholdLevels.KEY_PM25_CAUTION, ThresholdLevels.NORMAL.pm25Caution);
                         editor.putFloat(ThresholdLevels.KEY_PM25_ALARM,   ThresholdLevels.NORMAL.pm25Alarm);
                         editor.putString(ThresholdLevels.KEY_SENSITIVITY, "Normal");
+
+                        // Reset user profile info
+                        editor.remove("profile_pic_uri");
                         editor.apply();
 
-                        // Refresh the displayed values immediately
+                        // Reset UserPreferences (name, email, etc.)
+                        userPreferences.setUsername("");
+                        userPreferences.setEmail("");
+                        userPreferences.saveAllPreferences();
+
+                        // Reset profile pic to default
+                        profilePic.setImageResource(R.drawable.temp_profile);
+
+                        // Refresh UI
                         onResume();
                     })
                     .setNegativeButton("Cancel", null)
