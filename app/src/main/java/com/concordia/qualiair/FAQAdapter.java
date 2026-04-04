@@ -1,4 +1,6 @@
 package com.concordia.qualiair;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,10 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.FAQViewHolder> {
 
         holder.tvQuestion.setText(item.getQuestion());
         holder.tvAnswer.setText(item.getAnswer());
+
+        // Make URLs clickable
+        Linkify.addLinks(holder.tvAnswer, Linkify.WEB_URLS);
+        holder.tvAnswer.setMovementMethod(LinkMovementMethod.getInstance());
 
         // Check if the item is expanded and show/hide the answer
         boolean isExpanded = item.isExpanded();

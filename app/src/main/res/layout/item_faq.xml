@@ -50,6 +50,7 @@
         android:text="Sample Answer"
         android:textColor="@color/textMuted"
         android:textSize="14sp"
+        android:linksClickable="true"
         android:visibility="gone" />
 
 </LinearLayout>

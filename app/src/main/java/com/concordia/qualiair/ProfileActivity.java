@@ -57,10 +57,29 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         //Logout button
-        MaterialButton btnLogOut = findViewById(R.id.btnLogOut);
-        btnLogOut.setOnClickListener(v -> {
-            // Perform logout logic (clear prefs, etc.) and go to Login
-            finishAffinity(); // Close all activities in stack
+        MaterialButton btnDefaultSettings = findViewById(R.id.btnDefaultSettings);
+        btnDefaultSettings.setOnClickListener(v -> {
+            new androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle("Reset Settings")
+                    .setMessage("This will restore all thresholds to their default values. Continue?")
+                    .setPositiveButton("Reset", (dialog, which) -> {
+                        SharedPreferences prefs = getSharedPreferences("QualiAirPreferences", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+
+                        editor.putFloat(ThresholdLevels.KEY_NH3_CAUTION,  ThresholdLevels.NORMAL.nh3Caution);
+                        editor.putFloat(ThresholdLevels.KEY_NH3_ALARM,    ThresholdLevels.NORMAL.nh3Alarm);
+                        editor.putFloat(ThresholdLevels.KEY_H2S_CAUTION,  ThresholdLevels.NORMAL.h2sCaution);
+                        editor.putFloat(ThresholdLevels.KEY_H2S_ALARM,    ThresholdLevels.NORMAL.h2sAlarm);
+                        editor.putFloat(ThresholdLevels.KEY_PM25_CAUTION, ThresholdLevels.NORMAL.pm25Caution);
+                        editor.putFloat(ThresholdLevels.KEY_PM25_ALARM,   ThresholdLevels.NORMAL.pm25Alarm);
+                        editor.putString(ThresholdLevels.KEY_SENSITIVITY, "Normal");
+                        editor.apply();
+
+                        // Refresh the displayed values immediately
+                        onResume();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
         });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
