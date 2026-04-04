@@ -196,7 +196,12 @@ public class DiscoveryActivity2 extends AppCompatActivity {
                     runOnUiThread(() -> {
                         isScanning = false;
                         btnScan.setText("Scan Again");
-                        tvScanStatus.setText("Scan complete");
+                        if(foundDevices.isEmpty()){
+                            tvScanStatus.setText("Scan complete: No device found :(");
+                        }
+                        else{
+                        tvScanStatus.setText("Scan complete: "+foundDevices.size()+" device(s) found");
+                        }
                     });
                 }
 

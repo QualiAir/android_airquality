@@ -76,6 +76,7 @@ public class CredentialsActivity2 extends AppCompatActivity {
                     new BLEConnectionMaker.ProvisionCallback() {
                         @Override
                         public void onSuccess(String ipAddress, String deviceIDESP32) {
+
                             Device device = new Device(finalCustomName);
                             device.setSsid(ssid);
                             device.setPassword(password);

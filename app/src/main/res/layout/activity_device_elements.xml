@@ -43,8 +43,8 @@
                 android:id="@+id/deviceName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PROV_QUALIAIR_01"
-                android:textColor="#F0F4FF"
+                android:text=""
+                android:textColor="@color/text"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -58,28 +58,6 @@
                 android:textSize="12sp" />
 
         </LinearLayout>
-
-        <!--        &lt;!&ndash; Signal bars + chevron &ndash;&gt;-->
-        <!--        <LinearLayout-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:orientation="horizontal"-->
-        <!--            android:gravity="center_vertical"-->
-        <!--            android:gap="8dp">-->
-
-        <!--            <ImageView-->
-        <!--                android:id="@+id/ivSignal"-->
-        <!--                android:layout_width="20dp"-->
-        <!--                android:layout_height="20dp"-->
-        <!--                android:src="@drawable/ic_signal_bars" />-->
-
-        <!--            <TextView-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:text="›"-->
-        <!--                android:textColor="#6B7280"-->
-        <!--                android:textSize="20sp" />-->
-        <!--        </LinearLayout>-->
 
     </LinearLayout>
 

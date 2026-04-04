@@ -131,7 +131,6 @@ public class DeviceActivity extends AppCompatActivity {
         tvDeviceName.setText(device.getName());
         tvDeviceSSID.setText("Network: " + device.getSsid());
 
-        // tvDialogStatus is orange — good for showing IP or online status
         String ip = device.getIpAddress();
         if (ip != null && !ip.isEmpty()) {
             tvDeviceIP.setText("IP: " + ip);

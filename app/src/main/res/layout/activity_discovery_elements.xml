@@ -9,7 +9,7 @@
     android:layout_marginBottom="10dp"
     app:cardCornerRadius="14dp"
     app:cardElevation="0dp"
-    app:cardBackgroundColor="#111827">
+    app:cardBackgroundColor="@color/border">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,8 +41,8 @@
                 android:id="@+id/tvFoundDeviceName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PROV_QUALIAIR_03"
-                android:textColor="#F0F4FF"
+                android:text=""
+                android:textColor="@color/text"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="Signal: -48 dBm"
+                android:text=""
                 android:textColor="#6B7280"
                 android:textSize="12sp" />
 
