@@ -287,7 +287,7 @@ public class SettingsActivity extends AppCompatActivity {
                     float pm25A = Float.parseFloat(etPm25AlarmDialog.getText().toString());
 
                     if (nh3C >= nh3A || h2sC >= h2sA || pm25C >= pm25A) {
-                        Snackbar.make(findViewById(R.id.btnSave), "Caution must be < Alarm", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(R.id.btnSave), "Caution must be less than Alarm", Snackbar.LENGTH_SHORT).show();
                         return;
                     }
 

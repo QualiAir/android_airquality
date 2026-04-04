@@ -29,36 +29,37 @@
         android:id="@+id/btnSettings"
         style="@style/Widget.Material3.Button.TonalButton"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="47dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="12dp"
         android:text="Settings"
         android:textColor="@color/text"
-        app:iconTint="@color/text"
-        app:iconGravity="textStart"
-        app:iconPadding="12dp"
         app:backgroundTint="@color/surfaceHigh"
         app:cornerRadius="16dp"
         app:icon="@drawable/ic_settings"
+        app:iconGravity="textStart"
+        app:iconPadding="12dp"
+        app:iconTint="@color/text"
         app:layout_constraintBottom_toTopOf="@+id/btnLogOut"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardThresholds" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogOut"
         style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="51dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
         android:text="Log Out"
         android:textColor="@color/danger"
-        app:icon="@drawable/ic_logout"
-        app:iconTint="@color/danger"
-        app:iconGravity="textStart"
         app:cornerRadius="16dp"
+        app:icon="@drawable/ic_logout"
+        app:iconGravity="textStart"
+        app:iconTint="@color/danger"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -109,28 +110,45 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Alert Thresholds"
-                android:textColor="@color/text"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Alert Thresholds"
+                    android:textColor="@color/text"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/lblModeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/textMuted"
+                    android:textSize="14sp"
+                    android:layout_marginStart="8dp" />
+
+            </LinearLayout>
 
             <!-- NH3 row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="12dp"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="12dp">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="NH₃"
+                    android:text="Ammonia"
                     android:textColor="@color/text"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -138,37 +156,37 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:text="Caution"
                     android:textColor="@color/textMuted"
-                    android:textSize="13sp"
-                    android:layout_marginEnd="4dp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/lblNh3Caution"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="25 ppm"
                     android:textColor="@color/warning"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="16dp"
-                    android:text="25 ppm" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:text="Alarm"
                     android:textColor="@color/textMuted"
-                    android:textSize="13sp"
-                    android:layout_marginEnd="4dp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/lblNh3Alarm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="35 ppm"
                     android:textColor="@color/danger"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:text="35 ppm" />
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -176,22 +194,22 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/surfaceHigh"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="12dp"
+                android:background="@color/surfaceHigh" />
 
             <!-- H2S row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="12dp"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="12dp">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="H₂S"
+                    android:text="Hydrogen Sulfide"
                     android:textColor="@color/text"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -199,37 +217,37 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:text="Caution"
                     android:textColor="@color/textMuted"
-                    android:textSize="13sp"
-                    android:layout_marginEnd="4dp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/lblH2sCaution"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="1 ppm"
                     android:textColor="@color/warning"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="16dp"
-                    android:text="1 ppm" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:text="Alarm"
                     android:textColor="@color/textMuted"
-                    android:textSize="13sp"
-                    android:layout_marginEnd="4dp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/lblH2sAlarm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="5 ppm"
                     android:textColor="@color/danger"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:text="5 ppm" />
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -237,21 +255,21 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/surfaceHigh"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="12dp"
+                android:background="@color/surfaceHigh" />
 
             <!-- PM2.5 row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="PM2.5"
+                    android:text="Fine Dust"
                     android:textColor="@color/text"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -259,37 +277,37 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:text="Caution"
                     android:textColor="@color/textMuted"
-                    android:textSize="13sp"
-                    android:layout_marginEnd="4dp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/lblPm25Caution"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="102 µg/m³"
                     android:textColor="@color/warning"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="16dp"
-                    android:text="102 µg/m³" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:text="Alarm"
                     android:textColor="@color/textMuted"
-                    android:textSize="13sp"
-                    android:layout_marginEnd="4dp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/lblPm25Alarm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="200 µg/m³"
                     android:textColor="@color/danger"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:text="200 µg/m³" />
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
