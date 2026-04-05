@@ -153,6 +153,7 @@ public class DeviceActivity extends AppCompatActivity {
         devices.clear();
         devices.addAll(deviceList.getAllDevices());
         if (deviceAdapter != null) deviceAdapter.notifyDataSetChanged();
+        if(devices.size()!=0){}
         startPollingAllDevices();
     }
 

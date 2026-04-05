@@ -52,13 +52,23 @@ public class MainActivity extends AppCompatActivity {
 
     private AirQualityMonitor monitor = new AirQualityMonitor();
 
-    SharedPreferences prefs;
+    SharedPreferences devicesSP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         alertManager = new AlertManager(this);
+
+        devicesSP = getSharedPreferences("QualiAirDevices", MODE_PRIVATE);
+
+        if (devicesSP.getAll().isEmpty()) {
+            Log.e("MainActivity", "No devices");
+            // auto sends to device activity
+            Intent intent = new Intent(MainActivity.this, DeviceActivity.class);
+            startActivity(intent);
+        }
+        Log.e("MainActivity", " still on create");
 
         // Request notification permission on Android 13+
         if (Build.VERSION.SDK_INT >= 33) {
@@ -143,20 +153,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setupGaugeRanges();
-        prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
-        boolean isFirstLaunch = prefs.getBoolean("isFirstLaunch", true);
-
-        if (isFirstLaunch) {
-            // make this a one time thing
-            prefs.edit().putBoolean("isFirstLaunch", false).apply();
-
-            // auto sends to device activity
-            Intent intent = new Intent(MainActivity.this, DeviceActivity.class);
-            startActivity(intent);
-            finish(); // prevents going back to MainActivity
-        }
 
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e("MainActivity", " on start");
+    }
+
+
 
     private void setupGaugeRanges() {
 
@@ -345,6 +351,13 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
         @Override
         protected void onResume () {
             super.onResume();
+
+            SharedPreferences devicesSP = getSharedPreferences("devices_SP", MODE_PRIVATE);
+            if (devicesSP.getAll().isEmpty()) {
+                Intent intent = new Intent(MainActivity.this, DeviceActivity.class);
+                startActivity(intent);
+            }
+
             if (bottomNavigationView != null) {
                 bottomNavigationView.setSelectedItemId(R.id.nav_home);
             }
