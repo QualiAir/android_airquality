@@ -126,6 +126,7 @@ public class DeviceActivity extends AppCompatActivity {
         TextView tvDeviceSSID = dialogView.findViewById(R.id.tvDialogSSID);
         TextView tvDeviceIP = dialogView.findViewById(R.id.tvDialogStatus);
         Button btnCancel = dialogView.findViewById(R.id.btnDialogCancel);
+        Button btnDeleteDevice = dialogView.findViewById(R.id.btnDeleteDevice);
 
         // Populate fields
         tvDeviceName.setText(device.getName());
@@ -144,6 +145,12 @@ public class DeviceActivity extends AppCompatActivity {
                 .create();
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
+        btnDeleteDevice.setOnClickListener(v -> {
+            deviceList.deleteDevice(device.getName());  // remove from SharedPreferences
+            devices.remove(device);           // remove from the list in memory
+            deviceAdapter.notifyDataSetChanged(); // refresh the RecyclerView
+            dialog.dismiss();
+        });
         dialog.show();
     }
 
