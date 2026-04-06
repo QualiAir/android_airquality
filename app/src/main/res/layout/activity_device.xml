@@ -64,20 +64,38 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- "+ Add New Device" dashed button pinned to bottom -->
+
     <Button
         android:id="@+id/btnAddDevice"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="108dp"
+        android:background="@drawable/bg_add_device_button"
         android:text="+ Add New Device"
         android:textColor="#00D4AA"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:background="@drawable/bg_add_device_button"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@null"
+        app:itemIconTint="@null"
+        app:itemRippleColor="@null"
+        app:itemTextColor="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/btnAddDevice"
+        app:layout_constraintVertical_bias="1.0"
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

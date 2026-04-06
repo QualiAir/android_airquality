@@ -1,6 +1,7 @@
 package com.concordia.qualiair.Device;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.concordia.qualiair.FAQActivity;
+import com.concordia.qualiair.HistoryActivity;
+import com.concordia.qualiair.MainActivity;
+import com.concordia.qualiair.ProfileActivity;
 import com.concordia.qualiair.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONObject;
 
@@ -31,6 +37,9 @@ public class DeviceActivity extends AppCompatActivity {
     // One poller per device
     private final List<PingSender> pollers = new ArrayList<>();
 
+    private BottomNavigationView bottomNavigationView;
+    SharedPreferences devicesSP;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +52,37 @@ public class DeviceActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Devices");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        devicesSP = getSharedPreferences("QualiAirDevices", MODE_PRIVATE);
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // 1. Force the Home icon to be highlighted when this activity starts
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_home) {
+                if (devicesSP.getAll().isEmpty()) {return true;}
+                startActivity(new Intent(DeviceActivity.this, MainActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_faq) {
+                if (devicesSP.getAll().isEmpty()) {return true;}
+                startActivity(new Intent(DeviceActivity.this, FAQActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_history) {
+                if (devicesSP.getAll().isEmpty()) {return true;}
+                startActivity(new Intent(DeviceActivity.this, HistoryActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                if (devicesSP.getAll().isEmpty()) {return true;}
+                startActivity(new Intent(DeviceActivity.this, ProfileActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_devices) {
+                return true;
+            }
+            return false;
+        });
 
         bleConnectionMaker = new BLEConnectionMaker(this);
 
