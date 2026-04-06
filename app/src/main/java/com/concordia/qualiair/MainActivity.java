@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
             // auto sends to device activity
             Intent intent = new Intent(MainActivity.this, DeviceActivity.class);
             startActivity(intent);
+            return;
         }
         Log.e("MainActivity", " still on create");
 
@@ -352,10 +353,11 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
         protected void onResume () {
             super.onResume();
 
-            SharedPreferences devicesSP = getSharedPreferences("devices_SP", MODE_PRIVATE);
+            SharedPreferences devicesSP = getSharedPreferences("QualiAirDevices", MODE_PRIVATE);
             if (devicesSP.getAll().isEmpty()) {
                 Intent intent = new Intent(MainActivity.this, DeviceActivity.class);
                 startActivity(intent);
+                return;
             }
 
             if (bottomNavigationView != null) {
