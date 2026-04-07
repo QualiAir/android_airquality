@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/colorBackground"
+    android:fitsSystemWindows="true"
     tools:context=".ProfileActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -25,325 +26,321 @@
             app:navigationIconTint="@color/text" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSettings"
-        style="@style/Widget.Material3.Button.TonalButton"
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:text="Settings"
-        android:textColor="@color/text"
-        app:backgroundTint="@color/surfaceHigh"
-        app:cornerRadius="16dp"
-        app:icon="@drawable/ic_settings"
-        app:iconGravity="textStart"
-        app:iconPadding="12dp"
-        app:iconTint="@color/text"
-        app:layout_constraintBottom_toTopOf="@+id/btnDefaultSettings"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardThresholds" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnDefaultSettings"
-        style="@style/Widget.Material3.Button.TextButton"
-        android:layout_width="0dp"
-        android:layout_height="51dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        android:text="Reset Profile"
-        android:textColor="@color/danger"
-        app:cornerRadius="16dp"
-        app:iconGravity="textStart"
-        app:iconTint="@color/danger"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSettings"/>
-
-    <TextView
-        android:id="@+id/lblName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="User Name"
-        android:textColor="@color/text"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profilePic"
-        app:layout_constraintBottom_toTopOf="@+id/lblEmail"/>
-
-    <TextView
-        android:id="@+id/lblEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="user@example.com"
-        android:textColor="@color/textMuted"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lblName"
-        app:layout_constraintBottom_toTopOf="@+id/cardThresholds"/>
-
-    <!-- Thresholds card -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardThresholds"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        app:cardBackgroundColor="@color/surface"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnSettings"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lblEmail">
-
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:paddingBottom="24dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profilePic"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="32dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/temp_profile"
+                android:padding="2dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/surfaceHigh"
+                app:shapeAppearanceOverlay="@style/CircleImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/lblName"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_marginTop="20dp"
+                android:text="User Name"
+                android:textColor="@color/text"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profilePic" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Alert Thresholds"
-                    android:textColor="@color/text"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/lblModeValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text=""
-                    android:textColor="@color/textMuted"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <!-- NH3 row -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/lblEmail"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_marginTop="4dp"
+                android:text="user@example.com"
+                android:textColor="@color/textMuted"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lblName" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Ammonia"
-                    android:textColor="@color/text"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:text="Caution"
-                    android:textColor="@color/textMuted"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/lblNh3Caution"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:text="25 ppm"
-                    android:textColor="@color/warning"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:text="Alarm"
-                    android:textColor="@color/textMuted"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/lblNh3Alarm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="35 ppm"
-                    android:textColor="@color/danger"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="12dp"
-                android:background="@color/surfaceHigh" />
-
-            <!-- H2S row -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardThresholds"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
+                app:cardBackgroundColor="@color/surface"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lblEmail">
 
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Hydrogen Sulfide"
-                    android:textColor="@color/text"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:text="Caution"
-                    android:textColor="@color/textMuted"
-                    android:textSize="13sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/lblH2sCaution"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:text="1 ppm"
-                    android:textColor="@color/warning"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Alert Thresholds"
+                            android:textColor="@color/text"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:text="Alarm"
-                    android:textColor="@color/textMuted"
-                    android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/lblModeValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text=""
+                            android:textColor="@color/textMuted"
+                            android:textSize="14sp" />
+                    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/lblH2sAlarm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="5 ppm"
-                    android:textColor="@color/danger"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-            </LinearLayout>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Ammonia"
+                            android:textColor="@color/text"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="12dp"
-                android:background="@color/surfaceHigh" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:text="Caution"
+                            android:textColor="@color/textMuted"
+                            android:textSize="13sp" />
 
-            <!-- PM2.5 row -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/lblNh3Caution"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="25 ppm"
+                            android:textColor="@color/warning"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Fine Dust"
-                    android:textColor="@color/text"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:text="Alarm"
+                            android:textColor="@color/textMuted"
+                            android:textSize="13sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:text="Caution"
-                    android:textColor="@color/textMuted"
-                    android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/lblNh3Alarm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="35 ppm"
+                            android:textColor="@color/danger"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/lblPm25Caution"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:text="102 µg/m³"
-                    android:textColor="@color/warning"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@color/surfaceHigh" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:text="Alarm"
-                    android:textColor="@color/textMuted"
-                    android:textSize="13sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/lblPm25Alarm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="200 µg/m³"
-                    android:textColor="@color/danger"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Hydrogen Sulfide"
+                            android:textColor="@color/text"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
-            </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:text="Caution"
+                            android:textColor="@color/textMuted"
+                            android:textSize="13sp" />
 
-        </LinearLayout>
+                        <TextView
+                            android:id="@+id/lblH2sCaution"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="1 ppm"
+                            android:textColor="@color/warning"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
 
-    </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:text="Alarm"
+                            android:textColor="@color/textMuted"
+                            android:textSize="13sp" />
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/profilePic"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="40dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/temp_profile"
-        android:padding="2dp"
-        app:strokeWidth="2dp"
-        app:strokeColor="@color/surfaceHigh"
-        app:shapeAppearanceOverlay="@style/CircleImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        app:layout_constraintBottom_toTopOf="@+id/lblName"
-        tools:srcCompat="@tools:sample/avatars" />
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+                        <TextView
+                            android:id="@+id/lblH2sAlarm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5 ppm"
+                            android:textColor="@color/danger"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@color/surfaceHigh" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Fine Dust"
+                            android:textColor="@color/text"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:text="Caution"
+                            android:textColor="@color/textMuted"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/lblPm25Caution"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="102 µg/m³"
+                            android:textColor="@color/warning"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:text="Alarm"
+                            android:textColor="@color/textMuted"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/lblPm25Alarm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="200 µg/m³"
+                            android:textColor="@color/danger"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSettings"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="32dp"
+                android:text="Settings"
+                android:textColor="@color/text"
+                app:backgroundTint="@color/surfaceHigh"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/ic_settings"
+                app:iconGravity="textStart"
+                app:iconPadding="12dp"
+                app:iconTint="@color/text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardThresholds" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDefaultSettings"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="8dp"
+                android:text="Reset Profile"
+                android:textColor="@color/danger"
+                app:cornerRadius="16dp"
+                app:iconGravity="textStart"
+                app:iconTint="@color/danger"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnSettings" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <include
         android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
+        layout="@layout/layout_bottom_nav"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@null"
-        app:itemIconTint="@null"
-        app:itemTextColor="@null"
-        app:itemRippleColor="@null"
-        app:menu="@menu/bottom_nav_menu"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,8 @@ package com.concordia.qualiair.Device;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.concordia.qualiair.FAQActivity;
 import com.concordia.qualiair.HistoryActivity;
 import com.concordia.qualiair.MainActivity;
+import com.concordia.qualiair.NavigationHelper;
 import com.concordia.qualiair.ProfileActivity;
 import com.concordia.qualiair.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -151,6 +154,11 @@ public class DeviceActivity extends AppCompatActivity {
                 .setCancelable(true)
                 .create();
 
+        // FIX: Remove default dialog background so rounded corners are visible
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
         btnCancel.setOnClickListener(v -> dialog.dismiss());
         btnDeleteDevice.setOnClickListener(v -> {
             deviceList.deleteDevice(device.getName());  // remove from SharedPreferences
@@ -164,10 +172,22 @@ public class DeviceActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        
         devices.clear();
         devices.addAll(deviceList.getAllDevices());
+        
+        // --- HIDE NAVBAR IF NO DEVICES (Initial Install Logic) ---
+        View navView = findViewById(R.id.bottom_navigation);
+        if (devices.isEmpty()) {
+            if (navView != null) navView.setVisibility(View.GONE);
+            if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        } else {
+            if (navView != null) navView.setVisibility(View.VISIBLE);
+            NavigationHelper.setupBottomNavigation(this, R.id.nav_devices);
+            if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         if (deviceAdapter != null) deviceAdapter.notifyDataSetChanged();
-        if(devices.size()!=0){}
         startPollingAllDevices();
     }
 

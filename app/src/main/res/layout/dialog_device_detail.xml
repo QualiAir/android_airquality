@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingStart="32dp"
-        android:paddingEnd="32dp">>
+        android:paddingEnd="32dp">
 
         <Button
             android:id="@+id/btnDeleteDevice"

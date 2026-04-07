@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
-
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -187,17 +187,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="14dp"
                 android:gravity="center"
-                android:layout_marginBottom="14dp">
+                android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_select_NH3"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
-                    android:layout_weight="1"
                     android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
                     android:text="Ammonia"
                     android:textSize="10sp"
                     app:cornerRadius="20dp" />
@@ -207,8 +207,8 @@
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
-                    android:layout_weight="1"
                     android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
                     android:text="Hydrogen Sulfide"
                     android:textSize="9sp"
                     app:cornerRadius="20dp" />
@@ -236,8 +236,8 @@
                     android:id="@+id/card_pressure"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
                     app:cardBackgroundColor="@color/surface"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp">
@@ -259,20 +259,19 @@
                             android:id="@+id/tv_pressure_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
                             android:text="--"
                             android:textColor="@color/safe"
                             android:textSize="20sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp"/>
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
                             android:text="hPa"
                             android:textColor="@color/textMuted"
-                            android:textSize="10sp"
-                            android:layout_marginBottom="6dp"/>
-
+                            android:textSize="10sp" />
 
 
                     </LinearLayout>
@@ -283,8 +282,8 @@
                     android:id="@+id/card_humidity"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
                     app:cardBackgroundColor="@color/surface"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp">
@@ -306,20 +305,19 @@
                             android:id="@+id/tv_humidity_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
                             android:text="--"
                             android:textColor="@color/safe"
                             android:textSize="20sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp"/>
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
                             android:text="%"
                             android:textColor="@color/textMuted"
-                            android:textSize="10sp"
-                            android:layout_marginBottom="6dp"/>
-
+                            android:textSize="10sp" />
 
 
                     </LinearLayout>
@@ -352,19 +350,19 @@
                             android:id="@+id/tv_temp_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
                             android:text="--"
                             android:textColor="@color/safe"
                             android:textSize="20sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp"/>
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
                             android:text="°C"
                             android:textColor="@color/textMuted"
-                            android:textSize="10sp"
-                            android:layout_marginBottom="6dp"/>
+                            android:textSize="10sp" />
 
 
                     </LinearLayout>
@@ -375,14 +373,13 @@
         </LinearLayout>
     </ScrollView>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <include
         android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
+        layout="@layout/layout_bottom_nav"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@null"
-        app:itemIconTint="@null"
-        app:itemTextColor="@null"
-        app:itemRippleColor="@null"
-        app:menu="@menu/bottom_nav_menu" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

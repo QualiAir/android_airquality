@@ -24,7 +24,6 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BottomNavigationView bottomNavigationView;
     private GaugeView gaugeMain;
     private TextView tvGaugeValue;
     private TextView tvGaugeStatus;
@@ -81,35 +80,6 @@ public class MainActivity extends AppCompatActivity {
                 );
             }
         }
-
-
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        // 1. Force the Home icon to be highlighted when this activity starts
-        bottomNavigationView.setSelectedItemId(R.id.nav_home);
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-
-            if (itemId == R.id.nav_home) {
-                // We are already on Home. Just return true to keep the highlight.
-                return true;
-            } else if (itemId == R.id.nav_faq) {
-                startActivity(new Intent(MainActivity.this, FAQActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_history) {
-                startActivity(new Intent(MainActivity.this, HistoryActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_profile) {
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_devices) {
-                startActivity(new Intent(MainActivity.this, DeviceActivity.class));
-                return true;
-            }
-            return false;
-        });
-
 
         gaugeMain = findViewById(R.id.gauge_main);
         tvGaugeValue = findViewById(R.id.tv_gauge_value);
@@ -360,9 +330,7 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
                 return;
             }
 
-            if (bottomNavigationView != null) {
-                bottomNavigationView.setSelectedItemId(R.id.nav_home);
-            }
+            NavigationHelper.setupBottomNavigation(this, R.id.nav_home);
             setupGaugeRanges();
             connectToHiveMQ();
         }

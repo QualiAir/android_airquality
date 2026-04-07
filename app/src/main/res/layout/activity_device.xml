@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
+    android:fitsSystemWindows="true"
     tools:context=".Device.DeviceActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -22,7 +23,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Subtitle: "Manage your QualiAir devices" -->
     <TextView
         android:id="@+id/tvSubtitle"
         android:layout_width="0dp"
@@ -35,7 +35,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar2" />
 
-    <!-- Section label: "MY DEVICES" -->
     <TextView
         android:id="@+id/tvMyDevices"
         android:layout_width="0dp"
@@ -50,7 +49,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvSubtitle" />
 
-    <!-- RecyclerView stops above the button -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
@@ -63,23 +61,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- "+ Add New Device" dashed button pinned to bottom -->
-
     <Button
         android:id="@+id/btnAddDevice"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="108dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/bg_add_device_button"
         android:text="+ Add New Device"
         android:textColor="#00D4AA"
         android:textSize="15sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <include
+        android:id="@+id/bottom_navigation"
+        layout="@layout/layout_bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

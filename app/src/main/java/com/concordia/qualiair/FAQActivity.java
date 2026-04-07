@@ -6,10 +6,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Intent;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.concordia.qualiair.Device.DeviceActivity;
-
 public class FAQActivity extends AppCompatActivity {
 
     @Override
@@ -17,21 +13,17 @@ public class FAQActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_faq);
 
-        //link MaterialToolbar in xml
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Action Bar and back button
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("FAQ");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        //Initialize RecyclerV
         RecyclerView rvFaq = findViewById(R.id.rvFaq);
         rvFaq.setLayoutManager(new LinearLayoutManager(this));
 
-        //list of questions and answers
         List<FAQItem> faqList = new ArrayList<>();
         faqList.add(new FAQItem("What is NH3 (Ammonia) and where does it come from?", "Ammonia is a colorless gas with a sharp odor. It mainly comes from agricultural activity (fertilizers, livestock), industrial processes, and wastewater treatment."));
         faqList.add(new FAQItem("What are the health effects of NH3 exposure?", "Low levels cause eye, nose, and throat irritation. At higher concentrations it can cause coughing, respiratory distress, and in severe cases, lung damage. The default sensitivity level flags caution at 25 ppm and alarm at 35 ppm.\n"));
@@ -47,34 +39,14 @@ public class FAQActivity extends AppCompatActivity {
         faqList.add(new FAQItem("Where can I find more information on Particulate Matter?", "We have looked at a few sources and decided to base our preset levels on the data provided by the tables in this link: https://www.epa.gov/criteria-air-pollutants/naaqs-table"));
         faqList.add(new FAQItem("Support contact?", "Email us at elec390team1@gmail.com."));
 
-        //Adapter
         FAQAdapter adapter = new FAQAdapter(faqList);
         rvFaq.setAdapter(adapter);
+    }
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        bottomNavigationView.setSelectedItemId(R.id.nav_faq); // highlight current tab
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-
-            if (itemId == R.id.nav_faq) {
-                return true; // already here
-            } else if (itemId == R.id.nav_home) {
-                startActivity(new Intent(FAQActivity.this, MainActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_history) {
-                startActivity(new Intent(FAQActivity.this, HistoryActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_profile) {
-                startActivity(new Intent(FAQActivity.this, ProfileActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_devices) {
-                startActivity(new Intent(FAQActivity.this, DeviceActivity.class));
-                return true;
-            }
-            return false;
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NavigationHelper.setupBottomNavigation(this, R.id.nav_faq);
     }
 
     @Override
