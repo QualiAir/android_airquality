@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.concordia.qualiair.FcmTokenManager;
 import com.concordia.qualiair.R;
 import com.google.android.material.appbar.MaterialToolbar;
 
@@ -91,7 +92,7 @@ public class CredentialsActivity2 extends AppCompatActivity {
 
                             DeviceList deviceList = new DeviceList(CredentialsActivity2.this);
                             deviceList.saveDevice(device);
-
+                            FcmTokenManager.syncSavedTokenWithBackend(CredentialsActivity2.this);
                             runOnUiThread(() -> {
                                 tvStatus.setText("Status: Success! ✓");
                                 Toast.makeText(CredentialsActivity2.this,
