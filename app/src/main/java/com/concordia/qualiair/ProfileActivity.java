@@ -93,36 +93,12 @@ public class ProfileActivity extends AppCompatActivity {
                     .setNegativeButton("Cancel", null)
                     .show();
         });
-
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        bottomNavigationView.setSelectedItemId(R.id.nav_profile); // highlight current tab
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-
-            if (itemId == R.id.nav_profile) {
-                return true; // already here
-            } else if (itemId == R.id.nav_home) {
-                startActivity(new Intent(ProfileActivity.this, MainActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_devices) {
-                startActivity(new Intent(ProfileActivity.this, DeviceActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_history) {
-                startActivity(new Intent(ProfileActivity.this, HistoryActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_faq) {
-                startActivity(new Intent(ProfileActivity.this, FAQActivity.class));
-                return true;
-            }
-            return false;
-        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        NavigationHelper.setupBottomNavigation(this, R.id.nav_profile);
 
         userPreferences.loadAllPreferences();
         String name  = userPreferences.getUsername();

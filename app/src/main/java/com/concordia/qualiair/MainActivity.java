@@ -24,7 +24,6 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BottomNavigationView bottomNavigationView;
     private GaugeView gaugeMain;
     private TextView tvGaugeValue;
     private TextView tvGaugeStatus;
@@ -52,13 +51,24 @@ public class MainActivity extends AppCompatActivity {
 
     private AirQualityMonitor monitor = new AirQualityMonitor();
 
-    SharedPreferences prefs;
+    SharedPreferences devicesSP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         alertManager = new AlertManager(this);
+
+        devicesSP = getSharedPreferences("QualiAirDevices", MODE_PRIVATE);
+
+        if (devicesSP.getAll().isEmpty()) {
+            Log.e("MainActivity", "No devices");
+            // auto sends to device activity
+            Intent intent = new Intent(MainActivity.this, DeviceActivity.class);
+            startActivity(intent);
+            return;
+        }
+        Log.e("MainActivity", " still on create");
 
         // Request notification permission on Android 13+
         if (Build.VERSION.SDK_INT >= 33) {
@@ -70,35 +80,6 @@ public class MainActivity extends AppCompatActivity {
                 );
             }
         }
-
-
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        // 1. Force the Home icon to be highlighted when this activity starts
-        bottomNavigationView.setSelectedItemId(R.id.nav_home);
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-
-            if (itemId == R.id.nav_home) {
-                // We are already on Home. Just return true to keep the highlight.
-                return true;
-            } else if (itemId == R.id.nav_faq) {
-                startActivity(new Intent(MainActivity.this, FAQActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_history) {
-                startActivity(new Intent(MainActivity.this, HistoryActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_profile) {
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_devices) {
-                startActivity(new Intent(MainActivity.this, DeviceActivity.class));
-                return true;
-            }
-            return false;
-        });
-
 
         gaugeMain = findViewById(R.id.gauge_main);
         tvGaugeValue = findViewById(R.id.tv_gauge_value);
@@ -143,20 +124,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setupGaugeRanges();
-        prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
-        boolean isFirstLaunch = prefs.getBoolean("isFirstLaunch", true);
-
-        if (isFirstLaunch) {
-            // make this a one time thing
-            prefs.edit().putBoolean("isFirstLaunch", false).apply();
-
-            // auto sends to device activity
-            Intent intent = new Intent(MainActivity.this, DeviceActivity.class);
-            startActivity(intent);
-            finish(); // prevents going back to MainActivity
-        }
 
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e("MainActivity", " on start");
+    }
+
+
 
     private void setupGaugeRanges() {
 
@@ -345,9 +322,15 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
         @Override
         protected void onResume () {
             super.onResume();
-            if (bottomNavigationView != null) {
-                bottomNavigationView.setSelectedItemId(R.id.nav_home);
+
+            SharedPreferences devicesSP = getSharedPreferences("QualiAirDevices", MODE_PRIVATE);
+            if (devicesSP.getAll().isEmpty()) {
+                Intent intent = new Intent(MainActivity.this, DeviceActivity.class);
+                startActivity(intent);
+                return;
             }
+
+            NavigationHelper.setupBottomNavigation(this, R.id.nav_home);
             setupGaugeRanges();
             connectToHiveMQ();
         }

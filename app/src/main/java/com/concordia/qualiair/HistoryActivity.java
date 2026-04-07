@@ -135,31 +135,12 @@ public class HistoryActivity extends AppCompatActivity {
             }
             applyFilter();
         });
+    }
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        bottomNavigationView.setSelectedItemId(R.id.nav_history); // highlight current tab
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-
-            if (itemId == R.id.nav_history) {
-                return true; // already here
-            } else if (itemId == R.id.nav_home) {
-                startActivity(new Intent(HistoryActivity.this, MainActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_devices) {
-                startActivity(new Intent(HistoryActivity.this, DeviceActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_profile) {
-                startActivity(new Intent(HistoryActivity.this, ProfileActivity.class));
-                return true;
-            } else if (itemId == R.id.nav_faq) {
-                startActivity(new Intent(HistoryActivity.this, FAQActivity.class));
-                return true;
-            }
-            return false;
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NavigationHelper.setupBottomNavigation(this, R.id.nav_history);
     }
 
     private float getSavedThreshold(String key, float defaultVal) {
