@@ -38,7 +38,8 @@
         android:label="QualiAir"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.QualiAir">
+        android:theme="@style/Theme.QualiAir"
+        android:usesCleartextTraffic="true">
         <activity android:name=".Device.DeviceActivity"
             android:label="Devices"
             android:exported="false"/>
@@ -90,6 +91,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
     </application>
 
 </manifest>
