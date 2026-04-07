@@ -2,6 +2,12 @@ package com.concordia.qualiair;
 
 import android.content.Context;
 import android.util.Log;
+
+import com.concordia.qualiair.Device.Device;
+import com.concordia.qualiair.Device.DeviceList;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -10,80 +16,95 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FcmTokenManager {
 
-    // Tag used to identify logs from this class in Logcat
     private static final String TAG = "FcmTokenManager";
-    // Sends the phone's FCM token to the Python backend so it knows where to deliver notifications
+    private static final String BASE_URL = "https://backend-airquality.onrender.com/";
+
+    /**
+     * Uses the existing DeviceList class to find a registered device ID.
+     * Returns the ID of the first device found in the system.
+     */
+    private static String getRegisteredDeviceId(Context context) {
+        DeviceList deviceList = new DeviceList(context);
+        List<Device> devices = deviceList.getAllDevices();
+        if (devices != null && !devices.isEmpty()) {
+            // Your teammate's Device class has this method to get the ID
+            return devices.get(0).getDeviceIDESP32();
+        }
+        return null;
+    }
+
     public static void sendTokenToBackend(Context context, String token) {
-        // Build a Retrofit instance pointing to our Python backend
+        String deviceId = getRegisteredDeviceId(context);
+
+        if (deviceId == null) {
+            Log.w(TAG, "No devices found via DeviceList. Saving token for future sync.");
+            context.getSharedPreferences("QualiAirPreferences", Context.MODE_PRIVATE)
+                    .edit()
+                    .putString("fcm_token", token)
+                    .apply();
+            return;
+        }
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://backend-airquality.onrender.com/")
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        // Create the ApiService using the Retrofit instance (connects the menu to the waiter)
+
         ApiService apiService = retrofit.create(ApiService.class);
-
-        // Get device_id from SharedPreferences
-        String deviceId = context.getSharedPreferences("QualiAirPreferences", Context.MODE_PRIVATE)
-                .getString("device_id", "unknown_device");
-
-        // Create request object with device_id and token
         Call<Void> call = apiService.registerToken(new RegisterRequest(deviceId, token));
 
-        // Execute the call in the background so it doesn't freeze the app
         call.enqueue(new Callback<Void>() {
-
-            // Called when the backend responds (success or failure)
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    Log.d(TAG, "Token sent successfully to backend");
+                    Log.d(TAG, "FCM Token successfully associated with device: " + deviceId);
                 } else {
-                    Log.e(TAG, "Failed to send token: " + response.code());
+                    Log.e(TAG, "Backend rejected token sync. Code: " + response.code());
                 }
             }
-            // Called when the request couldn't reach the backend at all
+
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.e(TAG, "Error sending token: " + t.getMessage());
+                Log.e(TAG, "Network failure during token sync: " + t.getMessage());
             }
         });
     }
 
-    // Sends the user's current threshold settings to the backend
-// so background notifications respect the user's chosen sensitivity level
-    public static void sendThresholdsToBackend(Context context, ThresholdLevels.Thresholds thresholds) {
+    public static void syncSavedTokenWithBackend(Context context) {
+        String savedToken = context.getSharedPreferences("QualiAirPreferences", Context.MODE_PRIVATE)
+                .getString("fcm_token", null);
 
-        // Build Retrofit instance pointing to our Python backend
+        if (savedToken != null && !savedToken.isEmpty()) {
+            Log.d(TAG, "Syncing saved token with now-registered device...");
+            sendTokenToBackend(context, savedToken);
+        }
+    }
+
+    public static void sendThresholdsToBackend(Context context, ThresholdLevels.Thresholds thresholds) {
+        String deviceId = getRegisteredDeviceId(context);
+
+        if (deviceId == null) {
+            Log.e(TAG, "Cannot sync thresholds: No device found in DeviceList.");
+            return;
+        }
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://backend-airquality.onrender.com/")
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        // Create the ApiService using the Retrofit instance
         ApiService apiService = retrofit.create(ApiService.class);
-
-        // Get device_id from SharedPreferences
-        String deviceId = context.getSharedPreferences("QualiAirPreferences", Context.MODE_PRIVATE)
-                .getString("device_id", "unknown_device");
-
-        // Create request object with device_id and thresholds
         Call<Void> call = apiService.updateThresholds(new ThresholdUpdateRequest(deviceId, thresholds));
 
-        // Execute the call in the background so it doesn't freeze the app
         call.enqueue(new Callback<Void>() {
-
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Log.d(TAG, "Thresholds sent successfully to backend");
-                } else {
-                    Log.e(TAG, "Failed to send thresholds: " + response.code());
-                }
+                if (response.isSuccessful()) Log.d(TAG, "Thresholds updated on backend.");
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.e(TAG, "Error sending thresholds: " + t.getMessage());
+                Log.e(TAG, "Failed to update thresholds on backend: " + t.getMessage());
             }
         });
     }

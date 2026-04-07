@@ -29,7 +29,9 @@ public class QualiAirFirebaseService extends FirebaseMessagingService {
 
     @Override
     public void onNewToken(String token) {
-        // Send this token to Python backend
+        //save to sharedprefs first so it's ready when we have a device id
+        getSharedPreferences("QualiAirPreferences", MODE_PRIVATE).edit().putString("fcm_token", token).apply();
+        // Send this token to Python backend - but this will fail gracefully if no device detected
         FcmTokenManager.sendTokenToBackend(this, token);
     }
 
