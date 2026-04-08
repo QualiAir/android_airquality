@@ -57,7 +57,7 @@ public String getTime() {
         if("dust".equals(sensor)){
             return String.format("%.4f", value);//dust has 4 significant figure
         }
-        return String.format("%.2f", value);//2 significant figure for nh3/h2s
+        return String.format("%.4f", value);//2 significant figure for nh3/h2s
     }
     public String getLevel() {
 

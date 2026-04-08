@@ -173,12 +173,12 @@ public class MainActivity extends AppCompatActivity {
             case "nh3":
                 gaugeMain.applyPreset(t,"NH3");
                 tvGaugeUnit.setText("ppm");
-                tvGaugeValue.setText(String.format("%.2f", value));
+                tvGaugeValue.setText(String.format("%.4f", value));
                 break;
             case "h2s":
                 gaugeMain.applyPreset(t,"H2S");
                 tvGaugeUnit.setText("ppm");
-                tvGaugeValue.setText(String.format("%.2f", value));
+                tvGaugeValue.setText(String.format("%.4f", value));
                 break;
             case "pm25":
                 gaugeMain.applyPreset(t,"PM25");
