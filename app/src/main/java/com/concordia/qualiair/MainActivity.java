@@ -173,12 +173,12 @@ public class MainActivity extends AppCompatActivity {
             case "nh3":
                 gaugeMain.applyPreset(t,"NH3");
                 tvGaugeUnit.setText("ppm");
-                tvGaugeValue.setText(String.format("%.2f", value));
+                tvGaugeValue.setText(String.format("%.4f", value));
                 break;
             case "h2s":
                 gaugeMain.applyPreset(t,"H2S");
                 tvGaugeUnit.setText("ppm");
-                tvGaugeValue.setText(String.format("%.2f", value));
+                tvGaugeValue.setText(String.format("%.4f", value));
                 break;
             case "pm25":
                 gaugeMain.applyPreset(t,"PM25");
@@ -282,7 +282,7 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
                             tvHumidityValue.setText(String.format("%.2f", humidity));
                             tvTempValue.setText(String.format("%.2f", temp));
                             monitor.update(nh3, h2s, pm25);
-                            alertManager.onNewReading(monitor);
+                            //alertManager.onNewReading(monitor);
                             switch (selectedSensor) {
                                 case "nh3":
                                     updateGaugeDisplay(monitor.getLatest("nh3"));
