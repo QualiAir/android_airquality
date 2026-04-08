@@ -282,7 +282,7 @@ private void applyStatusStyle(AirQualityMonitor.StatusLevel status) {
                             tvHumidityValue.setText(String.format("%.2f", humidity));
                             tvTempValue.setText(String.format("%.2f", temp));
                             monitor.update(nh3, h2s, pm25);
-                            //alertManager.onNewReading(monitor);
+                            alertManager.onNewReading(monitor);
                             switch (selectedSensor) {
                                 case "nh3":
                                     updateGaugeDisplay(monitor.getLatest("nh3"));
