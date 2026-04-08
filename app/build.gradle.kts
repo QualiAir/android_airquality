@@ -23,9 +23,14 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "MQTT_BROKER", "\"${localProperties["MQTT_BROKER"] ?: "tcp://test.mosquitto.org:1883"}\"")
-        buildConfigField("String", "MQTT_USERNAME", "\"${localProperties["MQTT_USERNAME"] ?: ""}\"")
-        buildConfigField("String", "MQTT_PASSWORD", "\"${localProperties["MQTT_PASSWORD"] ?: ""}\"")
+
+        val mqttBroker = project.findProperty("MQTT_BROKER") ?: "tcp://test.mosquitto.org:1883"
+        val mqttUsername = project.findProperty("MQTT_USERNAME") ?: ""
+        val mqttPassword = project.findProperty("MQTT_PASSWORD") ?: ""
+
+        buildConfigField("String", "MQTT_BROKER", "\"$mqttBroker\"")
+        buildConfigField("String", "MQTT_USERNAME", "\"$mqttUsername\"")
+        buildConfigField("String", "MQTT_PASSWORD", "\"$mqttPassword\"")
     }
 
     buildTypes {
